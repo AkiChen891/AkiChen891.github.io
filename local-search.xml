@@ -21,7 +21,7 @@
     <link href="/2022/10/28/TEST/"/>
     <url>/2022/10/28/TEST/</url>
     
-    <content type="html"><![CDATA[<h1 id="This-is-a-test-page-of-Aki’s-new-blog"><a href="#This-is-a-test-page-of-Aki’s-new-blog" class="headerlink" title="This is a test page of Aki’s new blog"></a>This is a test page of Aki’s new blog</h1><h3 id="Hello-world"><a href="#Hello-world" class="headerlink" title="Hello world!"></a>Hello world!</h3><p><em>This website is still under constructing</em></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="This-is-a-test-page-of-Aki’s-new-blog"><a href="#This-is-a-test-page-of-Aki’s-new-blog" class="headerlink" title="This is a test page of Aki’s new blog"></a>This is a test page of Aki’s new blog</h1><h3 id="Hello-world"><a href="#Hello-world" class="headerlink" title="Hello world!"></a>Hello world!</h3><p><em>This website is still under constructing</em></p><script type="math/tex; mode=display">lim_{1\to+\infty}P(|\frac{1}{n}\sum_i^nX_i-\mu|<\epsilon)=1, i=1,...,n</script>]]></content>
     
     
     
