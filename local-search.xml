@@ -8,7 +8,7 @@
     <link href="/2022/10/29/Latex%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95/"/>
     <url>/2022/10/29/Latex%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95/</url>
     
-    <content type="html"><![CDATA[<script type="math/tex; mode=display">\begin{equation}    Z_{1-4}=    \begin{bmatrix}-0.4568     &    0.2178     &    -0.0264     &    -0.0771     \\-0.1886     &    0.2756     &    -0.0908     &    0.5277     \\-0.1557     &    -0.1320     &    0.3542     &    -0.1271     \\\dots     &    \dots      &    \dots      &    \dots      \\0.2731     &    -0.1462     &    -0.0617     &    0.5429     \\-0.1724     &    -0.1864     &    0.3537     &    0.1313     \\0.2848     &    0.0925     &    0.4072     &    -0.0236     \\    \end{bmatrix}\end{equation}</script>]]></content>
+    <content type="html"><![CDATA[<script type="math/tex; mode=display">    Z_{1-4}=    \begin{bmatrix}-0.4568     &    0.2178     &    -0.0264     &    -0.0771     \\-0.1886     &    0.2756     &    -0.0908     &    0.5277     \\-0.1557     &    -0.1320     &    0.3542     &    -0.1271     \\\dots     &    \dots      &    \dots      &    \dots      \\0.2731     &    -0.1462     &    -0.0617     &    0.5429     \\-0.1724     &    -0.1864     &    0.3537     &    0.1313     \\0.2848     &    0.0925     &    0.4072     &    -0.0236     \\    \end{bmatrix}</script>]]></content>
     
     
     
