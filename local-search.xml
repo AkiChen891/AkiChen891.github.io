@@ -4,11 +4,24 @@
   
   
   <entry>
+    <title>Latex环境测试</title>
+    <link href="/2022/10/29/Latex%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95/"/>
+    <url>/2022/10/29/Latex%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95/</url>
+    
+    <content type="html"><![CDATA[<p>\begin{equation}<br>    Z_{1-4}=<br>    \begin{bmatrix}<br>-0.4568     &amp;    0.2178     &amp;    -0.0264     &amp;    -0.0771     \\<br>-0.1886     &amp;    0.2756     &amp;    -0.0908     &amp;    0.5277     \\<br>-0.1557     &amp;    -0.1320     &amp;    0.3542     &amp;    -0.1271     \\<br>\dots     &amp;    \dots      &amp;    \dots      &amp;    \dots      \\<br>0.2731     &amp;    -0.1462     &amp;    -0.0617     &amp;    0.5429     \\<br>-0.1724     &amp;    -0.1864     &amp;    0.3537     &amp;    0.1313     \\<br>0.2848     &amp;    0.0925     &amp;    0.4072     &amp;    -0.0236     \\</p><pre><code class="hljs">\end&#123;bmatrix&#125;</code></pre><p>\end{equation}</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>TEST</title>
     <link href="/2022/10/28/TEST/"/>
     <url>/2022/10/28/TEST/</url>
     
-    <content type="html"><![CDATA[<p>###This is a test page of Aki’s new blog<br>##Hello world!</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="This-is-a-test-page-of-Aki’s-new-blog"><a href="#This-is-a-test-page-of-Aki’s-new-blog" class="headerlink" title="This is a test page of Aki’s new blog"></a>This is a test page of Aki’s new blog</h1><h3 id="Hello-world"><a href="#Hello-world" class="headerlink" title="Hello world!"></a>Hello world!</h3><p><em>This website is still under constructing</em></p>]]></content>
     
     
     
