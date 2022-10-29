@@ -8,7 +8,7 @@
     <link href="/2022/10/29/Latex%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95/"/>
     <url>/2022/10/29/Latex%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95/</url>
     
-    <content type="html"><![CDATA[$$ Z_{1-4}=<span class="math display">\[\begin{bmatrix}-0.4568     &amp;   0.2178  &amp;   -0.0264     &amp;   -0.0771     \\-0.1886     &amp;   0.2756  &amp;   -0.0908     &amp;   0.5277  \\-0.1557     &amp;   -0.1320     &amp;   0.3542  &amp;   -0.1271     \\\dots   &amp;   \dots   &amp;   \dots   &amp;   \dots   \\0.2731  &amp;   -0.1462     &amp;   -0.0617     &amp;   0.5429  \\-0.1724     &amp;   -0.1864     &amp;   0.3537  &amp;   0.1313  \\0.2848  &amp;   0.0925  &amp;   0.4072  &amp;   -0.0236     \\        \end{bmatrix}\]</span><p>$$</p>]]></content>
+    <content type="html"><![CDATA[<p><span class="math display">\[\begin{equation}    Z_{1-4}=    \begin{bmatrix}-0.4568     &amp;   0.2178  &amp;   -0.0264     &amp;   -0.0771     \\-0.1886     &amp;   0.2756  &amp;   -0.0908     &amp;   0.5277  \\-0.1557     &amp;   -0.1320     &amp;   0.3542  &amp;   -0.1271     \\\dots   &amp;   \dots   &amp;   \dots   &amp;   \dots   \\0.2731  &amp;   -0.1462     &amp;   -0.0617     &amp;   0.5429  \\-0.1724     &amp;   -0.1864     &amp;   0.3537  &amp;   0.1313  \\0.2848  &amp;   0.0925  &amp;   0.4072  &amp;   -0.0236     \\        \end{bmatrix}\end{equation}\]</span></p>]]></content>
     
     
     
