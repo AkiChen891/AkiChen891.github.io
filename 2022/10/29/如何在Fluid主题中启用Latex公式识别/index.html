@@ -16,21 +16,23 @@
   <meta name="author" content="Aki Chen">
   <meta name="keywords" content="">
   
-    <meta name="description" content="\[\begin{equation}     Z_{1-4}&#x3D;     \begin{bmatrix} -0.4568     &amp;   0.2178  &amp;   -0.0264     &amp;   -0.0771     \\ -0.1886     &amp;   0.2756  &amp;   -0.0908     &amp;   0.5277  \\ -0.15">
+    <meta name="description" content="关于hexo和Latex Latex以其便捷性和高可用性常见于科研论文的写作中。但是Hexo中默认支持的hexo-renderer-marked渲染器不支持latex公式渲染，因此需要一些额外的操作来让Hexo识别md文件中的Latex公式信息。以Fluid主题为例，Fluid目前支持Mathjax和Katex引擎进行Latex公式渲染。由于Mathjax渲染的稳定性和速度明显优于Katex，此">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Latex环境测试">
-<meta property="og:url" content="http://akichen891.github.io/2022/10/29/Latex%E7%8E%AF%E5%A2%83%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:title" content="如何在Fluid主题中启用Latex公式识别">
+<meta property="og:url" content="http://akichen891.github.io/2022/10/29/%E5%A6%82%E4%BD%95%E5%9C%A8Fluid%E4%B8%BB%E9%A2%98%E4%B8%AD%E5%90%AF%E7%94%A8Latex%E5%85%AC%E5%BC%8F%E8%AF%86%E5%88%AB/index.html">
 <meta property="og:site_name" content="Testpage">
-<meta property="og:description" content="\[\begin{equation}     Z_{1-4}&#x3D;     \begin{bmatrix} -0.4568     &amp;   0.2178  &amp;   -0.0264     &amp;   -0.0771     \\ -0.1886     &amp;   0.2756  &amp;   -0.0908     &amp;   0.5277  \\ -0.15">
+<meta property="og:description" content="关于hexo和Latex Latex以其便捷性和高可用性常见于科研论文的写作中。但是Hexo中默认支持的hexo-renderer-marked渲染器不支持latex公式渲染，因此需要一些额外的操作来让Hexo识别md文件中的Latex公式信息。以Fluid主题为例，Fluid目前支持Mathjax和Katex引擎进行Latex公式渲染。由于Mathjax渲染的稳定性和速度明显优于Katex，此">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-10-28T16:42:17.000Z">
-<meta property="article:modified_time" content="2022-10-29T06:32:53.849Z">
+<meta property="og:image" content="http://akichen891.github.io/img/Texas.JPG">
+<meta property="article:published_time" content="2022-10-29T07:54:15.000Z">
+<meta property="article:modified_time" content="2022-10-29T08:11:17.983Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://akichen891.github.io/img/Texas.JPG">
   
   
   
-  <title>Latex环境测试 - Testpage</title>
+  <title>如何在Fluid主题中启用Latex公式识别 - Testpage</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -195,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Latex环境测试</span>
+            <span id="subtitle">如何在Fluid主题中启用Latex公式识别</span>
           
         </div>
 
@@ -206,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-10-29 00:42" pubdate>
-          2022年10月29日 凌晨
+        <time datetime="2022-10-29 15:54" pubdate>
+          2022年10月29日 下午
         </time>
       </span>
     
@@ -218,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          366 字
+          1.4k 字
         
       </span>
     
@@ -229,7 +231,7 @@
         
         
         
-          4 分钟
+          12 分钟
         
       </span>
     
@@ -267,12 +269,46 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Latex环境测试</h1>
+            <h1 style="display: none">如何在Fluid主题中启用Latex公式识别</h1>
             
             
               <div class="markdown-body">
                 
-                <p><span class="math display">\[\begin{equation}
+                <h2 id="关于hexo和latex">关于hexo和Latex</h2>
+<p>Latex以其便捷性和高可用性常见于科研论文的写作中。但是Hexo中默认支持的hexo-renderer-marked渲染器不支持latex公式渲染，因此需要一些额外的操作来让Hexo识别md文件中的Latex公式信息。以Fluid主题为例，Fluid目前支持Mathjax和Katex引擎进行Latex公式渲染。由于Mathjax渲染的稳定性和速度明显优于Katex，此处我们选取Mathjax引擎。</p>
+<h2 id="具体步骤">具体步骤</h2>
+<ul>
+<li><p>卸载hexo-math和hexo-renderer-marked。在Hexo的根目录中打开git
+bash，输入如下命令： <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript"><span class="hljs-built_in">npm</span> un hexo-math<br><br><span class="hljs-built_in">npm</span> un hexo-renderer-marked<br></code></pre></td></tr></table></figure></p></li>
+<li><p>安装hexo-renderer-pandoc渲染器:</p></li>
+</ul>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript"><span class="hljs-built_in">npm</span> i hexo-renderer-pandoc<br></code></pre></td></tr></table></figure>
+<p>Pandoc是使用Haskell语言编写的一款跨平台、自由开源及命令行界面的标记语言转换工具，可实现不同标记语言间的格式转换。</p>
+<ul>
+<li><p>修改Theme中的_config.yml,定位到第698行,将math中的Enable改为true,engine指定为mathjax:
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">math:</span><br>    <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br><br>    <span class="hljs-attr">specific:</span> <span class="hljs-literal">false</span><br><br>    <span class="hljs-attr">engine:</span> <span class="hljs-string">mathjax</span><br></code></pre></td></tr></table></figure> mathjax和katex只能同时启用一个。</p></li>
+<li><p>当需要新建文章时，需要在文章头声明启用Mathjax渲染：
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-meta">---</span><br><span class="hljs-attr">title:</span> <span class="hljs-string">XXX</span><br><span class="hljs-attr">categories:</span><br><span class="hljs-attr">tags:</span> <span class="hljs-string">XXX</span><br><span class="hljs-attr">mathjax:</span> <span class="hljs-literal">true</span><br><span class="hljs-meta">---</span><br></code></pre></td></tr></table></figure></p></li>
+<li><p>安装完成后，执行<code>hexo clean</code>和<code>hexo s</code>，然后<code>hexo g -d</code>部署到Github。Latex公式就应当能够正常显示了。</p></li>
+</ul>
+<h2 id="示例">示例</h2>
+<p><span class="math display">\[\begin{equation}
+    U=P(e+\frac{1}{I}\int_0^t edt +D \frac{de}{dt})+U(0)
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+    \left\{
+    \begin{array}{l}
+        p_1 = b_{11}z_1 + b_{12}z_2 + b_{13}z_3 + ... + b_{1,14}z_{14}
+\\
+        p_2 = b_{21}z_1 + b_{22}z_2 + b_{23}z_3 + ... + b_{2,14}z_{14}
+\\
+        \vdots \\
+        p_i = b_{i1}z_1 + b_{i2}z_2 + b_{i3}z_3 + ... + b_{i,14}z_{14}
+\\
+    \end{array}
+    \right.
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
     Z_{1-4}=
     \begin{bmatrix}
 -0.4568     &amp;   0.2178  &amp;   -0.0264     &amp;   -0.0771     \\
@@ -303,8 +339,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Latex环境测试</div>
-      <div>http://akichen891.github.io/2022/10/29/Latex环境测试/</div>
+      <div>如何在Fluid主题中启用Latex公式识别</div>
+      <div>http://akichen891.github.io/2022/10/29/如何在Fluid主题中启用Latex公式识别/</div>
     </div>
     <div class="license-meta">
       
