@@ -19,23 +19,31 @@
   <meta name="author" content="Aki Chen">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Markdown编译器 在 Hexo 中，如果默认的 Markdown 编译器无法正确渲染 LaTeX 公式，可以考虑使用支持 LaTeX 公式的 Markdown 编译器插件。常用的包括：  hexo-renderer-pandoc hexo-renderer-markdown-it hexo-filter-mathjax hexo-renderer-markdown-it-plus  推荐使">
+    <meta name="description" content="简介 Hexo博客生成并部署后，无论是部署至第三方平台（如Github Pages），还是部署至私有服务器然后定向至个人域名，都需要人工向搜索引擎提交收录。简单来说这一过程就是把该网站的内容和地址“告诉”搜索引擎，让搜索引擎“认识”你。这样当下次有人在搜索引擎中搜索与你博客有关联的内容时，搜索引擎就能够发现你了。 我们以Google为例，要完成这个过程，通常需要以下步骤：  确认博客是否被收录">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在Hexo中启用新Markdown解释器并配置Katex">
-<meta property="og:url" content="http://akichen891.github.io/2024/07/11/%E5%9C%A8Hexo%E4%B8%AD%E5%90%AF%E7%94%A8%E6%96%B0Markdown%E8%A7%A3%E9%87%8A%E5%99%A8%E5%B9%B6%E9%85%8D%E7%BD%AEKatex/index.html">
+<meta property="og:title" content="将基于Hexo的个人网站提交至Google收录">
+<meta property="og:url" content="http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Markdown编译器 在 Hexo 中，如果默认的 Markdown 编译器无法正确渲染 LaTeX 公式，可以考虑使用支持 LaTeX 公式的 Markdown 编译器插件。常用的包括：  hexo-renderer-pandoc hexo-renderer-markdown-it hexo-filter-mathjax hexo-renderer-markdown-it-plus  推荐使">
+<meta property="og:description" content="简介 Hexo博客生成并部署后，无论是部署至第三方平台（如Github Pages），还是部署至私有服务器然后定向至个人域名，都需要人工向搜索引擎提交收录。简单来说这一过程就是把该网站的内容和地址“告诉”搜索引擎，让搜索引擎“认识”你。这样当下次有人在搜索引擎中搜索与你博客有关联的内容时，搜索引擎就能够发现你了。 我们以Google为例，要完成这个过程，通常需要以下步骤：  确认博客是否被收录">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-07-11T15:12:54.000Z">
-<meta property="article:modified_time" content="2024-07-11T15:39:09.234Z">
+<meta property="og:image" content="http://akichen891.github.io/images/sitemap/sousuo.png">
+<meta property="og:image" content="http://akichen891.github.io/images/sitemap/tianjia.png">
+<meta property="og:image" content="http://akichen891.github.io/images/sitemap/1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/sitemap/2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/sitemap/3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/sitemap/4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/sitemap/5.png">
+<meta property="article:published_time" content="2024-07-13T08:04:58.000Z">
+<meta property="article:modified_time" content="2024-07-13T08:47:08.337Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://akichen891.github.io/images/sitemap/sousuo.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>在Hexo中启用新Markdown解释器并配置Katex - Hexo</title>
+  <title>将基于Hexo的个人网站提交至Google收录 - Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -191,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">在Hexo中启用新Markdown解释器并配置Katex</span>
+            <span id="subtitle">将基于Hexo的个人网站提交至Google收录</span>
           
         </div>
 
@@ -202,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-07-11 23:12" pubdate>
-          2024年7月11日 晚上
+        <time datetime="2024-07-13 16:04" pubdate>
+          2024年7月13日 下午
         </time>
       </span>
     
@@ -214,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          215 字
+          1.1k 字
         
       </span>
     
@@ -225,7 +233,7 @@
         
         
         
-          2 分钟
+          10 分钟
         
       </span>
     
@@ -270,38 +278,69 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">在Hexo中启用新Markdown解释器并配置Katex</h1>
+            <h1 id="seo-header">将基于Hexo的个人网站提交至Google收录</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="markdown编译器"><a class="markdownIt-Anchor" href="#markdown编译器"></a> Markdown编译器</h2>
-<p>在 Hexo 中，如果默认的 Markdown 编译器无法正确渲染 LaTeX 公式，可以考虑使用支持 LaTeX 公式的 Markdown 编译器插件。常用的包括：</p>
+                <h2 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h2>
+<p>Hexo博客生成并部署后，无论是部署至第三方平台（如Github Pages），还是部署至私有服务器然后定向至个人域名，都需要人工向搜索引擎提交收录。简单来说这一过程就是把该网站的内容和地址“告诉”搜索引擎，让搜索引擎“认识”你。这样当下次有人在搜索引擎中搜索与你博客有关联的内容时，搜索引擎就能够发现你了。</p>
+<p>我们以Google为例，要完成这个过程，通常需要以下步骤：</p>
 <ul>
-<li>hexo-renderer-pandoc</li>
-<li>hexo-renderer-markdown-it</li>
-<li>hexo-filter-mathjax</li>
-<li>hexo-renderer-markdown-it-plus</li>
+<li>确认博客是否被收录</li>
+<li>验证网站所有者</li>
+<li>生成并提交站点地图（sitemap）</li>
+<li>等待收录</li>
 </ul>
-<p>推荐使用<a target="_blank" rel="noopener" href="https://github.com/CHENXCHEN/hexo-renderer-markdown-it-plus">hexo-renderer-markdown-it-plus</a>.</p>
-<h2 id="hexo-renderer-markdown-it-plus-安装与配置"><a class="markdownIt-Anchor" href="#hexo-renderer-markdown-it-plus-安装与配置"></a> hexo-renderer-markdown-it-plus 安装与配置</h2>
+<h3 id="一-确认博客是否被收录"><a class="markdownIt-Anchor" href="#一-确认博客是否被收录"></a> 一、确认博客是否被收录</h3>
+<p>以本网站为例，打开Google，输入<code>site:akichen891.github.io</code><br>
+<img src="/images/sitemap/sousuo.png" srcset="/img/loading.gif" lazyload alt="搜索结果"></p>
+<p>如果Google提示“找不到相符的内容”，则说明你的网站尚未被Google收录。如果网站已经被收录，Google会自动查询和网站有关的内容。</p>
+<h3 id="二-验证网站所有者"><a class="markdownIt-Anchor" href="#二-验证网站所有者"></a> 二、验证网站所有者</h3>
+<p>只有向搜索引擎添加并认证网站，证明自己是该域名的拥有者和管理者后，搜索引擎可以快速批量添加该域名下的所有子站点，而无需一一验证。认证完成后还可以使用Google Console查看并管理网站的访问统计等、</p>
+<p>要进行验证，首先前往<a target="_blank" rel="noopener" href="https://www.google.com/webmasters/tools/home?hl=zh-CN">Google Console</a>。</p>
+<p>Google Console会要求选择资源类型。<br>
+<img src="/images/sitemap/tianjia.png" srcset="/img/loading.gif" lazyload alt="选择资源类型"></p>
+<p>选择“网址前缀”，在输入框中输入带<code>http://</code>或<code>https://</code>前缀的完整主域名，然后点击“继续”。</p>
+<p>Google提供五种验证方法：</p>
 <ul>
-<li>卸载旧的渲染器：</li>
+<li>HTML文件</li>
+<li>HTML标记</li>
+<li>Google Analytics</li>
+<li>Google跟踪代码管理器</li>
+<li>域名提供商</li>
 </ul>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">npm uninstall hexo-renderer-marked <span class="hljs-comment">--save</span><br></code></pre></td></tr></table></figure>
-<ul>
-<li>安装<code>hexo-renderer-markdown-it-plus</code>：</li>
-</ul>
-<p>在Hexo根目录中打开Git Bash，然后：</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">npm install hexo-renderer-markdown-<span class="hljs-keyword">it</span>-plus <span class="hljs-comment">--save</span><br></code></pre></td></tr></table></figure>
-<ul>
-<li>配置<code>_config.yml</code>：</li>
-</ul>
-<p>添加以下配置：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">markdown:</span><br>  <span class="hljs-attr">render:</span><br>    <span class="hljs-attr">engine:</span> <span class="hljs-string">markdown-it-plus</span><br>    <span class="hljs-attr">options:</span><br>      <span class="hljs-attr">html:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">xhtmlOut:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">breaks:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">linkify:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">typographer:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">quotes:</span> <span class="hljs-string">&#x27;“”‘’&#x27;</span><br>      <span class="hljs-attr">plugins:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">plugin:</span><br>            <span class="hljs-attr">name:</span> <span class="hljs-string">markdown-it-katex</span><br>            <span class="hljs-attr">options:</span><br>              <span class="hljs-attr">throwOnError:</span> <span class="hljs-literal">false</span><br>              <span class="hljs-attr">errorColor:</span> <span class="hljs-string">&#x27;#cc0000&#x27;</span><br></code></pre></td></tr></table></figure>
-<h2 id="引入katex的css"><a class="markdownIt-Anchor" href="#引入katex的css"></a> 引入KaTeX的CSS</h2>
-<p>为了避免公式错位问题，需要确保正确引入 KaTeX 的 CSS 文件。在主题布局文件（通常是 themes/your-theme/layout/_partial/head.ejs）中添加以下代码：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;link <span class="hljs-attribute">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css&quot;</span>&gt;<br></code></pre></td></tr></table></figure>
+<p>这几种方法依次为从简到难。这里只介绍头两种。</p>
+<h4 id="html文件验证"><a class="markdownIt-Anchor" href="#html文件验证"></a> HTML文件验证</h4>
+<p>这是最简单的一种验证方法，具体步骤Google也写的很清楚。</p>
+<p><img src="/images/sitemap/1.png" srcset="/img/loading.gif" lazyload alt="HTML文件验证"></p>
+<p>点击下载这个<code>.html</code>文件，对于Hexo，将该文件放在Hexo根目录下<code>/source</code>文件中。然后<code>hexo g -d</code>，等待部署。当你能够在浏览器中输入<code>https://example.blog/googleXXXXXXX.html</code>并成功跳转时，说明该文件已经添加成功。</p>
+<p>回到Google Console，点击验证，正常情况下Google Console很快就会提示验证成功。</p>
+<p>如果使用该方法却一直提示验证失败，可以用第二种方法。</p>
+<h4 id="html标记验证"><a class="markdownIt-Anchor" href="#html标记验证"></a> HTML标记验证</h4>
+<p>这种方法和第一种方法非常类似，只不过将验证文件变成了一个html元标记。<br>
+<img src="/images/sitemap/2.png" srcset="/img/loading.gif" lazyload alt="HTML标记验证"></p>
+<p>按照要求，复制元标记。对于Hexo博客，这个所谓的“首页”文件的位置可能有所不同。对于Fluid主题，该文件即为<code>\node_modules\hexo-theme-fluid\layout\_partials</code>目录下的<code>head.ejs</code>.</p>
+<p>按照Google的要求，在<code>&lt;head&gt;</code>中粘贴该元标记。<br>
+<img src="/images/sitemap/3.png" srcset="/img/loading.gif" lazyload alt="HTML标记验证"></p>
+<p>之后，<code>hexo clean</code>，然后<code>hexo g -d</code>，等待部署。部署完成后在Google Console中点击验证。</p>
+<h2 id="三-站点地图sitemap"><a class="markdownIt-Anchor" href="#三-站点地图sitemap"></a> 三、站点地图(Sitemap)</h2>
+<h3 id="什么是站点地图"><a class="markdownIt-Anchor" href="#什么是站点地图"></a> 什么是站点地图？</h3>
+<blockquote>
+<p>站点地图是网站上的一个文件，可以让 Google 知道应该了解网站上的哪些网页。如果您使用了网站托管服务（比如 Squarespace 或 Wix），这些服务可能会为您管理站点地图，这样的话，您就无需创建自己的站点地图，也无需使用此报告。若想了解站点地图的相关信息，请搜索您的托管服务提供商。如果您的网站规模较小（少于 100 个网页），并且您可以通过追踪首页上的一个或多个链接到达网站上的任何网页，则可能无需使用站点地图或此报告。在这种情况下，只需请求将您的首页编入索引即可（除非您使用的是上述网站托管服务，在这种情况下您无需执行任何操作）。</p>
+</blockquote>
+<h3 id="为hexo生成站点地图"><a class="markdownIt-Anchor" href="#为hexo生成站点地图"></a> 为Hexo生成站点地图</h3>
+<p>为启用站点地图，首先要在Hexo根目录中Git Bash来安装插件：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">npm install hexo-generator-sitemap <span class="hljs-comment">--save</span><br></code></pre></td></tr></table></figure>
+<p>在<strong>站点配置文件</strong>（不是主题配置文件！）<code>_config.yml</code>中添加：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-meta"># Auto Generate sitemap</span><br><span class="hljs-symbol">sitemap:</span><br><span class="hljs-symbol">path:</span> sitemap.xml<br></code></pre></td></tr></table></figure>
+<p>然后<code>hexo g -d</code>，若<code>/public</code>文件夹下生成了<code>sitemap.xml</code>，并且浏览器能够访问<code>https://example.blog/sitemap.xml</code>，说明创建成功。</p>
+<h3 id="向google提交站点地图"><a class="markdownIt-Anchor" href="#向google提交站点地图"></a> 向Google提交站点地图</h3>
+<p>在Google Console中，左侧栏选择“站点地图”，在“添加新的站点地图”中，输入你的站点地图网址，比如<code>sitemap.xml</code>。</p>
+<p><img src="/images/sitemap/4.png" srcset="/img/loading.gif" lazyload alt="添加站点地图"></p>
+<p>提交成功后，Google会在“已提交的站点地图”中显示该sitemap。<br>
+<img src="/images/sitemap/5.png" srcset="/img/loading.gif" lazyload alt="已提交的站点地图"></p>
+<p>索引需要一段时间编制并生效。通常情况下，48小时内Google即可完成收录。</p>
 
                 
               </div>
@@ -340,8 +379,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>在Hexo中启用新Markdown解释器并配置Katex</div>
-      <div>http://akichen891.github.io/2024/07/11/在Hexo中启用新Markdown解释器并配置Katex/</div>
+      <div>将基于Hexo的个人网站提交至Google收录</div>
+      <div>http://akichen891.github.io/2024/07/13/将基于Hexo的个人网站提交至Google收录/</div>
     </div>
     <div class="license-meta">
       
@@ -353,7 +392,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年7月11日</div>
+          <div>2024年7月13日</div>
         </div>
       
       
@@ -385,18 +424,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/" title="将基于Hexo的个人网站提交至Google收录">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">将基于Hexo的个人网站提交至Google收录</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/11/%E3%80%90%E7%94%B5%E6%9C%BA%E7%9E%AC%E6%80%81%E5%88%86%E6%9E%90%E3%80%91%E4%BA%A4%E6%B5%81%E7%94%B5%E6%9C%BA%E7%94%B5%E5%8E%8B%E4%B8%8E%E7%A3%81%E9%93%BE%E6%96%B9%E7%A8%8B%E5%BC%8F%EF%BC%88%E7%9B%B8%E5%9D%90%E6%A0%87%EF%BC%89/" title="【电机瞬态分析】交流电机电压与磁链方程式（相坐标）">
-                        <span class="hidden-mobile">【电机瞬态分析】交流电机电压与磁链方程式（相坐标）</span>
+                      <a href="/2024/07/11/%E5%9C%A8Hexo%E4%B8%AD%E5%90%AF%E7%94%A8%E6%96%B0Markdown%E8%A7%A3%E9%87%8A%E5%99%A8%E5%B9%B6%E9%85%8D%E7%BD%AEKatex/" title="在Hexo中启用新Markdown解释器并配置Katex">
+                        <span class="hidden-mobile">在Hexo中启用新Markdown解释器并配置Katex</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
