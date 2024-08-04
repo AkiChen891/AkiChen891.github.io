@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://akichen891.github.io/images/1.2/park1.png">
 <meta property="og:image" content="http://akichen891.github.io/images/1.2/park2.png">
 <meta property="article:published_time" content="2024-07-14T05:08:23.000Z">
-<meta property="article:modified_time" content="2024-07-28T17:34:03.506Z">
+<meta property="article:modified_time" content="2024-08-04T08:28:41.664Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/1.2/raozuzhouxian.png">
@@ -218,7 +218,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          3.5k 字
         
       </span>
     
@@ -229,7 +229,7 @@
         
         
         
-          25 分钟
+          30 分钟
         
       </span>
     
@@ -542,6 +542,30 @@ i_Q
 <p>当Clark变换被推广至旋转dq坐标系（即包含转子位置角<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span>作为变量）时，结合三角恒等变换，可导出Park变换方程。相关推导参见<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44462280/article/details/110290942">《Clark变换与Park变换的推导》</a>。</p>
 <p>Park方程为定常系数微分方程，在同步电机分析中使用该方程可以通过解析方法求解<strong>恒速</strong>运转时电机的瞬态和稳态运行问题。</p>
 <p>上述方程中各变量都是有名值,用有名值的好处是物理念明确,单位的量纲清楚,但在实际计算中往往有所不便,因此，分析计算电机的许多问题时，经常采用标么值。</p>
+<h3 id="dq0坐标系统与双反应理论"><a class="markdownIt-Anchor" href="#dq0坐标系统与双反应理论"></a> dq0坐标系统与双反应理论</h3>
+<p>电机学中已经介绍过，双反应理论是由Andre Blondel提出的一种解释同步电机内部磁场分布的方法。该理论假设同步电机的电枢磁动势（MMF）可以分解为两个独立的分量：</p>
+<ul>
+<li>
+<p>d轴反应：与转子磁链对齐的磁动势分量，主要影响电机的励磁电流。</p>
+</li>
+<li>
+<p>q轴反应：与d轴垂直的磁动势分量，主要影响电机的转矩电流。</p>
+</li>
+</ul>
+<p>双反应理论认为这两个反应是独立的，并且可以分别计算，从而简化了电机的分析。</p>
+<p>dq0坐标系统与双反应理论在概念和应用上具有很大的统一性。具体表现如下：</p>
+<ul>
+<li>
+<p>坐标对齐：在dq0坐标系统中，d轴和q轴分别对应双反应理论中的d轴反应和q轴反应。这使得电机的磁动势和电流可以通过这两个独立的分量来表示。</p>
+</li>
+<li>
+<p>数学简化：两者都旨在简化电机的数学分析。dq0坐标系统将交流变量转换为直流变量，而双反应理论将复杂的三相系统分解为两个独立的轴。这两种方法结合使用，可以大大简化电机的动态建模和控制设计。</p>
+</li>
+<li>
+<p>独立性假设：双反应理论假设d轴反应和q轴反应是独立的，这在dq0坐标系统中也得到了体现。dq0系统中的电压和电流方程可以分别在d轴和q轴上进行解耦分析。</p>
+</li>
+</ul>
+<p>同步电机的dq0坐标系统和双反应理论都为简化和深入理解电机内部的物理现象提供了工具。dq0坐标系统通过数学变换将电机的时变问题转换为静态问题，而双反应理论则通过物理解释将电机的磁动势分解为两个独立分量。两者在概念和实际应用上具有很强的统一性，结合使用能够更好地分析和控制同步电机。</p>
 
                 
               </div>
