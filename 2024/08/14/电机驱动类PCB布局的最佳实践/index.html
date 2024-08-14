@@ -41,8 +41,34 @@
 <meta property="og:image" content="http://akichen891.github.io/images/siva/3-3.png">
 <meta property="og:image" content="http://akichen891.github.io/images/siva/3-4.png">
 <meta property="og:image" content="http://akichen891.github.io/images/siva/3-5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/4-1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/4-2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/4-3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/4-4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/4-5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/4-6.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/4-7.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-6.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-7.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-8.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/5-9.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-6.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-7.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-8.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-9.png">
+<meta property="og:image" content="http://akichen891.github.io/images/siva/6-10.png">
 <meta property="article:published_time" content="2024-08-14T06:05:09.000Z">
-<meta property="article:modified_time" content="2024-08-14T07:20:36.191Z">
+<meta property="article:modified_time" content="2024-08-14T10:52:48.966Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/siva/1-1.png">
@@ -230,7 +256,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.2k 字
+          6.9k 字
         
       </span>
     
@@ -241,7 +267,7 @@
         
         
         
-          35 分钟
+          58 分钟
         
       </span>
     
@@ -430,6 +456,118 @@
 <h3 id="过孔放置"><a class="markdownIt-Anchor" href="#过孔放置"></a> 过孔放置</h3>
 <p>尽管过孔很小，但它们会占用 PCB 和接地平面上的空间。将多个过孔布线在一起会在平面上产生间隙，并影响电流和接地回路。良好的过孔布局可为所有信号创建充足的返回路径。图 3-5 显示了如何避免过孔造成不必要的接地平面分裂的示例。</p>
 <p><img src="/images/siva/3-5.png" srcset="/img/loading.gif" lazyload alt="图3-5 避免过孔分裂接地平面"></p>
+<h1 id="通用布线技巧"><a class="markdownIt-Anchor" href="#通用布线技巧"></a> 通用布线技巧</h1>
+<p>在进行电机驱动器 PCB 设计时，请遵循以下通用布线技术：</p>
+<ul>
+<li>使栅极驱动器走线尽可能宽且长度尽可能短。对于至少 1 盎司铜，从 20 密耳的走线宽度开始，如果大电流需要，则走线宽度可以更大。</li>
+</ul>
+<p><img src="/images/siva/4-1.png" srcset="/img/loading.gif" lazyload alt="图4-1 DRV8323xEVM 栅极信号线"></p>
+<ul>
+<li>高端FET栅极的信号走线应当尽可能靠近开关节点走线，以尽量减少电感、环路面积以及 dv/dt 开关引起噪声的可能性。</li>
+</ul>
+<p><img src="/images/siva/4-2.png" srcset="/img/loading.gif" lazyload alt="图4-2 平行栅极信号线"></p>
+<ul>
+<li>不要使用直角走线。走线中的 90 度弯曲会起到阻抗的作用，并可能导致电流反射。当电机的相位切换时，急弯可能会引发电磁干扰 (EMI) 问题。圆形弯曲是理想的，但在实际设计中可能不切实际。拐角布线的最佳做法是使用钝角。图 4-3 显示了走线中不同角度的示例。</li>
+</ul>
+<p><img src="/images/siva/4-3.png" srcset="/img/loading.gif" lazyload alt="图4-3 正确的走线角度"></p>
+<ul>
+<li>将过孔过渡到焊盘，特别是将输出引脚上的细线过渡到粗线。泪滴（Teardrop）技术可降低信号转换的热应力。该技术还可避免线的开裂，并使线在机械上更坚固。泪滴技术适用于从小信号过渡到通孔焊盘的情况。</li>
+</ul>
+<p><img src="/images/siva/4-4.png" srcset="/img/loading.gif" lazyload alt="图4-4 过孔至焊盘的过渡"></p>
+<ul>
+<li>绕物体布线时，应以平行对的方式布线，以避免因分叉布线而导致的差分阻抗和不连续性。这种方法对于电流检测放大器的信号非常重要。</li>
+</ul>
+<p><img src="/images/siva/4-5.png" srcset="/img/loading.gif" lazyload alt="图4-5 平行走线"></p>
+<ul>
+<li>将无源元件（例如源匹配电阻或交流耦合电容）放置在信号路径内，并将它们并排放置。平行放置元件可产生更宽的走线间距。不建议交错放置元件，因为这会造成狭窄的区域。</li>
+</ul>
+<p><img src="/images/siva/4-6.png" srcset="/img/loading.gif" lazyload alt="图4-6 推荐的元器件放置"></p>
+<ul>
+<li>将电路的模拟部分和数字部分分开接地是抑制噪声的最简单、最有效的方法之一。</li>
+</ul>
+<p><img src="/images/siva/4-7.png" srcset="/img/loading.gif" lazyload alt="图4-7 数字地与模拟地的隔离"></p>
+<h1 id="bulk电容和旁路电容的放置"><a class="markdownIt-Anchor" href="#bulk电容和旁路电容的放置"></a> Bulk电容和旁路电容的放置</h1>
+<h2 id="bulk电容放置"><a class="markdownIt-Anchor" href="#bulk电容放置"></a> Bulk电容放置</h2>
+<p>在电机驱动系统设计中，Bulk电容器（大容量电容器）可最大限度地减少低频电流瞬变的影响，并存储电荷以提供电机驱动器切换时所需的大电流。选择Bulk电容器时，请考虑电机系统所需的最高电流、电源电压纹波和电机类型。</p>
+<p>使用Bulk电解电容帮助从通过电机绕组驱动的电流中获取低频、高值电流。这些电容器通常大于 10 μF，具体取决于应用要求。</p>
+<p>将所有Bulk电容器放置在电源模块或电路板的电源入口点附近。TI 建议每个Bulk电容器都有多个通孔将焊盘连接到相应的电源层。TI 还建议所有Bulk电容器都具有低等效串联电阻 (ESR)。</p>
+<p><img src="/images/siva/5-1.png" srcset="/img/loading.gif" lazyload alt="图5-1 Bulk电容多过孔放置"></p>
+<p><img src="/images/siva/5-2.png" srcset="/img/loading.gif" lazyload alt="图5-2 Bulk电容和旁路电容放置"></p>
+<h2 id="电荷泵电容器charge-pump-capacitor和自举电容"><a class="markdownIt-Anchor" href="#电荷泵电容器charge-pump-capacitor和自举电容"></a> 电荷泵电容器（Charge Pump Capacitor）和自举电容</h2>
+<p>TI 的大多数电机驱动设备 (DRVxx) 都使用电荷泵或自举电容器来完全切换高侧 N 沟道 MOSFET 的栅极。将这些电容器放置在尽可能靠近电机驱动设备的位置。在图 5-3 中，C4 电容器是用于从 VM 到 VCP 引脚的电荷泵输出的电容，而 C7 电容器是用于电荷泵切换节点的电容。</p>
+<p><img src="/images/siva/5-3.png" srcset="/img/loading.gif" lazyload alt="图5-3 电荷泵电容放置"></p>
+<h2 id="旁路bypass解耦decoupling电容放置"><a class="markdownIt-Anchor" href="#旁路bypass解耦decoupling电容放置"></a> 旁路（Bypass）/解耦（Decoupling）电容放置</h2>
+<h3 id="靠近电源"><a class="markdownIt-Anchor" href="#靠近电源"></a> 靠近电源</h3>
+<p>旁路电容用于将高频噪声最小化，以减少进入 DRV 器件电源引脚的噪声。TI 建议将电容尽可能靠近器件的电源输入引脚和接地引脚。如果旁路电容和器件之间的走线长度没有最小化，它们可能会在旁路电容要过滤的高频下产生电感。走线电感增加的阻抗可能导致电源引脚处的电压或电流产生振铃，从而导致 EMI 并影响数字或模拟电路的性能。最佳做法是将值较小的电容尽可能靠近器件放置，以最大限度地减少走线电感的影响。将值较大的电容连接到值较小的电容之后，因为随着电容值的增加，电感变得更小。</p>
+<p><img src="/images/siva/5-4.png" srcset="/img/loading.gif" lazyload alt="图5-4 靠近设备的解耦电容"></p>
+<p>如上文所示，使用的过孔越多，阻抗越低。TI 强烈建议在电源层和接地层使用多个过孔。将过孔直接放置在电容器的安装焊盘上是一种有效的方法，可以最大限度地减少布线面积，同时仍能实现电流流动布线。请遵循以下旁路电容器指南：</p>
+<ul>
+<li>
+<p>不要在旁路电容器和有源器件之间使用过孔。可视化高频电流流动并尽可能减少高频电流环路。</p>
+</li>
+<li>
+<p>确保旁路电容器与有源元件位于同一层，以获得最佳效果。不要在旁路电容器引脚和 IC 电源或接地引脚之间放置过孔。</p>
+</li>
+<li>
+<p>将过孔布线到旁路电容器中，然后再布线到有源元件中。</p>
+</li>
+<li>
+<p>使用最多的过孔和最宽的走线以获得最佳布局。</p>
+</li>
+<li>
+<p>旁路电容器越近越好（小于 0.5 厘米，0.2 英寸）。</p>
+</li>
+<li>
+<p>不要使用大于 3:1 的长宽比。</p>
+</li>
+</ul>
+<p><img src="/images/siva/5-5.png" srcset="/img/loading.gif" lazyload alt="图5-5 旁路电容的放置"></p>
+<h3 id="靠近功率级power-stage"><a class="markdownIt-Anchor" href="#靠近功率级power-stage"></a> 靠近功率级（Power Stage）</h3>
+<p>对于功率级上的旁路电容，请使用小型陶瓷电容器来衰减由 MOSFET 和其他寄生电容切换引起的高频电流。这些电容器的电容值通常小于 10 μF，具体取决于应用要求。</p>
+<p><img src="/images/siva/5-6.png" srcset="/img/loading.gif" lazyload alt="图5-6 设置有旁路电容的H桥"></p>
+<h3 id="靠近开关电流源switch-current-source"><a class="markdownIt-Anchor" href="#靠近开关电流源switch-current-source"></a> 靠近开关电流源（Switch Current Source）</h3>
+<p>正确布局和放置这些电容器对于确保其有效性至关重要。电容和开关电流源之间的任何额外寄生电感都会降低其效果。理想情况下，将电容器放置在尽可能靠近开关电流源的位置，在本例中为电机和 MOSFET。图 5-7 显示了基于上一个原理图示例的示例布局。</p>
+<p><img src="/images/siva/5-7.png" srcset="/img/loading.gif" lazyload alt="图5-7 旁路电容的放置"></p>
+<h3 id="靠近电流测量运放"><a class="markdownIt-Anchor" href="#靠近电流测量运放"></a> 靠近电流测量运放</h3>
+<p>对于带有集成电流检测放大器 (CSA) 的设备，TI 建议将额外的去耦电容尽可能靠近检测引脚放置，并使用大约 1 nF 的值。图 5-8 显示了去耦电容 C12、C13 和 C17。</p>
+<p><img src="/images/siva/5-8.png" srcset="/img/loading.gif" lazyload alt="图5-8 SNx和SPx布局"></p>
+<h3 id="靠近稳压器voltage-regulators"><a class="markdownIt-Anchor" href="#靠近稳压器voltage-regulators"></a> 靠近稳压器（Voltage Regulators）</h3>
+<p>对于带有稳压器的器件，请将电容器尽可能靠近引脚放置。尽量减少接地引脚的接地回路。例如，图 5-9 显示 C18 电容器尽可能靠近 DVDD 稳压器。</p>
+<p><img src="/images/siva/5-9.png" srcset="/img/loading.gif" lazyload alt="图5-9 DVDD的接地回路"></p>
+<h1 id="mosfet的放置与功率级布线"><a class="markdownIt-Anchor" href="#mosfet的放置与功率级布线"></a> MOSFET的放置与功率级布线</h1>
+<p>栅极驱动器和功率 MOSFET 的放置对于预驱动器电机驱动解决方案的正确功能和最佳性能至关重要。对于带有集成 MOSFET 的电机驱动器，例如 DRV8870、DRV8313、DRV10987、DRV10983-Q1 和 DRV8873-Q1，正确的布线已在内部完成。对于栅极驱动器，例如 DRV8701、DRV8304、DRV8306、DRV8323、DRV8343-Q1 和 DRV8353，仔细规划 PCB 的布局和功率 MOSFET 的放置非常重要。以下部分介绍了一些常见的 MOSFET 拓扑，并介绍了使用常见电机驱动架构的基本布局示例。</p>
+<h2 id="常见功率-mosfet-封装"><a class="markdownIt-Anchor" href="#常见功率-mosfet-封装"></a> 常见功率 MOSFET 封装</h2>
+<p>本节介绍一些常见的 N 沟道功率 MOSFET 封装类型。大多数<br>
+功率 MOSFET 都有这四种选项之一。通过了解封装类型、尺寸和引脚排列，可以更好地设计 PCB 以获得最佳解决方案。</p>
+<p>图 6-1 中的符号代表 N 沟道功率 MOSFET。虽然 MOSFET 是一种四端器件，具有源极、栅极、漏极和体极，但体极通常位于源极端子。</p>
+<p><img src="/images/siva/6-1.png" srcset="/img/loading.gif" lazyload alt="图6-1 N-MOSFET符号"></p>
+<p>MOSFET 封装与功率级和散热直接相关。不同的封装具有不同的布线规则。</p>
+<h3 id="dpak"><a class="markdownIt-Anchor" href="#dpak"></a> DPAK</h3>
+<p>图 6-2 所示的 DPAK (SOT-252) 封装是业界最常用的封装之一。此封装在尺寸和性能之间实现了折衷。DPAK 封装通常用于高功率 MOSFET 和稳压器。</p>
+<p><img src="/images/siva/6-2.png" srcset="/img/loading.gif" lazyload alt="图6-2 DPAK封装"></p>
+<h3 id="d2pak"><a class="markdownIt-Anchor" href="#d2pak"></a> D2PAK</h3>
+<p>D2PAK（SOT-252）封装（见图 6-3）是 DPAK 封装的较大版本，可以提供更好的散热效果。</p>
+<p><img src="/images/siva/6-3.png" srcset="/img/loading.gif" lazyload alt="图6-3 D2PAK封装"></p>
+<h3 id="to-220"><a class="markdownIt-Anchor" href="#to-220"></a> TO-220</h3>
+<p>TO-220 封装（见图 6-4）是一种通孔 MOSFET 封装。直立片可用于安装散热器。使用这种封装的缺点是它需要更多空间，并且通常比表面贴装封装（例如 DPAK 和 D2PAK 封装）更高。</p>
+<p><img src="/images/siva/6-4.png" srcset="/img/loading.gif" lazyload alt="图6-4 TO-220封装"></p>
+<h3 id="8-pin-son"><a class="markdownIt-Anchor" href="#8-pin-son"></a> 8-Pin SON</h3>
+<p>8 引脚 SON 封装（见图 6-5）是最常见的无引线封装。此封装提供了一种解决方案，可实现最小的电路板空间和最佳性能。大多数引线封装具有相似的引脚排列。8 引脚 SON 封装的独特之处在于，与引线封装（TO-252 和 TO-220）相比，栅极引脚位于相反的一侧。</p>
+<p><img src="/images/siva/6-5.png" srcset="/img/loading.gif" lazyload alt="图6-5 8-Pin SON 封装"></p>
+<h2 id="mosfet布局设置"><a class="markdownIt-Anchor" href="#mosfet布局设置"></a> MOSFET布局设置</h2>
+<p>图 6-6 和图 6-7 显示了两种典型配置的常见 MOSFET 位置和布局；分别为半桥堆叠和半桥并排，适用于有引线和无引线封装。</p>
+<p><img src="/images/siva/6-6.png" srcset="/img/loading.gif" lazyload alt="图6-6 半桥堆叠"></p>
+<p><img src="/images/siva/6-7.png" srcset="/img/loading.gif" lazyload alt="图6-7 半桥并排"></p>
+<p>这些半桥布局可以重复用于多个半桥拓扑，包括 H 桥（两个半桥）、逆变器（三个半桥）和双 H 桥（四个半桥）。</p>
+<h2 id="功率级布局设计"><a class="markdownIt-Anchor" href="#功率级布局设计"></a> 功率级布局设计</h2>
+<p>在为功率 MOSFET 选择正确的位置后，下一步是确保布线正确。由于 MOSFET 用于高功率、电机驱动开关应用，因此设计对非理想布局引入的寄生效应很敏感。本节介绍了一些需要布线的关键信号以及管理这些信号的最佳实践。功率级如图 6-8 所示。</p>
+<p><img src="/images/siva/6-8.png" srcset="/img/loading.gif" lazyload alt="图6-8 带开关节点（红圈）的半桥功率级"></p>
+<h3 id="开关节点switch-node"><a class="markdownIt-Anchor" href="#开关节点switch-node"></a> 开关节点（Switch Node）</h3>
+<p>开关节点是高端 MOSFET 的源极引脚和低端 MOSFET 的漏极引脚之间的连接，如图 6-10 所示。此节点是最终连接到负载（在本应用中为电机）的网络。开关节点是半桥配置中要路由的最关键信号，因为此网络上的信号具有高频、大电流特性。图 6-8 所示的电路具有由 PCB 和功率 MOSFET 引起的许多非理想寄生效应。图 6-9 显示了其中一些主要寄生效应，它们是开关节点振铃现象的主要原因。</p>
+<p><img src="/images/siva/6-9.png" srcset="/img/loading.gif" lazyload alt="图6-9 半桥寄生效应"></p>
+<p>开关节点振铃是由于 PCB 和功率 MOSFET 的寄生效应导致的开关节点上的 LC 振荡。开关节点振铃会导致 EMI 并产生过冲和下冲电压，这可能会违反 MOSFET 漏极-源极电压和栅极驱动器引脚的绝对最大额定值。它还会降低功率级的效率。</p>
+<p>可以通过外部措施和系统调整（降低斜率、外部缓冲器等）来解决开关节点振铃问题，但基本合理的布局可以解决许多主要问题。图 6-10 中的布局示例显示了最小化高端 MOSFET 源极和低端 MOSFET 漏极之间电感的设计。最佳做法是最小化铜平面连接的长度并最大化其宽度，并使用具有最小寄生电感的 MOSFET 封装。</p>
+<p><img src="/images/siva/6-10.png" srcset="/img/loading.gif" lazyload alt="图6-10 开关节点布局样例"></p>
 
                 
               </div>
