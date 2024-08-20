@@ -19,27 +19,21 @@
   <meta name="author" content="Aki Chen">
   <meta name="keywords" content="">
   
-    <meta name="description" content="原文来自德州仪器（TI）：TPS5430 Datasheet 本文将以德州仪器（TI）TPS5430 降压DC-DC转换器为例，剖析手册中的参数与技术指标，并进行选型方面的介绍，同时简要介绍高频DC-DC设计相关内容。  特性   宽输入电压范围：  TPS5430：5.5V 至 36V TPS5431：5.5V 至 23V    高达 3A 的连续（4A 峰值）输出电流   通过 100mΩ 集">
-<meta property="og:type" content="article">
-<meta property="og:title" content="以TPS5430为例进行DC-DC选型与设计">
-<meta property="og:url" content="http://akichen891.github.io/2024/08/19/%E4%BB%A5TPS5430%E4%B8%BA%E4%BE%8B%E8%BF%9B%E8%A1%8CDC-DC%E9%80%89%E5%9E%8B%E4%B8%8E%E8%AE%BE%E8%AE%A1/index.html">
+    <meta property="og:type" content="article">
+<meta property="og:title" content="SIDs and routing of Singapore Changi (WSSS)">
+<meta property="og:url" content="http://akichen891.github.io/2024/08/21/FIR/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="原文来自德州仪器（TI）：TPS5430 Datasheet 本文将以德州仪器（TI）TPS5430 降压DC-DC转换器为例，剖析手册中的参数与技术指标，并进行选型方面的介绍，同时简要介绍高频DC-DC设计相关内容。  特性   宽输入电压范围：  TPS5430：5.5V 至 36V TPS5431：5.5V 至 23V    高达 3A 的连续（4A 峰值）输出电流   通过 100mΩ 集">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://akichen891.github.io/images/dcdc/1.png">
-<meta property="og:image" content="http://akichen891.github.io/images/dcdc/2.png">
-<meta property="og:image" content="http://akichen891.github.io/images/dcdc/3.png">
-<meta property="article:published_time" content="2024-08-18T16:49:00.000Z">
-<meta property="article:modified_time" content="2024-08-18T17:26:18.355Z">
+<meta property="article:published_time" content="2024-08-20T19:13:07.000Z">
+<meta property="article:modified_time" content="2024-08-20T19:17:34.739Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://akichen891.github.io/images/dcdc/1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>以TPS5430为例进行DC-DC选型与设计 - Hexo</title>
+  <title>SIDs and routing of Singapore Changi (WSSS) - Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -195,7 +189,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">以TPS5430为例进行DC-DC选型与设计</span>
+            <span id="subtitle">SIDs and routing of Singapore Changi (WSSS)</span>
           
         </div>
 
@@ -206,8 +200,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-08-19 00:49" pubdate>
-          2024年8月19日 凌晨
+        <time datetime="2024-08-21 03:13" pubdate>
+          2024年8月21日 凌晨
         </time>
       </span>
     
@@ -218,7 +212,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          0 字
         
       </span>
     
@@ -229,7 +223,7 @@
         
         
         
-          10 分钟
+          1 分钟
         
       </span>
     
@@ -274,120 +268,18 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">以TPS5430为例进行DC-DC选型与设计</h1>
+            <h1 id="seo-header">SIDs and routing of Singapore Changi (WSSS)</h1>
             
             
               <div class="markdown-body">
                 
-                <p><em>原文来自德州仪器（TI）</em>：<a target="_blank" rel="noopener" href="https://www.ti.com.cn/product/cn/TPS5430?bm-verify=AAQAAAAJ_____9dYxHNK53iaDtVqyxPQxRcsrzMOM-c86S6ivd470tCxI7v2y_3iLaQxnR81kWkBePuyKvYKyC-Kf15mbkeVGi8nAGHJ0TZ3ENp-6GgUlTcvMy_qdx-euoFt1ZFv6JxkzW-Dd3OlaLFZQaxAsFpiD3EHrvgSZyrsjhPFZukuNU6g3lsGi53NSBPq24SEFjJVkxhff7hPbsSkYNRWKgMWat5cOPLkdhhwYkWjjWZCYxQ19lVbHzjbGrfD90mIptd-Xo2P9gBYm2ZBpeDhZ5g5dlGNhcbA7Z9fEjLipdCzrhXmW1HXWL3ZbWTD">TPS5430 Datasheet</a></p>
-<p>本文将以德州仪器（TI）TPS5430 降压DC-DC转换器为例，剖析手册中的参数与技术指标，并进行选型方面的介绍，同时简要介绍高频DC-DC设计相关内容。</p>
-<h2 id="特性"><a class="markdownIt-Anchor" href="#特性"></a> 特性</h2>
-<ul>
-<li>
-<p>宽输入电压范围：</p>
-<ul>
-<li>TPS5430：5.5V 至 36V</li>
-<li>TPS5431：5.5V 至 23V</li>
-</ul>
-</li>
-<li>
-<p>高达 3A 的连续（4A 峰值）输出电流</p>
-</li>
-<li>
-<p>通过 100mΩ 集成式 MOSFET 开关实现高达 95%的高效率</p>
-</li>
-<li>
-<p>宽输出电压范围：可调节为低至 1.22V，初始精度为 1.5%</p>
-</li>
-<li>
-<p>内部补偿可最大限度减少外部器件数量</p>
-</li>
-<li>
-<p>适用于小型滤波器尺寸的固定 500kHz 开关频率</p>
-</li>
-<li>
-<p>通过输入电压前馈改进线路调整和瞬态响应</p>
-</li>
-<li>
-<p>系统受过流限制、过压保护和热关断的保护</p>
-</li>
-<li>
-<p>–40°C 至 125°C 的工作结温范围</p>
-</li>
-<li>
-<p>采用小型热增强型 8 引脚 SO PowerPAD™ 集成电路封装</p>
-</li>
-<li>
-<p>使用 TPS5430 并借助 WEBENCH® Power Designer 创建定制设计</p>
-</li>
-</ul>
-<h2 id="应用"><a class="markdownIt-Anchor" href="#应用"></a> 应用</h2>
-<ul>
-<li>消费类：机顶盒、DVD 显示屏、LCD 显示屏</li>
-<li>工业用和车载音频电源</li>
-<li>电池充电器、大功率 LED 电源</li>
-<li>12V 和 24V 分布式电源系统</li>
-</ul>
-<h2 id="说明"><a class="markdownIt-Anchor" href="#说明"></a> 说明</h2>
-<p>TPS543x 是一款高输出电流 PWM 转换器，集成了低电阻、高侧 N 沟道 MOSFET。具有所列的特性的基板上还包括高性能电压误差放大器（可在瞬态条件下提供高稳压精度）、欠压锁定电路（用于防止在输入电压达到 5.5V 前启动）、内部设置的慢启动电路（用于限制浪涌电流）以及电压前馈电路（用于改进瞬态响应）。通过使用 ENA 引脚，关断电源电流通常可减少到15μA。其他特性包括高电平有效使能端、过流限制、过压保护和热关断。为降低设计复杂性并减少外部元件数量，对 TPS543x 反馈环路进行内部补偿。TPS5431可采用高达 23V 的电源轨运行。TPS5430 可调节多种电源，包括 24V 总线。</p>
-<p>TPS543x 器件采用热增强型且易于使用的 8 引脚 SOIC PowerPAD 集成电路封装。TI 提供评估模块和Designer 软件工具，协助快速实现高性能电源设计，满足迫切的设备开发周期要求。</p>
-<p><img src="/images/dcdc/1.png" srcset="/img/loading.gif" lazyload alt="简化原理图与效率-输出电流关系"></p>
-<blockquote>
-<p>有关<em>效率</em>：DC-DC转换器的效率（Efficiency）表示输入功率中有多少被成功转换为输出功率，而非被损耗。它通常以百分比表示。效率高意味着大部分能量都被有效转换，只有少量能量因开关损耗、导通损耗、磁损耗等形式而被消耗为热量。DC-DC 转换器的效率通常会随着输入电压、输出电流、负载条件等变化而有所不同。一般来说，DC-DC 转换器的效率可以达到 85% 至 95% 甚至更高。较高的效率在电源设计中至关重要，因为它直接影响系统的功耗和热管理设计。</p>
-</blockquote>
-<h2 id="引脚配置和功能"><a class="markdownIt-Anchor" href="#引脚配置和功能"></a> 引脚配置和功能</h2>
-<p><img src="/images/dcdc/2.png" srcset="/img/loading.gif" lazyload alt="引脚配置和功能"></p>
-<blockquote>
-<p><em>应当注意</em>：</p>
-<ul>
-<li><strong>VSENSE</strong>：反馈回路对噪声敏感，应当在PCB设计时进行特殊处理。</li>
-<li><strong>ENA</strong>：与其他型号的IC不同，TPS5430的使能在悬空（Float）时开启，低于0.5V即外部拉低时关闭。不过经验表明ENA被外部上拉时也能够开启使能。</li>
-<li><strong>PH</strong>：即输出端。IC内部集成有N-MOSFET，其源极（S）即连接至PH引脚。</li>
-</ul>
-</blockquote>
-<h2 id="规格"><a class="markdownIt-Anchor" href="#规格"></a> 规格</h2>
-<h3 id="绝对最大额定值"><a class="markdownIt-Anchor" href="#绝对最大额定值"></a> 绝对最大额定值</h3>
-<p><img src="/images/dcdc/3.png" srcset="/img/loading.gif" lazyload alt="绝对最大额定值"></p>
-<blockquote>
-<p><em>应当注意</em>：</p>
-<ul>
-<li>所有输入引脚禁止反接，即使设计有外部反接保护电路。</li>
-<li>ENA引脚上拉后输入不得超过7V。</li>
-<li>接近 VIN 引脚的绝对最大额定值可能会导致 PH 引脚上的电压超过绝对最大额定值。</li>
-<li>IC输出端可能会在瞬态出现负电压脉冲，其一般由高di/dt与寄生电感共同作用引起。参见：<a target="_blank" rel="noopener" href="https://www.novosns.com/technical-articles-163">如何解决负压脉冲</a></li>
-<li>表中的“拉电流”原文为“Source Current”，通常指的是FET向负载提供电流的能力。在开关模式中，FET在导通时从电源“拉”电流并传输到负载。当MOSFET处于关闭状态时，PH 引脚会呈现高阻抗状态。表中 PH 漏电流指的是在这种高阻抗状态下，PH 引脚仍然有少量的电流从引脚流出或流入（一般是流出）。手册中标注的 10 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mi>A</mi></mrow><annotation encoding="application/x-tex">\mu A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">μ</span><span class="mord mathnormal">A</span></span></span></span> 漏电流，表示在开关管关闭时，PH 引脚由于漏电效应产生的微小电流。这种电流通常很小，不会对系统性能造成显著影响，但在某些对精度要求较高的应用中，这些小电流可能需要考虑。</li>
-</ul>
-</blockquote>
-<h3 id="esd-ratings"><a class="markdownIt-Anchor" href="#esd-ratings"></a> ESD Ratings</h3>
-<p>静电放电测试项，此处略。</p>
-
+                <iframe src="https://www.google.com/maps/d/embed?mid=1mBNYcq7HpVWCewc8iwea5tgu6sIlsM0&ehbc=2E312F" width="900" height="540"></iframe>
                 
               </div>
             
             <hr/>
             <div>
               <div class="post-metas my-3">
-  
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%94%B5%E5%AD%90%E4%B8%8E%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1/" class="category-chain-item">电子与电路设计</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
   
   
 </div>
@@ -398,8 +290,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>以TPS5430为例进行DC-DC选型与设计</div>
-      <div>http://akichen891.github.io/2024/08/19/以TPS5430为例进行DC-DC选型与设计/</div>
+      <div>SIDs and routing of Singapore Changi (WSSS)</div>
+      <div>http://akichen891.github.io/2024/08/21/FIR/</div>
     </div>
     <div class="license-meta">
       
@@ -411,7 +303,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年8月19日</div>
+          <div>2024年8月21日</div>
         </div>
       
       
@@ -443,18 +335,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/08/21/FIR/" title="SIDs and routing of Singapore Changi (WSSS)">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">SIDs and routing of Singapore Changi (WSSS)</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/08/14/%E7%94%B5%E6%9C%BA%E9%A9%B1%E5%8A%A8%E7%B1%BBPCB%E5%B8%83%E5%B1%80%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" title="电机驱动类PCB布局的最佳实践">
-                        <span class="hidden-mobile">电机驱动类PCB布局的最佳实践</span>
+                      <a href="/2024/08/19/%E4%BB%A5TPS5430%E4%B8%BA%E4%BE%8B%E8%BF%9B%E8%A1%8CDC-DC%E9%80%89%E5%9E%8B%E4%B8%8E%E8%AE%BE%E8%AE%A1/" title="以TPS5430为例进行DC-DC选型与设计">
+                        <span class="hidden-mobile">以TPS5430为例进行DC-DC选型与设计</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
