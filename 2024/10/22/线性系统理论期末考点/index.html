@@ -27,7 +27,7 @@
 <meta property="og:description" content="第七章 数学基础  单模矩阵与单模变换 互质性与互质性判据（秩判据）、 既约性与既约性判据（行次系数矩阵或列次系数矩阵） 非既约矩阵的既约化 Smith标准形   第八章 矩阵分式描述（MFD）  左MFD与右MFD的求法 真与严真的性质与判据，以及严真有理分式 严真性判据的应用前提（行既约或列既约） 最小阶MFD 从非真MFD导出严真MFD（多项式除法） 不可简约MFD的性质与判据（互质性判据">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-22T14:00:04.000Z">
-<meta property="article:modified_time" content="2024-10-27T04:21:56.112Z">
+<meta property="article:modified_time" content="2024-10-30T14:04:48.858Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -214,7 +214,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.4k 字
         
       </span>
     
@@ -225,7 +225,7 @@
         
         
         
-          10 分钟
+          12 分钟
         
       </span>
     
@@ -382,6 +382,40 @@
 </ol>
 </li>
 </ul>
+<h2 id="第十一章-pmd"><a class="markdownIt-Anchor" href="#第十一章-pmd"></a> 第十一章 PMD</h2>
+<ul>
+<li>PMD的形式
+<ul>
+<li>同传递函数矩阵<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>s</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">G(s)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">G</span><span class="mopen">(</span><span class="mord mathnormal">s</span><span class="mclose">)</span></span></span></span>的关系</li>
+<li>同状态空间描述的关系</li>
+<li>同<strong>严真</strong>MFD的关系</li>
+</ul>
+</li>
+<li>不可简约PMD
+<ul>
+<li>判断：左互质+右互质</li>
+<li>不可简约PMD的构造（不可简约MFD构造的组合）</li>
+</ul>
+</li>
+<li>PMD的观测器形实现
+<ol>
+<li>由PMD化左MFD</li>
+<li>判断左MFD行既约，后判断是否严真</li>
+<li>构造左MFD观测器形实现</li>
+<li>转化为PMD观测器形实现</li>
+<li>判断是否为最小实现（PMD不可简约，MFD不可简约，完全能控和能观）</li>
+</ol>
+</li>
+<li>PMD的极点和零点
+<ul>
+<li>PMD的极点（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>e</mi><mi>t</mi><mi>P</mi><mo stretchy="false">(</mo><mi>s</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">detP(s)=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal">s</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>）</li>
+<li>PMD的传输零点（系统矩阵降秩）</li>
+<li>输入解耦零点（左降秩）</li>
+<li>输出解耦零点（右降秩）</li>
+</ul>
+</li>
+<li>系统矩阵</li>
+</ul>
 
                 
               </div>
@@ -418,7 +452,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年10月27日</div>
+          <div>2024年10月30日</div>
         </div>
       
       
