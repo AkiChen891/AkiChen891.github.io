@@ -19,16 +19,18 @@
   <meta name="author" content="Aki Chen">
   <meta name="keywords" content="">
   
-    <meta name="description" content="中断轮询模式(IT) 使用HAL_UARTEx_ReceiveToIdle_IT函数，该函数会持续接收数据，直到缓冲区溢出或触发空闲事件。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253&#x2F;**  * @brief Receive an amount">
+    <meta name="description" content="串口(uart)是一种低速的串行异步通信，适用于低速通信场景，通常使用的波特率小于或等于115200bps。 对于小于或者等于115200bps波特率的，而且数据量不大的通信场景，一般没必要使用DMA，或者说使用DMA并未能充分发挥出DMA的作用。 对于数量大，或者波特率提高时，必须使用DMA以释放CPU资源，因为高波特率可能带来这样的问题：   对于发送，使用循环发送，可能阻塞线程，需要消耗大量">
 <meta property="og:type" content="article">
 <meta property="og:title" content="STM32 UART接收不固定字节数据(IT&#x2F;DMA)">
 <meta property="og:url" content="http://akichen891.github.io/2024/11/25/STM32%20UART%E6%8E%A5%E6%94%B6%E4%B8%8D%E5%9B%BA%E5%AE%9A%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="中断轮询模式(IT) 使用HAL_UARTEx_ReceiveToIdle_IT函数，该函数会持续接收数据，直到缓冲区溢出或触发空闲事件。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253&#x2F;**  * @brief Receive an amount">
+<meta property="og:description" content="串口(uart)是一种低速的串行异步通信，适用于低速通信场景，通常使用的波特率小于或等于115200bps。 对于小于或者等于115200bps波特率的，而且数据量不大的通信场景，一般没必要使用DMA，或者说使用DMA并未能充分发挥出DMA的作用。 对于数量大，或者波特率提高时，必须使用DMA以释放CPU资源，因为高波特率可能带来这样的问题：   对于发送，使用循环发送，可能阻塞线程，需要消耗大量">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://akichen891.github.io/images/arm/dma1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/rxhalf.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/rxhalf1.png">
 <meta property="article:published_time" content="2024-11-25T07:14:21.000Z">
-<meta property="article:modified_time" content="2024-11-28T07:09:09.763Z">
+<meta property="article:modified_time" content="2024-11-29T09:29:39.574Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/arm/dma1.png">
@@ -216,7 +218,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          515 字
+          1.8k 字
         
       </span>
     
@@ -227,7 +229,7 @@
         
         
         
-          5 分钟
+          15 分钟
         
       </span>
     
@@ -277,7 +279,22 @@
             
               <div class="markdown-body">
                 
-                <h2 id="中断轮询模式it"><a class="markdownIt-Anchor" href="#中断轮询模式it"></a> 中断轮询模式(IT)</h2>
+                <p>串口(uart)是一种低速的串行异步通信，适用于低速通信场景，通常使用的波特率小于或等于115200bps。</p>
+<p>对于小于或者等于115200bps波特率的，而且数据量不大的通信场景，一般没必要使用DMA，或者说使用DMA并未能充分发挥出DMA的作用。</p>
+<p>对于数量大，或者波特率提高时，必须使用DMA以释放CPU资源，因为高波特率可能带来这样的问题：</p>
+<ul>
+<li>
+<p>对于发送，使用循环发送，可能阻塞线程，需要消耗大量CPU资源“搬运”数据，浪费CPU</p>
+</li>
+<li>
+<p>对于发送，使用中断发送，不会阻塞线程，但需浪费大量中断资源，CPU频繁响应中断；以115200bps波特率，1s传输11520字节，大约69us需响应一次中断，如波特率再提高，将消耗更多CPU资源</p>
+</li>
+<li>
+<p>对于接收，如仍采用传统的中断模式接收，同样会因为频繁中断导致消耗大量CPU资源<br>
+因此，高波特率场景下，串口非常有必要使用DMA。</p>
+</li>
+</ul>
+<h2 id="中断轮询模式it"><a class="markdownIt-Anchor" href="#中断轮询模式it"></a> 中断轮询模式(IT)</h2>
 <p>使用<code>HAL_UARTEx_ReceiveToIdle_IT</code>函数，该函数会持续接收数据，直到缓冲区溢出或触发空闲事件。</p>
 <figure class="highlight zephir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs zephir"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@brief</span> Receive an amount of data in interrupt mode till either the expected number of data is received or an IDLE event occurs.</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@note</span>   Reception is initiated by this function call. Further progress of reception is achieved thanks</span><br><span class="hljs-comment">  *         to UART interrupts raised by RXNE and IDLE events. Callback is called at end of reception indicating</span><br><span class="hljs-comment">  *         number of received data elements.</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@note</span>   When UART parity is not enabled (PCE = 0), and Word Length is configured to 9 bits (M = 01),</span><br><span class="hljs-comment">  *         the received data is handled as a set of uint16_t. In this case, Size must indicate the number</span><br><span class="hljs-comment">  *         of uint16_t available through pData.</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@param</span> huart UART handle.</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@param</span> pData Pointer to data buffer (uint8_t or uint16_t data elements).</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@param</span> Size  Amount of data elements (uint8_t or uint16_t) to be received.</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@retval</span> HAL status</span><br><span class="hljs-comment">  */</span><br>HAL_StatusTypeDef HAL_UARTEx_ReceiveToIdle_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size)<br>&#123;<br>  HAL_StatusTypeDef status;<br><br>  <span class="hljs-comment">/* 检查没有正在进行的接收过程 */</span><br>  <span class="hljs-keyword">if</span> (huart-&gt;RxState == HAL_UART_STATE_READY)<br>  &#123;<br>    <span class="hljs-keyword">if</span> ((pData == NULL) || (Size == <span class="hljs-number">0</span>U))<br>    &#123;<br>      <span class="hljs-keyword">return</span> HAL_ERROR;<br>    &#125;<br><br>    <span class="hljs-comment">/* 接收数据，直到空闲事件发生*/</span><br>    huart-&gt;ReceptionType = HAL_UART_RECEPTION_TOIDLE;<br>    huart-&gt;RxEventType = HAL_UART_RXEVENT_TC;<br><br>    status =  UART_Start_Receive_IT(huart, pData, Size);<br><br>    <span class="hljs-comment">/* 检查接收是否成功开始 */</span><br>    <span class="hljs-keyword">if</span> (status == HAL_OK)<br>    &#123;<br>      <span class="hljs-keyword">if</span> (huart-&gt;ReceptionType == HAL_UART_RECEPTION_TOIDLE)<br>      &#123;<br>        __HAL_UART_CLEAR_IDLEFLAG(huart);<br>        ATOMIC_SET_BIT(huart-&gt;Instance-&gt;CR1, USART_CR1_IDLEIE);<br>      &#125;<br>      <span class="hljs-keyword">else</span><br>      &#123;<br>        <span class="hljs-comment">/* 如果在开始接收时已有错误待处理，则可能已引发中断并导致接收中止 */</span><br>        status = HAL_ERROR;<br>      &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> status;<br>  &#125;<br>  <span class="hljs-keyword">else</span><br>  &#123;<br>    <span class="hljs-keyword">return</span> HAL_BUSY;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="mainc"><a class="markdownIt-Anchor" href="#mainc"></a> main.c</h3>
@@ -293,9 +310,45 @@
 <p>在loop前调用一次以启动接收：</p>
 <figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sas">HAL_UARTEx_ReceiveToIdle_DMA(<span class="hljs-variable">&amp;huart1</span>, (uint8_t <span class="hljs-comment">*)RxBuffer, RX_BUFFER_SIZE);</span><br></code></pre></td></tr></table></figure>
 <h3 id="usartc-2"><a class="markdownIt-Anchor" href="#usartc-2"></a> usart.c</h3>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/* USER CODE BEGIN 1 */</span><br><span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;  <span class="hljs-comment">//接收次数</span><br><span class="hljs-type">uint16_t</span> index = <span class="hljs-number">0</span>; <span class="hljs-comment">//接收数据量</span><br><span class="hljs-type">uint8_t</span> Wilco[] = <span class="hljs-string">&quot;wilco\n&quot;</span>;  <span class="hljs-comment">//发送缓冲区</span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">HAL_UARTEx_RxEventCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint16_t</span> Size)</span></span><br><span class="hljs-function"></span>&#123;<br>  index = Size;<br>  count++;<br>  <span class="hljs-built_in">HAL_UART_Transmit_IT</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)Wilco, <span class="hljs-built_in">sizeof</span>(Wilco));   <span class="hljs-comment">//中断轮询发送以免DMA冲突</span><br><span class="hljs-comment">/*   for (int i = 0; i &lt; RX_BUFFER_SIZE; i++) </span><br><span class="hljs-comment">  &#123;</span><br><span class="hljs-comment">    RxBuffer[i] = 0;  // 清空接收缓冲区（可选）</span><br><span class="hljs-comment">  &#125; */</span><br>  <span class="hljs-built_in">HAL_UARTEx_ReceiveToIdle_DMA</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)RxBuffer, RX_BUFFER_SIZE); <span class="hljs-comment">//重新开启接收</span><br>&#125;<br><span class="hljs-comment">/* USER CODE END 1 */</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/* USER CODE BEGIN 1 */</span><br><span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;  <span class="hljs-comment">//接收次数</span><br><span class="hljs-type">uint16_t</span> index = <span class="hljs-number">0</span>; <span class="hljs-comment">//接收数据量</span><br><span class="hljs-type">uint8_t</span> Wilco[] = <span class="hljs-string">&quot;wilco\n&quot;</span>;  <span class="hljs-comment">//发送缓冲区</span><br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">  @name: UART接收中断回调函数</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">HAL_UARTEx_RxEventCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint16_t</span> Size)</span></span><br><span class="hljs-function"></span>&#123;<br>  index = Size;<br>  count++;<br>  <span class="hljs-built_in">HAL_UART_Transmit_IT</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)Wilco, <span class="hljs-built_in">sizeof</span>(Wilco));   <span class="hljs-comment">//中断轮询发送以免DMA冲突</span><br><span class="hljs-comment">/*   for (int i = 0; i &lt; RX_BUFFER_SIZE; i++) </span><br><span class="hljs-comment">  &#123;</span><br><span class="hljs-comment">    RxBuffer[i] = 0;  // 清空接收缓冲区（可选）</span><br><span class="hljs-comment">  &#125; */</span><br>  <span class="hljs-built_in">HAL_UARTEx_ReceiveToIdle_DMA</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)RxBuffer, RX_BUFFER_SIZE); <span class="hljs-comment">//重新开启接收</span><br>&#125;<br><span class="hljs-comment">/* USER CODE END 1 */</span><br></code></pre></td></tr></table></figure>
 <p><img src="/images/arm/dma1.png" srcset="/img/loading.gif" lazyload alt=""></p>
-
+<h2 id="dma模式大量数据与乒乓缓存"><a class="markdownIt-Anchor" href="#dma模式大量数据与乒乓缓存"></a> DMA模式（大量数据）与乒乓缓存</h2>
+<p><a target="_blank" rel="noopener" href="https://www.eet-china.com/mp/a28491.html">原文链接</a>，本小节以STM32F429IGT6 HAL库为例</p>
+<p>大规模传输时若继续使用空间中断（或传输完成中断）会有风险，因为当DMA传输数据完成，CPU介入开始拷贝DMA通道buffer数据，如果此时串口继续有数据进来，DMA继续搬运数据到buffer，就有可能将数据覆盖，因为DMA数据搬运是不受CPU控制的，即使你关闭了CPU中断。</p>
+<p>因此严谨的做法需要建立双buffer，CPU和DMA各自使用一块内存交替访问，即<strong>乒乓缓存</strong>，处理流程为：</p>
+<ol>
+<li>DMA先将数据搬运到buf1，搬运完成通知CPU来拷贝buf1数据</li>
+<li>DMA将数据搬运到buf2，与CPU拷贝buf1数据不会冲突</li>
+<li>buf2数据搬运完成，通知CPU来拷贝buf2数据</li>
+<li>DMA继续开始拷贝新数据</li>
+</ol>
+<p>STM32大多数型号不提供现成的双缓存机制，但提供“半满中断”，即数据搬运到buf大小的一半时，可以产生一个中断信号。基于这个机制，我们可以实现双缓存功能，只需将buf空间开辟大一点即可。</p>
+<ol>
+<li>DMA将数据搬运完成buf的前一半时，触发“半满中断”事件，Callback中通知CPU来拷贝buf前半部分数据</li>
+<li>DMA继续将数据搬运到buf的后半部分，与CPU拷贝buf前半部数据不会冲突</li>
+<li>buf后半部分数据搬运完成，触发“溢满中断”，Callback通知CPU来拷贝buf后半部分数据</li>
+<li>DMA循环拷贝新数据</li>
+</ol>
+<p>基于上述描述机制，DMA方式接收串口数据，有三种中断场景需要CPU去将buf数据拷贝到final中，分别是：</p>
+<ul>
+<li>DMA通道buf溢满（传输完成）场景，触发满溢中断（<code>HAL_UARTEx_RxEventCallback</code>）</li>
+<li>DMA通道buf半满场景，触发半满中断（<code>HAL_UART_RxHalfCpltCallback</code>）</li>
+<li>串口空闲中断场景，触发空闲中断（<code>UART_FLAG_IDLE</code>）</li>
+</ul>
+<p><img src="/images/arm/rxhalf.png" srcset="/img/loading.gif" lazyload alt="三种中断事件场景"></p>
+<p><img src="/images/arm/rxhalf1.png" srcset="/img/loading.gif" lazyload alt="数据处理流程图"></p>
+<p>也就是说，代码总共需要考虑以下几种情况：</p>
+<ol>
+<li>数据量未达到半满，触发<strong>空闲中断</strong></li>
+<li>数据量达到半满，未达到满溢，先触发<strong>半满中断</strong>，后触发<strong>空闲中断</strong></li>
+<li>数据量刚好达到满溢，先触发<strong>半满中断</strong>，后触发<strong>满溢中断</strong></li>
+</ol>
+<p>对于情况1：在空闲中断中拷贝全部数据</p>
+<p>对于情况2：在半满中断中通知CPU拷贝一半的数据，DMA继续接收剩下的数据，最后在空闲中断中拷贝剩下的数据</p>
+<p>对于情况3：在半满中断中通知CPU拷贝一半的数据，DMA继续接收剩下的数据，最后在满溢中断中拷贝剩下的一半数据</p>
+<p>下面这个代码经过试验不太好使，空闲中断和满溢中断似乎有冲突，导致接收完成后MCU进不去满溢中断。</p>
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs sas"><span class="hljs-comment">/* USER CODE BEGIN USART1_IRQn 0 */</span><br><span class="hljs-keyword">if</span> (__HAL_UART_GET_F<span class="hljs-meta">LAG</span>(<span class="hljs-variable">&amp;huart1</span>, UART_FLAG_IDLE))<br>&#123;<br>  __HAL_UART_CLEAR_F<span class="hljs-meta">LAG</span>(<span class="hljs-variable">&amp;huart1</span>, UART_FLAG_IDLE);<br>  HAL_UART_DMAStop(<span class="hljs-variable">&amp;huart1</span>);<br>  uint32_t temp = RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(<span class="hljs-variable">&amp;hdma_usart1_rx</span>);  //已接收的数据大小<br><br>  <span class="hljs-keyword">if</span> (temp != 0)<br>  //如果接收到了数据<br>  &#123;<br>    uint8_t txbuffer[] = <span class="hljs-string">&quot;rx ok in idle IT\n&quot;</span>;<br>    HAL_UART_Transmit(<span class="hljs-variable">&amp;huart1</span>, txbuffer, sizeof(txbuffer), 0xFFFF);<br><br>    <span class="hljs-keyword">if</span> (rx_half_flag == 0)<br>    //如果半满中断尚未触发过（前半段）<br>    &#123;<br>      for (int i = 0; i &lt; temp; i++)<br>      &#123;<br>        RX_final[final_index] = Rx_buffer[i];<br>        final_index++;<br>        HAL_UART_Receive_DMA(<span class="hljs-variable">&amp;huart1</span>, Rx_buffer, RX_BUFFER_SIZE - temp);<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rx_half_flag)<br>    //如果半满中断已触发过（后半段）<br>    &#123;<br>      uint32_t temp_size = RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(<span class="hljs-variable">&amp;hdma_usart1_rx</span>) - RX_BUFFER_SIZE / 2;<br>      for (int i = RX_BUFFER_SIZE / 2; i &lt; RX_BUFFER_SIZE / 2 + temp_size; i++)<br>      &#123;<br>        RX_final[final_index] = Rx_buffer[i];<br>        final_index++;<br>      &#125;<br>      HAL_UART_Receive_DMA(<span class="hljs-variable">&amp;huart1</span>, Rx_buffer, RX_BUFFER_SIZE/2 - temp_size);<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (temp == RX_BUFFER_SIZE)<br>  &#123;<br>    HAL_UART_Receive_DMA(<span class="hljs-variable">&amp;huart1</span>, Rx_buffer, RX_BUFFER_SIZE);<br>  &#125;<br></code></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs cpp">  <span class="hljs-comment">/* USER CODE BEGIN 1 */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">HAL_UART_RxHalfCpltCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-keyword">if</span> (huart-&gt;Instance == USART1)<br>  &#123;<br>    rx_half_flag = <span class="hljs-number">1</span>;<br>    <br>    <span class="hljs-type">uint8_t</span> sendbuffer[] = <span class="hljs-string">&quot;rxhalf IT\n&quot;</span>;<br>    <span class="hljs-built_in">HAL_UART_Transmit</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)sendbuffer, <span class="hljs-built_in">sizeof</span>(sendbuffer), <span class="hljs-number">0xFFFF</span>);<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; RX_BUFFER_SIZE / <span class="hljs-number">2</span>; i++)<br>    &#123;<br>      RX_final[final_index] = Rx_buffer[i];<br>      final_index++;<br>    &#125;<br><br>    <span class="hljs-built_in">HAL_UART_Receive_DMA</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *) Rx_buffer, RX_BUFFER_SIZE / <span class="hljs-number">2</span>);<br>  &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">HAL_UARTEx_RxEventCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint16_t</span> Size)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-keyword">if</span> (huart-&gt;Instance == USART1)<br>  &#123;<br>    <span class="hljs-type">uint8_t</span> sendbuffer[] = <span class="hljs-string">&quot;rx ok\n&quot;</span>;<br>    <span class="hljs-built_in">HAL_UART_Transmit</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)sendbuffer, <span class="hljs-built_in">sizeof</span>(sendbuffer), <span class="hljs-number">0xFFFF</span>);<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = RX_BUFFER_SIZE / <span class="hljs-number">2</span>; i &lt; RX_BUFFER_SIZE; i++)<br>    &#123;<br>      RX_final[final_index] = Rx_buffer[i];<br>      final_index++;<br>    &#125;<br><br>    rx_half_flag = <span class="hljs-number">0</span>;<br>  &#125;<br>  <span class="hljs-built_in">HAL_UART_Receive_DMA</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *) Rx_buffer, RX_BUFFER_SIZE);<br>&#125;<br><span class="hljs-comment">/* USER CODE END 1 */</span><br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -331,7 +384,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年11月28日</div>
+          <div>2024年11月29日</div>
         </div>
       
       
