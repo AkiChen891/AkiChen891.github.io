@@ -1,0 +1,677 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="STM32F4系列MCU内置有温度传感器，用于采集片内温度，其绑定在ADC1的IN18通道，CubeMX中显示为&quot;Temperature sensor channel&quot;。  ADC配置 ADC的结构体hadc1配置如下： 123456789101112hadc1.Instance &#x3D; ADC1;hadc1.Init.ClockPrescaler &#x3D; ADC_CLOCK_SYNC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32F4 内部温度传感器（Internal Temperature Sensor）">
+<meta property="og:url" content="http://akichen891.github.io/2024/12/04/STM32%E5%86%85%E9%83%A8%E6%B8%A9%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E9%87%87%E9%9B%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="STM32F4系列MCU内置有温度传感器，用于采集片内温度，其绑定在ADC1的IN18通道，CubeMX中显示为&quot;Temperature sensor channel&quot;。  ADC配置 ADC的结构体hadc1配置如下： 123456789101112hadc1.Instance &#x3D; ADC1;hadc1.Init.ClockPrescaler &#x3D; ADC_CLOCK_SYNC">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/temp1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/temp2.png">
+<meta property="article:published_time" content="2024-12-04T07:43:45.000Z">
+<meta property="article:modified_time" content="2024-12-05T07:50:45.517Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://akichen891.github.io/images/arm/temp1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>STM32F4 内部温度传感器（Internal Temperature Sensor） - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">STM32F4 内部温度传感器（Internal Temperature Sensor）</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-04 15:43" pubdate>
+          2024年12月4日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">STM32F4 内部温度传感器（Internal Temperature Sensor）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>STM32F4系列MCU内置有温度传感器，用于采集片内温度，其绑定在ADC1的IN18通道，CubeMX中显示为&quot;Temperature sensor channel&quot;。</p>
+<h2 id="adc配置"><a class="markdownIt-Anchor" href="#adc配置"></a> ADC配置</h2>
+<p>ADC的结构体<code>hadc1</code>配置如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">hadc1.Instance</span> = ADC1<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.ClockPrescaler</span> = ADC_CLOCK_SYNC_PCLK_DIV4<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.Resolution</span> = ADC_RESOLUTION_12B<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.ScanConvMode</span> = DISABLE<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.ContinuousConvMode</span> = DISABLE<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.DiscontinuousConvMode</span> = DISABLE<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.ExternalTrigConvEdge</span> = ADC_EXTERNALTRIGCONVEDGE_NONE<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.ExternalTrigConv</span> = ADC_SOFTWARE_START<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.DataAlign</span> = ADC_DATAALIGN_RIGHT<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.NbrOfConversion</span> = <span class="hljs-number">1</span><span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.DMAContinuousRequests</span> = DISABLE<span class="hljs-comment">;</span><br><span class="hljs-attr">hadc1.Init.EOCSelection</span> = ADC_EOC_SINGLE_CONV<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>ClockPrescaler</code>：预分频系数，默认为<code>PCLK2 / 4</code>，此例为<code>90 / 4 = 22.5</code>MHz</li>
+<li><code>Resolution</code>：ADC分辨率，可选有 12 位、10 位、8 位和 6 位。分辨率越高，转换数据精度越高，转换时间也越长；反之分辨率越低，转换数据精度越低，转换时间也越<br>
+短。</li>
+<li><code>ScanConvMode</code>：是否使用扫描。多通道启用，单通道禁用。</li>
+<li><code>ContinuousConvMode</code>：启用为自动连续转换，禁用为单次转换。如果设置为单次转换，那么每次转换后都要人工介入才能开启新的转换</li>
+<li><code>DiscontinuousConvMode</code>：配置是否使用不连续的采样模式。该参数只有在<code>ScanConvMode</code>启用，且<code>ContinuousConvMode</code>关闭的情况下才有效</li>
+<li><code>ExternalTrigConv</code>：外部触发方式选择。若为软件触发则外部触发会关闭。</li>
+<li><code>ExternalTrigConvEdge</code>：外部触发极性选择（禁止触发检测、上升沿检测、下降沿检测或均可）</li>
+<li><code>DataAlign</code>：数据对齐方式，默认右对齐</li>
+<li><code>NbrOfConversion</code>：常规转换通道数目，范围1~16</li>
+<li><code>DMAContinuousRequests</code>：指定DMA请求是否以一次性模式执行（达到转换次数时DMA传输停止）或在连续模式下执行（DMA传输无限制，无论转换数量如何）。在连续模式下执行时，DMA必须配置在循环（Circular）模式，否则DMA传输缓冲区被填满时将发生溢出。</li>
+<li><code>EOCSelection</code>：指定转换结束后是否产生EOS中断或事件参数</li>
+</ul>
+<p>STM32F429的ADC总转换时间可以通过下式计算：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>T</mi><mrow><mi>c</mi><mi>o</mi><mi>n</mi><mi>v</mi><mi>e</mi><mi>r</mi><mi>s</mi><mi>i</mi><mi>o</mi><mi>n</mi></mrow></msub><mo>=</mo><msub><mi>T</mi><mrow><mi>s</mi><mi>a</mi><mi>m</mi><mi>p</mi><mi>l</mi><mi>i</mi><mi>n</mi><mi>g</mi></mrow></msub><mo>+</mo><mn>12</mn><mo>×</mo><msub><mi>T</mi><mrow><mi>a</mi><mi>d</mi><mi>c</mi></mrow></msub></mrow><annotation encoding="application/x-tex">T_{conversion} = T_{sampling} + 12 \times T_{adc}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p>对于每个ADC通道，采样时间可以通过ADC_SMPR1（用于通道10-18）或ADC_SMPR2（用于通道0-9）寄存器的相应位来配置。例如，通道0的采样时间是通过ADC_SMPR2的SMPR2[2:0]位设置。采样时间也可在<code>adc.c</code>中用代码定义，通常默认为3个ADC周期（SMP=000），可获得最快的采样速度：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-comment">/** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.</span><br><span class="hljs-comment"> */</span><br> <span class="hljs-keyword">sConfig.Channel </span>= ADC_CHANNEL_TEMPSENSOR;<br> <span class="hljs-keyword">sConfig.Rank </span>= <span class="hljs-number">1</span>;<br> <span class="hljs-keyword">sConfig.SamplingTime </span>= ADC_SAMPLETIME_3CYCLES;<br></code></pre></td></tr></table></figure>
+<p>12个周期由ADC输入时钟ADC_CLK决定，其由APB2（ 即PCLK2）分频产生，在<code>ClockPrescaler</code>中可修改。</p>
+<p>若采样时间为3个ADC周期，则ADC转换总时间为15个ADC周期，APB2时钟频率为90MHz，PCLK2/4分频后为22.5MHz，那么转换时间就是0.6667us。</p>
+<h2 id="dma配置"><a class="markdownIt-Anchor" href="#dma配置"></a> DMA配置</h2>
+<p>启用DMA2，ADC1转换后的原始数据存储到16位缓冲区Rx_Buf中。由于ADC分辨率为12位，即采回的数据为12位，正好能够被16位缓冲区存下，便于后续观察和管理内存中的采样值。如果用32位缓冲区，一个区域会存两个采样值，不方便查看和后续的转换。</p>
+<h2 id="采样"><a class="markdownIt-Anchor" href="#采样"></a> 采样</h2>
+<p>ADC直接采样会存在跳变或抖动，通常需要进行一定的软件滤波，最常见的方法是简单平均法。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/*</span><br><span class="hljs-comment">    @ brief:ADC采样并取平均</span><br><span class="hljs-comment">    @ param:times:平均次数</span><br><span class="hljs-comment">    @ return:计算得到的平均值</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function"><span class="hljs-type">uint16_t</span> <span class="hljs-title">adc1_get_average_value</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> times)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-type">uint16_t</span> temp_value = <span class="hljs-number">0</span>;<br>  <span class="hljs-type">uint8_t</span> t;<br><br>  <span class="hljs-comment">/* ADC 配置在单次模式，每次采样都需要手动重启ADC服务 */</span><br>  <span class="hljs-built_in">HAL_ADC_Start_DMA</span>(&amp;hadc1, (<span class="hljs-type">uint32_t</span> *) Rx_Buf, Rx_Buf_Size);  <span class="hljs-comment">//强制转换Rx_Buf为32位以满足形参限制</span><br><br>  <span class="hljs-comment">/* 采样值取平均 */</span><br>  <span class="hljs-keyword">for</span> (t = <span class="hljs-number">0</span>; t &lt; times; t++)<br>  &#123;<br>    temp_value = temp_value + <span class="hljs-built_in">HAL_ADC_GetValue</span>(&amp;hadc1);<br>    <span class="hljs-built_in">HAL_Delay</span>(<span class="hljs-number">5</span>);<br>  &#125;<br><br>  <span class="hljs-comment">/* 返回平均值 */</span><br>  <span class="hljs-keyword">return</span> temp_value / times;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>因分辨率为12位，ADC每次采样返回的数值即为12位无符号整型（十进制0~4095）。DMA将会传输每一次的采样值至缓冲区，为了能够更好的查看每一次返回的数值，该例程事先将缓冲区定义成了uint16_t类型，这样缓冲区数组的每一个单元正好能够存下一个采样值。在调用ADC采样函数时，只需要将其声明为uint32_t类型指针，这样DMA会按4个字节（32位）来传输数据。DMA本身并不关心传输的采样值到底是几位的，他只会读取4个字节的数据然后传递至内存，因此，每两个 uint16_t 数据（即 2 个采样值）会合并成一个 uint32_t，在内存中形成连续的数据块。</p>
+<p>以此类推，如果采样值为8位(uint8_t)，那么DMA每次将会打包4个采样值为一个uint32_t数值传回同样定义为uint8_t的缓冲区然后解包，缓冲区中的每个单元都显示一个采样值。</p>
+<p>然后进行温度的读取。温度传感器换算公式为（单位为摄氏度）：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mo stretchy="false">(</mo><msub><mi>V</mi><mrow><mi>s</mi><mi>e</mi><mi>n</mi><mi>s</mi><mi>e</mi></mrow></msub><mo>−</mo><msub><mi>V</mi><mn>25</mn></msub><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>A</mi><mi>v</mi><mi>g</mi><mi>S</mi><mi>l</mi><mi>o</mi><mi>p</mi><mi>e</mi><mo stretchy="false">)</mo><mo>+</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">T = ((V_{sense}-V_{25})/AvgSlope) + 25
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">s</span><span class="mord mathnormal mtight">e</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mtight">5</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">/</span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mord mathnormal">e</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">5</span></span></span></span></span></p>
+<p>式中参数取典型值，有<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mn>25</mn></msub><mo>=</mo><mn>0.76</mn></mrow><annotation encoding="application/x-tex">V_{25}=0.76</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.22222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mtight">5</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">7</span><span class="mord">6</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>v</mi><mi>g</mi><mi>S</mi><mi>l</mi><mi>o</mi><mi>p</mi><mi>e</mi><mo>=</mo><mn>2.5</mn><mi>m</mi><mi>v</mi><mi mathvariant="normal">/</mi><mtext>℃</mtext></mrow><annotation encoding="application/x-tex">AvgSlope = 2.5mv/℃</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mord">.</span><span class="mord">5</span><span class="mord mathnormal">m</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord">/</span><span class="mord">℃</span></span></span></span><br>
+采集温度：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/*</span><br><span class="hljs-comment">    @ brief:采集温度</span><br><span class="hljs-comment">    @ param:NULL</span><br><span class="hljs-comment">    @ return:温度值（short）</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">read_temperature</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-type">uint16_t</span> adc_value;<br>  <span class="hljs-type">double</span> temperature; <span class="hljs-comment">//返回温度为双精度值</span><br><br>  adc_value = <span class="hljs-built_in">adc1_get_average_value</span>(<span class="hljs-number">10</span>);<br><br>  temperature = ((<span class="hljs-type">float</span>)adc_value * <span class="hljs-number">3.3</span> / <span class="hljs-number">4096.0</span> - <span class="hljs-number">0.76</span>) / <span class="hljs-number">0.0025</span> + <span class="hljs-number">25.0</span>;<br><br>  <span class="hljs-keyword">return</span> temperature;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>main.c</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cpp">ic_temp = <span class="hljs-built_in">read_temperature</span>();<br><br><span class="hljs-type">uint8_t</span> txbuf[<span class="hljs-number">15</span>];<br><span class="hljs-built_in">sprintf</span>(txbuf, <span class="hljs-string">&quot;temp is: %.2f\n&quot;</span>, ic_temp); <span class="hljs-comment">//转换为字符串</span><br><br><span class="hljs-built_in">HAL_UART_Transmit</span>(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)txbuf, <span class="hljs-built_in">strlen</span>(txbuf), <span class="hljs-number">0xFFFF</span>);  <span class="hljs-comment">//串口轮询发送温度值</span><br></code></pre></td></tr></table></figure>
+<h2 id="结果"><a class="markdownIt-Anchor" href="#结果"></a> 结果</h2>
+<p><img src="/images/arm/temp1.png" srcset="/img/loading.gif" lazyload alt="上位机接收"></p>
+<p><img src="/images/arm/temp2.png" srcset="/img/loading.gif" lazyload alt="内存监视结果"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>STM32F4 内部温度传感器（Internal Temperature Sensor）</div>
+      <div>http://akichen891.github.io/2024/12/04/STM32内部温度传感器采集/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月4日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年12月5日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/11/25/STM32%20UART%E6%8E%A5%E6%94%B6%E4%B8%8D%E5%9B%BA%E5%AE%9A%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE/" title="STM32 UART在循环DMA模式下接收大量不定字长数据并进行乒乓缓存">
+                        <span class="hidden-mobile">STM32 UART在循环DMA模式下接收大量不定字长数据并进行乒乓缓存</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
