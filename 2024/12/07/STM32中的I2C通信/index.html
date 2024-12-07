@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="I2C简介 I2C是由数据线SDA和时钟线SCL构成的串行总线，用于发送或接收数据。其中SDA用于传输数据。SCL用于同步时钟信号。I2C还有以下特征：  主从架构  主机（Master）：控制通信过程，生成时钟信号并启动通信 从机（Slave）：响应主机指令，按地址匹配参与通信   地址：每个从设备具有唯一的7位或10位地址，用于识别通信目标。主设备在通信开始时发送从设备地址，从设备响应后开始">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32中的I2C通信">
+<meta property="og:url" content="http://akichen891.github.io/2024/12/07/STM32%E4%B8%AD%E7%9A%84I2C%E9%80%9A%E4%BF%A1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="I2C简介 I2C是由数据线SDA和时钟线SCL构成的串行总线，用于发送或接收数据。其中SDA用于传输数据。SCL用于同步时钟信号。I2C还有以下特征：  主从架构  主机（Master）：控制通信过程，生成时钟信号并启动通信 从机（Slave）：响应主机指令，按地址匹配参与通信   地址：每个从设备具有唯一的7位或10位地址，用于识别通信目标。主设备在通信开始时发送从设备地址，从设备响应后开始">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/i2c1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/i2c2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/i2c3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/24c021.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/24c022.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/24c023.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/24c024.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/24c025.png">
+<meta property="article:published_time" content="2024-12-07T12:41:46.000Z">
+<meta property="article:modified_time" content="2024-12-07T13:52:51.373Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://akichen891.github.io/images/arm/i2c1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>STM32中的I2C通信 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">STM32中的I2C通信</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-07 20:41" pubdate>
+          2024年12月7日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">STM32中的I2C通信</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="i2c简介"><a class="markdownIt-Anchor" href="#i2c简介"></a> I2C简介</h2>
+<p>I2C是由数据线SDA和时钟线SCL构成的串行总线，用于发送或接收数据。其中SDA用于传输数据。SCL用于同步时钟信号。I2C还有以下特征：</p>
+<ol>
+<li>主从架构
+<ul>
+<li>主机（Master）：控制通信过程，生成时钟信号并启动通信</li>
+<li>从机（Slave）：响应主机指令，按地址匹配参与通信</li>
+</ul>
+</li>
+<li>地址：每个从设备具有唯一的7位或10位地址，用于识别通信目标。主设备在通信开始时发送从设备地址，从设备响应后开始数据传输</li>
+<li>半双工通信： 数据线支持双向通信，但同一时刻只允许数据单向传输</li>
+<li>数据速率：
+<ul>
+<li>标准模式（Standard Mode）：最大速率100 kbps</li>
+<li>快速模式（Fast Mode）：最大速率400 kbps</li>
+<li>高速模式（High-Speed Mode）：最大速率3.4 Mbps</li>
+</ul>
+</li>
+<li>开漏设计：信号线通常采用开漏驱动，需要外部上拉电阻将信号线拉高到逻辑高电平。因此总线空闲时，SDA和DCL都为高电平。</li>
+<li>多设备连接：可以有多个具备 IIC 通信能力的设备挂载在上面，同时支持多个主机和多个从机，连接到总线的接口数量只由总线电容 400pF 的限制决定。</li>
+</ol>
+<h2 id="i2c时序和读写操作"><a class="markdownIt-Anchor" href="#i2c时序和读写操作"></a> I2C时序和读写操作</h2>
+<h3 id="时序信号"><a class="markdownIt-Anchor" href="#时序信号"></a> 时序信号</h3>
+<p><img src="/images/arm/i2c1.png" srcset="/img/loading.gif" lazyload alt="I2C总线时序图"></p>
+<ol>
+<li>起始信号：主机发出，为电平跳变信号而非恒电平信号。SCL为高电平期间，SDA由高电平跳变至低电平，总线被占用，准备数据传输</li>
+<li>停止信号：主机发出，为电平跳变信号而非恒电平信号。SCL为高电平期间，SDA由低电平跳变至高电平，总线空闲</li>
+<li>应答信号：发送器每发送一个字节，就在时钟脉冲 9 期间释放数据线，由接收器反馈一个应答信号。应答信号为低电平时，规定为有效应答位（ACK 简称应答位），表示接收器已经成功地接收了该字节。应答信号为高电平时，规定为非应答位（NACK），一般表示接收器接收该字节没有成功</li>
+<li>数据有效性：总线进行数据传送时，时钟信号为高电平期间，数据线上的数据必须保持稳定，只有在时钟线上的信号为低电平期间，数据线上的高电平或低电平状态才允许变化。数据在 SCL 的上升沿到来之前就需准备好。并在下降沿到来之前必须稳定</li>
+<li>数据传输：总线上传送的每一位数据都有一个时钟脉冲相对应（或同步控制），即在 SCL 串行时钟的配合下，在 SDA 上逐位地串行传送每一位数据。数据位的传输是边沿触发</li>
+<li>空闲状态：SDA 和 SCL两条信号线同时处于高电平时，规定为总线的空闲状态。此时各个器件的输出级场效应管均处在截止状态，即释放总线，由两条信号线各自的上拉电阻把电平拉高</li>
+</ol>
+<h3 id="写操作"><a class="markdownIt-Anchor" href="#写操作"></a> 写操作</h3>
+<p><img src="/images/arm/i2c2.png" srcset="/img/loading.gif" lazyload alt="I2C写操作通讯"></p>
+<ol>
+<li>主机发送起始信号，令总线上的所有从机等待接收数据</li>
+<li>主机发送从机地址+‘0’（写操作）组成的8位数据。从机接收到地址后，比对该地址是否为本机地址。若为本机地址，从机发送应答信号</li>
+<li>主机向从机发送数据</li>
+</ol>
+<h3 id="读操作"><a class="markdownIt-Anchor" href="#读操作"></a> 读操作</h3>
+<p><img src="/images/arm/i2c3.png" srcset="/img/loading.gif" lazyload alt="I2C读操作通讯"></p>
+<ol>
+<li>主机发送起始信号，令总线上的所有从机等待接收数据</li>
+<li>主机发送从机地址+‘1’（读操作）组成的8位数据。从机接收到地址后，比对该地址是否为本机地址。若为本机地址，从机发送应答信号</li>
+<li>从机向主机发送数据</li>
+</ol>
+<p>若主机一直返回应答信号，那么从机可以一直发送数据，直到主机发送NACK信号为止。</p>
+<h2 id="24c02时序"><a class="markdownIt-Anchor" href="#24c02时序"></a> 24C02时序</h2>
+<p>24C02 是一个 2K bit 的串行 EEPROM 存储器，内部含有 256 个字节。在 24C02 里面还有一个 8 字节的页写缓冲器。该设备的通信方式为 IIC，通过其 SCL 和 SDA 与其他设备通信。</p>
+<p><img src="/images/arm/24c021.png" srcset="/img/loading.gif" lazyload alt="24C02引脚"></p>
+<p>WP为写保护引脚，高电平只读，低电平开放读写功能。24C02的设备地址共8位，包含不可编程部分和可编程部分，可编程部分根据硬件Pin A0、A1、A2决定；设备地址最后一位用于设置是读操作还是写操作。具体为：</p>
+<p><img src="/images/arm/24c022.png" srcset="/img/loading.gif" lazyload alt="24C02设备地址格式"></p>
+<p>本文中A0、A1、A2均接地，故24C02设备读操作地址为<code>0xA1</code>，写操作地址为<code>0xA0</code>。</p>
+<h2 id="24c02读写操作"><a class="markdownIt-Anchor" href="#24c02读写操作"></a> 24C02读写操作</h2>
+<p><img src="/images/arm/24c023.png" srcset="/img/loading.gif" lazyload alt="24C02写时序"></p>
+<p>主机在 IIC 总线发送第 1 个字节的数据为24C02的设备地址<code>0xA0</code>，用于寻找总线上的24C02，在获得24C02的应答信号之后，继续发送第 2 个字节数据，该字节数据是 24C02 的内存地址，再等到 24C02 的应答信号，主机继续发送第 3 字节数据，这里的数据即是写入在第 2 字节内存地址的数据。主机完成写操作后，可以发出停止信号，终止数据传输。这种写操作每次只能写入1字节数据。</p>
+<p><img src="/images/arm/24c024.png" srcset="/img/loading.gif" lazyload alt="24C02页写时序"></p>
+<p>写操作时，24C02可以使用页写时序，其和普通写时序的区别是页写时序只需要告知一次内存地址1，后面的数据会按照写入顺序存入内存地址2、内存地址3等，节省通信时间。</p>
+<p><img src="/images/arm/24c025.png" srcset="/img/loading.gif" lazyload alt="24C02读时序"></p>
+<p>24C02读取数据的过程是一个复合的时序，其中包含写时序和读时序。通常第一个通信过程为写时序，起始信号产生后，主机发送24C02设备地址<code>0xA0</code>，获取从机应答信号后，接着发送需要读取的内存地址；在随后的读时序中，起始信号产生后，主机发送24C02设备地址<code>0xA1</code>, 获取从机应答信号后，从机返回刚刚在写时序中传递的内存地址的数据，以字节为单位传输在总线上，假如主机获取数据后返回的是应答信号，那么从机会一直传输数据，当主机发出的是非应答信号并以停止信号发出为结束，从机结束传输。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>STM32中的I2C通信</div>
+      <div>http://akichen891.github.io/2024/12/07/STM32中的I2C通信/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年12月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/04/STM32%E5%86%85%E9%83%A8%E6%B8%A9%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E9%87%87%E9%9B%86/" title="STM32F4 内部温度传感器（Internal Temperature Sensor）">
+                        <span class="hidden-mobile">STM32F4 内部温度传感器（Internal Temperature Sensor）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
