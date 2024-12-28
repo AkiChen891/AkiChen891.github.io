@@ -1,0 +1,827 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="简介 CAN 总线由德国BOSCH公司开发，是一种多主控消息广播系统，其最大信号传输速率为1Mbps。与USB或以太网等传统网络不同，CAN 不会在中央总线主控的监督下从节点A向节点B点对点发送大量数据包。在CAN网络中，许多短消息（如温度或发动机转速）会广播到整个网络，从而确保系统每个节点的数据一致性。CAN 是国际标准化组织 (ISO) 定义的串行通信总线，最初是为汽车行业开发的，旨在用双线">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CAN及其应用">
+<meta property="og:url" content="http://akichen891.github.io/2024/12/28/CAN%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简介 CAN 总线由德国BOSCH公司开发，是一种多主控消息广播系统，其最大信号传输速率为1Mbps。与USB或以太网等传统网络不同，CAN 不会在中央总线主控的监督下从节点A向节点B点对点发送大量数据包。在CAN网络中，许多短消息（如温度或发动机转速）会广播到整个网络，从而确保系统每个节点的数据一致性。CAN 是国际标准化组织 (ISO) 定义的串行通信总线，最初是为汽车行业开发的，旨在用双线">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN4.png">
+<meta property="article:published_time" content="2024-12-28T09:07:58.000Z">
+<meta property="article:modified_time" content="2024-12-28T10:26:46.492Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://akichen891.github.io/images/arm/CAN1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>CAN及其应用 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">CAN及其应用</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-28 17:07" pubdate>
+          2024年12月28日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">CAN及其应用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h2>
+<p>CAN 总线由德国BOSCH公司开发，是一种多主控消息广播系统，其最大信号传输速率为1Mbps。与USB或以太网等传统网络不同，CAN 不会在中央总线主控的监督下从节点A向节点B点对点发送大量数据包。在CAN网络中，许多短消息（如温度或发动机转速）会广播到整个网络，从而确保系统每个节点的数据一致性。CAN 是国际标准化组织 (ISO) 定义的串行通信总线，最初是为汽车行业开发的，旨在用双线总线取代复杂的线束。该规范要求具有较高的抗电气干扰能力以及自我诊断和修复数据错误的能力。这些特性使得 CAN 在楼宇自动化、医疗和制造业等各种行业中广受欢迎。</p>
+<p>CAN具有以下特点：</p>
+<ul>
+<li>
+<p><strong>多主控制</strong>。在总线空闲时，所有单元都可以发送消息（多主控制），而两个以上的单<br>
+元同时开始发送消息时，根据标识符（Identifier以下称为ID）决定优先级。ID并不是表示<br>
+发送的目的地址，而是表示访问总线的消息的优先级。两个以上的单元同时开始发送消息<br>
+时，对各消息ID的每个位进行逐个仲裁比较。仲裁获胜（被判定为优先级最高）的单元<br>
+可继续发送消息，仲裁失利的单元则立刻停止发送而进行接收工作。</p>
+</li>
+<li>
+<p><strong>系统的柔软性</strong>。与总线相连的单元没有类似于“地址”的信息。因此在总线上增加单元<br>
+时，连接在总线上的其它单元的软硬件及应用层都不需要改变。</p>
+</li>
+<li>
+<p><strong>通信速度较快，通信距离远</strong>。最高1Mbps（距离小于40M），最远可达10KM（速率低<br>
+于5Kbps）。</p>
+</li>
+<li>
+<p><strong>具有错误检测、错误通知和错误恢复功能</strong>。所有单元都可以检测错误（错误检测功<br>
+能），检测出错误的单元会立即同时通知其他所有单元（错误通知功能），正在发送消息的<br>
+单元一旦检测出错误，会强制结束当前的发送。强制结束发送的单元会不断反复地重新发<br>
+送此消息直到成功发送为止（错误恢复功能）。</p>
+</li>
+<li>
+<p><strong>故障封闭功能</strong>。CAN可以判断出错误的类型是总线上暂时的数据错误（如外部噪声<br>
+等）还是持续的数据错误（如单元内部故障、驱动器故障、断线等）。由此功能，当总线<br>
+上发生持续数据错误时，可将引起此故障的单元从总线上隔离出去。</p>
+</li>
+<li>
+<p><strong>连接节点多</strong>。CAN总线是可同时连接多个单元的总线。可连接的单元总数理论上是<br>
+没有限制的。但实际上可连接的单元数受总线上的时间延迟及电气负载的限制。降低通信<br>
+速度，可连接的单元数增加；提高通信速度，则可连接的单元数减少。</p>
+</li>
+</ul>
+<p>CAN 协议经过 ISO 标准化后有两个标准：ISO11898 标准（高速 CAN）和 ISO11519-2 标<br>
+准（低速 CAN）。其中 ISO11898 是针对通信速率为 125Kbps~1Mbps 的高速通信标准，而<br>
+ISO11519-2 是针对通信速率为 125Kbps 以下的低速通信标准。</p>
+<p>下文默认介绍ISO11898-2标准下的CAN，也就是高速CAN。</p>
+<h2 id="物理层"><a class="markdownIt-Anchor" href="#物理层"></a> 物理层</h2>
+<p><img src="/images/arm/CAN1.png" srcset="/img/loading.gif" lazyload alt="高速CAN总线"><br>
+高速CAN总线呈现闭环结构，总共由两根线（CAN_High和CAN_Low）组成，总线两端各串联120Ω电阻，用于阻抗匹配。每个挂载节点拥有独立的CAN控制器（通常集成于MCU内）和CAN收发器（通常为外部IC）。</p>
+<p><img src="/images/arm/CAN2.png" srcset="/img/loading.gif" lazyload alt="高速CAN物理层特性"></p>
+<p>与RS485类似，CAN通过差分信号传输数据，以降低共模噪声的干扰，通过CAN总线上两根线之间的电位差来判断总线电平。总线电平分为显性（Dominant）电平和隐性（Recessive）电平。当总线上任何设备传输显性 (0) 时，高速 CAN 信号会将 CANH 线驱动至 3.5 V，将 CANL 线驱动至 1.5 V；而如果没有设备传输显性，则终端电阻会将两条线被动地返回到隐性 (1) 状态，标称差分电压为 0 V。（接收器将任何小于 0.5 V 的差分电压视为隐性。）显性差分电压的标称值为 2 V。显性共模电压 (CANH+CANL)/2 必须在共模的 1.5 至 3.5 V 范围内，而隐性共模电压必须在共模的 ±12V 范围内。</p>
+<p>也就是说，下文中：</p>
+<ul>
+<li>显性电平：逻辑 0</li>
+<li>隐性电平：逻辑 1</li>
+</ul>
+<p>可见，显性电平的“显性”具有“优先”的意味，即总线上只要有一个单元输出显性电平，总线上即为显性电平。而隐性电平的“隐性”具有“包容”的意味，只有所有的单元都输出隐性电平，总线上才为隐性电平。</p>
+<h2 id="协议"><a class="markdownIt-Anchor" href="#协议"></a> 协议</h2>
+<p>CAN协议通过5种类型的帧进行：</p>
+<ul>
+<li>数据帧：用于发送单元向接收单元传送数据</li>
+<li>遥控帧：用于接收单元向具有相同ID的发送单元请求数据</li>
+<li>错误帧：用于当检测出错误时向其它单元通知错误</li>
+<li>过载帧：用于接收单元通知其尚未做好接收准备</li>
+<li>间隔帧：用于将数据帧及遥控帧与前面的帧分离开来</li>
+</ul>
+<p>数据帧和遥控帧还分为标准格式和扩展格式两种，标准格式的标识符（Identifier）为11位，扩展格式为29位。</p>
+<h3 id="标准格式下的数据帧"><a class="markdownIt-Anchor" href="#标准格式下的数据帧"></a> 标准格式下的数据帧</h3>
+<p><img src="/images/arm/CAN3.png" srcset="/img/loading.gif" lazyload alt="高速CAN标准格式位标识"><br>
+<img src="/images/arm/CAN4.png" srcset="/img/loading.gif" lazyload alt="高速CAN标准格式位标识"><br>
+<em>注意</em>：下方D表示显性电平（逻辑0），R表示隐性电平（逻辑1），D/R表示逻辑电平视配置而定。</p>
+<p>数据帧由7个段构成，分别为：</p>
+<ul>
+<li>帧起始</li>
+<li>仲裁段：表示该帧优先级</li>
+<li>控制段：表示数据字节数和保留位</li>
+<li>数据段：数据内容，一帧一般可发送0-8个字节</li>
+<li>CRC段：校验帧传输正确性</li>
+<li>ACK段：确认是否正常接收</li>
+<li>帧结束</li>
+</ul>
+<h4 id="帧起始1位"><a class="markdownIt-Anchor" href="#帧起始1位"></a> 帧起始（1位）</h4>
+<ul>
+<li>SOF：1位，显性电平，帧起始（Start of Frame），单个显性帧起始 (SOF) 位标记消息的开始，用于在空闲后同步总线上的节点。</li>
+</ul>
+<h4 id="仲裁段11位"><a class="markdownIt-Anchor" href="#仲裁段11位"></a> 仲裁段（11位）</h4>
+<ul>
+<li>Identifier：11位（扩展下为29位），即标识符，又名仲裁段，标准CAN模式下为 11 位，用于确定消息的优先级。二进制值越低，优先级越高。</li>
+</ul>
+<p><em>注意：无论是标准格式还是扩展格式，都禁止ID的高7位都为隐性，即禁止设定ID为1111111XXXX。</em></p>
+<ul>
+<li>RTR：1位，用于标识是否为远程帧（0：数据帧；1：远程帧）</li>
+</ul>
+<h4 id="控制段6位"><a class="markdownIt-Anchor" href="#控制段6位"></a> 控制段（6位）</h4>
+<ul>
+<li>IDE：1位，标识符选择位（0：使用标准ID；1：使用扩展ID）</li>
+<li>r0：1位，显性电平，保留位（可能用于未来的标准修订）</li>
+<li>DLC：4位，标识当前正在传输的数据的字节数，高位在前</li>
+</ul>
+<p><em>注意</em>：对于DLC位，通常只允许传输0-8，但接收方对DLC=9~15的情况并不视作错误</p>
+<table>
+<thead>
+<tr>
+<th>数据字节数</th>
+<th>DLC3</th>
+<th>DLC2</th>
+<th>DLC1</th>
+<th>DLC0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>D</td>
+<td>D</td>
+<td>D</td>
+<td>D</td>
+</tr>
+<tr>
+<td>1</td>
+<td>D</td>
+<td>D</td>
+<td>D</td>
+<td>R</td>
+</tr>
+<tr>
+<td>2</td>
+<td>D</td>
+<td>D</td>
+<td>R</td>
+<td>D</td>
+</tr>
+<tr>
+<td>3</td>
+<td>D</td>
+<td>D</td>
+<td>R</td>
+<td>R</td>
+</tr>
+<tr>
+<td>4</td>
+<td>D</td>
+<td>R</td>
+<td>D</td>
+<td>D</td>
+</tr>
+<tr>
+<td>5</td>
+<td>D</td>
+<td>R</td>
+<td>D</td>
+<td>R</td>
+</tr>
+<tr>
+<td>6</td>
+<td>D</td>
+<td>R</td>
+<td>R</td>
+<td>D</td>
+</tr>
+<tr>
+<td>7</td>
+<td>D</td>
+<td>R</td>
+<td>R</td>
+<td>R</td>
+</tr>
+<tr>
+<td>8</td>
+<td>R</td>
+<td>D</td>
+<td>D</td>
+<td>D</td>
+</tr>
+</tbody>
+</table>
+<p>表中D和R实际上就是0和1.比如8个字节所对应的RDDD实际上就是二进制的1000.</p>
+<h4 id="数据段0-64位"><a class="markdownIt-Anchor" href="#数据段0-64位"></a> 数据段（0-64位）</h4>
+<p>数据段最多传输8字节数据，从最高位（MSB）开始输出。</p>
+<h4 id="crc段16位"><a class="markdownIt-Anchor" href="#crc段16位"></a> CRC段（16位）</h4>
+<ul>
+<li>CRC顺序：15位，循环冗余校验上一个传输的数据</li>
+<li>CRC界定符：1位，隐性电平，用于分割</li>
+</ul>
+<p><em>CRC 顺序是根据多项式生成的 CRC 值，CRC 的计算范围包括帧起始、仲裁段、控制段、数据段。接收方以同样的算法计算 CRC 值并进行比较，不一致时会通报错误。</em></p>
+<h4 id="ack段2位"><a class="markdownIt-Anchor" href="#ack段2位"></a> ACK段（2位）</h4>
+<ul>
+<li>ACK槽（ACK Slot）：1位</li>
+<li>ACK界定符：1位，隐性电平</li>
+</ul>
+<p><em>注意</em>：对于ACK Slot，其工作方式为：</p>
+<ul>
+<li>对于发送单元：发送单元在ACK Slot发送1个隐性位</li>
+<li>对于接收单元：接收到正确信息的单元在ACK Slot发送显性位，通知发送单元正常接收结束。该动作称作“发送 ACK”或者“返回 ACK”。</li>
+</ul>
+<h4 id="帧结束7位"><a class="markdownIt-Anchor" href="#帧结束7位"></a> 帧结束（7位）</h4>
+<p>表示帧结束，由7个隐性位构成。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>CAN及其应用</div>
+      <div>http://akichen891.github.io/2024/12/28/CAN及其应用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月28日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年12月28日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/" title="STM32中的SPI">
+                        <span class="hidden-mobile">STM32中的SPI</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
