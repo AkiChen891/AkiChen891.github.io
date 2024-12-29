@@ -30,8 +30,14 @@
 <meta property="og:image" content="http://akichen891.github.io/images/arm/CAN2.png">
 <meta property="og:image" content="http://akichen891.github.io/images/arm/CAN3.png">
 <meta property="og:image" content="http://akichen891.github.io/images/arm/CAN4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/can5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN6.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN7.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN8.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN9.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/CAN10.png">
 <meta property="article:published_time" content="2024-12-28T09:07:58.000Z">
-<meta property="article:modified_time" content="2024-12-28T10:29:45.963Z">
+<meta property="article:modified_time" content="2024-12-29T12:37:42.256Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/arm/CAN1.png">
@@ -219,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          3.4k 字
         
       </span>
     
@@ -230,7 +236,7 @@
         
         
         
-          18 分钟
+          29 分钟
         
       </span>
     
@@ -456,6 +462,104 @@
 </ul>
 <h4 id="帧结束7位"><a class="markdownIt-Anchor" href="#帧结束7位"></a> 帧结束（7位）</h4>
 <p>表示帧结束，由7个隐性位构成。</p>
+<h3 id="错误帧"><a class="markdownIt-Anchor" href="#错误帧"></a> 错误帧</h3>
+<p><em>WIP</em></p>
+<h2 id="位时序"><a class="markdownIt-Anchor" href="#位时序"></a> 位时序</h2>
+<p>由发送单元在非同步的情况下发送的每秒钟的位数称为位速率。一个位可分为4段：</p>
+<ul>
+<li>同步段（SS）</li>
+<li>传播时间段（PTS）</li>
+<li>相位缓冲段1（PBS1）</li>
+<li>相位缓冲段2（PBS2）<br>
+这些段又由可称为 Time Quantum（以下称为 Tq）的最小时间单位构成。</li>
+</ul>
+<p>1位分为4个段，每个段又由若干个Tq构成，这称为位时序。</p>
+<p>1位由多少个Tq构成、每个段又由多少个Tq构成等，可以任意设定位时序。通过设定位时序，多个单元可同时采样，也可任意设定采样点。</p>
+<p><img src="/images/arm/can5.png" srcset="/img/loading.gif" lazyload alt="段及其作用"></p>
+<p><img src="/images/arm/CAN6.png" srcset="/img/loading.gif" lazyload alt="1个位的构成"><br>
+图中的采样点是指读取总线电平并将其作为位值的点，位于PBS1结束处。</p>
+<h2 id="仲裁"><a class="markdownIt-Anchor" href="#仲裁"></a> 仲裁</h2>
+<p>CAN本质是半双工通信，因为总线上同一时刻只允许一个信号传输，ID优先级不够的信号会在仲裁时失去发送权。具体为：</p>
+<ul>
+<li>若总线空闲：最先开始发送消息的单元取得发送权</li>
+<li>若多个单元同时发送：各发送单元从仲裁段的第一位开始进行仲裁，连续输出显性电平（逻辑0）最多的单元可继续发送</li>
+</ul>
+<p><img src="/images/arm/CAN7.png" srcset="/img/loading.gif" lazyload alt="CAN总线仲裁过程"></p>
+<h2 id="stm32f4的can控制器"><a class="markdownIt-Anchor" href="#stm32f4的can控制器"></a> STM32F4的CAN控制器</h2>
+<h3 id="基本信息与标识符滤波器"><a class="markdownIt-Anchor" href="#基本信息与标识符滤波器"></a> 基本信息与标识符滤波器</h3>
+<p>STM32F4自带的是bxCAN，即基本扩展CAN，其支持CAN协议2.0A和2.0B。CAN2.0A只能处理标准数据帧，扩展帧的内容会识别错误；而CAN2.0B Active可以处理标准数据帧和扩展数据帧；CAN2.0B Passive只能处理标准数据帧，忽略扩展帧。</p>
+<p>F429自带两个CAN控制器：CAN1和CAN2.两个CAN分别拥有自己的发送邮箱和接收FIFO，但二者共用28个滤波器，其分配方式通过<code>CAN_FMR</code>寄存器设置。滤波器用于选择性接收符合特定条件的 CAN 消息，通过对 CAN 报文的标识符（ID）进行筛选，只接收满足条件的报文，将不相关的报文丢弃。这可以避免 MCU 对所有接收到的 CAN 报文进行处理，从而提升系统效率。</p>
+<p>滤波器有两种工作模式：</p>
+<ul>
+<li>
+<p><strong>标识符掩码模式（Identifier Mask Mode）：</strong></p>
+<ul>
+<li>通过掩码定义哪些位需要匹配。</li>
+<li>灵活性高，适合处理某些位通配的场景。</li>
+<li>掩码中的每一位可以设置为：
+<ul>
+<li><strong>“0”：</strong> 忽略对应位。</li>
+<li><strong>“1”：</strong> 匹配对应位。</li>
+</ul>
+</li>
+<li>例：目标只接收以<code>0x2A</code>（<code>101010</code>）为前六位的标识符，则配置过滤器的标识符为<code>0x2A0</code>（<code>10101000000</code>），掩码为<code>0xFC0</code>（<code>11111100000</code>），接收到的ID与掩码进行按位比较，只匹配掩码为1的位。</li>
+</ul>
+</li>
+<li>
+<p><strong>标识符列表模式（Identifier List Mode）：</strong></p>
+<ul>
+<li>直接指定一组标识符，只有匹配这些标识符的消息才会通过。</li>
+<li>适合明确的标识符匹配。</li>
+<li>例：指定<code>0x1A5</code>为期望标识符，则只有接收到的ID等于<code>0x1A5</code>时该消息才会被允许通过。</li>
+</ul>
+</li>
+</ul>
+<h3 id="发送"><a class="markdownIt-Anchor" href="#发送"></a> 发送</h3>
+<p>CAN 控制器有 3 个发送邮箱（Tx Mailbox），用于存储待发送的消息。发送时，将消息写入空闲邮箱，然后硬件根据仲裁机制将消息发送到总线上。仲裁失败的消息会被重新加入发送队列，直到成功发送。</p>
+<p><img src="/images/arm/CAN8.png" srcset="/img/loading.gif" lazyload alt="CAN通过邮箱发送"></p>
+<p>正常发送流程为：</p>
+<ol>
+<li>配置CAN发送帧，包括：<br>
+- 消息的标识符（11位或29位）<br>
+- 帧类型（数据帧或远程帧）<br>
+- 填充待发送数据<br>
+- 声明待发送数据长度</li>
+<li>检查邮箱状态<br>
+- 确保至少有一个发送邮箱空闲（<code>TME=1</code>）</li>
+<li>邮箱请求发送<br>
+- 设置CAN_TIxR的TXRQ位为<code>1</code></li>
+<li>邮箱挂号<br>
+- <code>RQCP=0</code>,<code>TXOK=0</code>,<code>TME=0</code><br>
+- 等待成为最高优先级</li>
+<li>预定发送<br>
+- 已成为最高优先级<br>
+- 等待CAN总线空闲</li>
+<li>发送</li>
+<li>发送成功<br>
+- <code>RQCP=1</code>,<code>TXOK=1</code>,<code>TME=1</code><br>
+- 回到邮箱空闲状态</li>
+<li>发送失败<br>
+- <code>RQCP=1</code>,<code>TXOK=0</code>,<code>TME=1</code><br>
+- 回到邮箱空闲状态</li>
+</ol>
+<h3 id="接收"><a class="markdownIt-Anchor" href="#接收"></a> 接收</h3>
+<p>CAN接收到的有效报文，被存储在3级邮箱深度的FIFO中。FIFO完全由硬件来管理，从而节省了 CPU 的处理负荷，简化了软件并保证了数据的一致性。应用程序只能通过读取FIFO输出邮箱，来读取 FIFO 中最先收到的报文。</p>
+<p>CAN的接收有2个FIFO，我们每个滤波器组都可以设置其关联的 FIFO，通过 <code>CAN_FFA1R</code> 的设置，可以将滤波器组关联到FIFOO/FIFO1.</p>
+<p><em>有效报文：指那些正确被接收的（直到EOF都没有错误）且通过了标识符过滤的报文。</em></p>
+<p><img src="/images/arm/CAN9.png" srcset="/img/loading.gif" lazyload alt="CAN通过FIFO接收"></p>
+<p>FIFO接收到的报文数可以通过查询<code>CAN_RFxR</code>的FMP寄存器得到。</p>
+<p><em>注意</em>：必须在FIFO溢出之前读出至少1个报文，否则下个报文到来时FIFO将溢出，导致最早收到的报文丢失。每读出1个报文，相应的挂号就减1，直到FIFO为空。</p>
+<h3 id="位时间特性"><a class="markdownIt-Anchor" href="#位时间特性"></a> 位时间特性</h3>
+<p>不同于原本的CAN协议，STM32把传播时间段（PTS）和相位缓冲段（PBS1）合并，所以STM32的CAN一个位只有3段：</p>
+<ul>
+<li>同步段（SYNC_SEG）</li>
+<li>时间段1（BS1）</li>
+<li>时间段2（BS2）</li>
+</ul>
+<p><img src="/images/arm/CAN10.png" srcset="/img/loading.gif" lazyload alt="STM32中的CAN位时序"></p>
+<p>图中给出了CAN波特率的计算公式，只需要知道CAN_BTR中BRP、TS1和TS2的设置就可以计算。</p>
+<h3 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h3>
+<p><em>WIP</em></p>
 
                 
               </div>
@@ -513,7 +617,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年12月28日</div>
+          <div>2024年12月29日</div>
         </div>
       
       
