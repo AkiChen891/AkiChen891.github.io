@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="FLASH和EEPROM FLASH存储器和EEPROM（电可擦可编程只读存储器）都属于非易失性存储器，但它们在工作原理、使用方式、应用场景等方面有一些区别。  FLASH存储器 FLASH（闪存）是一种非易失性存储器，能够在没有电源的情况下保存数据。它的工作原理类似于EEPROM，但在数据擦除和写入的方式上有所不同。  特点：  大容量：FLASH存储器一般提供比EEPROM更大的存储容量，通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FLASH、EEPROM和FLASH模拟EEPROM">
+<meta property="og:url" content="http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="FLASH和EEPROM FLASH存储器和EEPROM（电可擦可编程只读存储器）都属于非易失性存储器，但它们在工作原理、使用方式、应用场景等方面有一些区别。  FLASH存储器 FLASH（闪存）是一种非易失性存储器，能够在没有电源的情况下保存数据。它的工作原理类似于EEPROM，但在数据擦除和写入的方式上有所不同。  特点：  大容量：FLASH存储器一般提供比EEPROM更大的存储容量，通">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/flash1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/flash2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/flash3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/flash4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/flash5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/flash6.png">
+<meta property="og:image" content="http://akichen891.github.io/images/arm/flash7.png">
+<meta property="article:published_time" content="2025-01-02T07:43:53.000Z">
+<meta property="article:modified_time" content="2025-01-02T08:55:11.171Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://akichen891.github.io/images/arm/flash1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>FLASH、EEPROM和FLASH模拟EEPROM - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">FLASH、EEPROM和FLASH模拟EEPROM</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-02 15:43" pubdate>
+          2025年1月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">FLASH、EEPROM和FLASH模拟EEPROM</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="flash和eeprom"><a class="markdownIt-Anchor" href="#flash和eeprom"></a> FLASH和EEPROM</h2>
+<p><strong>FLASH存储器</strong>和<strong>EEPROM</strong>（电可擦可编程只读存储器）都属于<strong>非易失性存储器</strong>，但它们在工作原理、使用方式、应用场景等方面有一些区别。</p>
+<h3 id="flash存储器"><a class="markdownIt-Anchor" href="#flash存储器"></a> <strong>FLASH存储器</strong></h3>
+<p><strong>FLASH</strong>（闪存）是一种非易失性存储器，能够在没有电源的情况下保存数据。它的工作原理类似于EEPROM，但在数据擦除和写入的方式上有所不同。</p>
+<h4 id="特点"><a class="markdownIt-Anchor" href="#特点"></a> 特点：</h4>
+<ol>
+<li><strong>大容量</strong>：FLASH存储器一般提供比EEPROM更大的存储容量，通常从几兆字节（MB）到几百兆字节（甚至几个GB）。</li>
+<li><strong>块擦除</strong>：FLASH存储器以<strong>块</strong>（通常为几KB到几MB）为单位进行擦除，擦除操作需要清空整个块，而不能像EEPROM那样按字节擦除。这使得FLASH的擦写次数比EEPROM更低，一般在10,000到100,000次之间。</li>
+<li><strong>写入速度较快</strong>：相比EEPROM，FLASH的写入速度更快，适用于需要快速写入的应用场景。</li>
+<li><strong>应用广泛</strong>：FLASH主要用于存储大容量数据，广泛应用于固态硬盘（SSD）、U盘、存储卡、智能手机、嵌入式设备等。</li>
+<li><strong>编程和擦除</strong>：FLASH可以通过电气方式编程和擦除，但擦除和编程过程比EEPROM要复杂得多，且无法像EEPROM那样轻松按字节更新数据。</li>
+</ol>
+<h4 id="类型"><a class="markdownIt-Anchor" href="#类型"></a> 类型：</h4>
+<ul>
+<li><strong>NAND Flash</strong>：主要用于大容量存储，速度快，成本低，广泛用于移动存储设备（如U盘、SD卡、SSD等）。</li>
+<li><strong>NOR Flash</strong>：速度较慢但可按字节进行读写，主要用于代码存储，适合嵌入式系统。</li>
+</ul>
+<h3 id="eeprom-vs-flash"><a class="markdownIt-Anchor" href="#eeprom-vs-flash"></a> <strong>EEPROM vs FLASH</strong></h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th><strong>EEPROM</strong></th>
+<th><strong>FLASH</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>存储容量</strong></td>
+<td>较小，一般为几KB到几MB</td>
+<td>较大，可以达到几GB</td>
+</tr>
+<tr>
+<td><strong>数据擦除方式</strong></td>
+<td>按字节擦除</td>
+<td>按块擦除（大块范围，一般几KB至几MB）</td>
+</tr>
+<tr>
+<td><strong>写入速度</strong></td>
+<td>较慢，尤其在单个字节写入时</td>
+<td>较快，适合大块数据写入</td>
+</tr>
+<tr>
+<td><strong>擦写次数</strong></td>
+<td>较多，通常达到100,000次以上</td>
+<td>较少，通常为10,000到100,000次</td>
+</tr>
+<tr>
+<td><strong>应用场景</strong></td>
+<td>存储配置参数、序列号、校准数据等</td>
+<td>存储操作系统、应用程序、数据文件等</td>
+</tr>
+<tr>
+<td><strong>价格</strong></td>
+<td>较贵，尤其在小容量时</td>
+<td>相对便宜，适用于大容量存储</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>EEPROM</strong>通常用于存储少量的数据，比如设备配置、用户设置等，需要频繁的、字节级的读写操作。它的主要优点是可以单独字节擦写，但容量较小，写入速度较慢。</li>
+<li><strong>FLASH</strong>则适用于大容量的存储需求，广泛用于存储操作系统、应用程序、媒体文件等。由于其按块擦除的特性，写入速度较快，但擦写次数较少，适合大数据量的存储。</li>
+</ul>
+<p>对于嵌入式系统来说，<strong>EEPROM</strong>适用于需要频繁更新的小量数据，而<strong>FLASH</strong>则适合存储较大的程序或数据集。</p>
+<h2 id="stm32f429中的flash"><a class="markdownIt-Anchor" href="#stm32f429中的flash"></a> STM32F429中的FLASH</h2>
+<h3 id="组织架构"><a class="markdownIt-Anchor" href="#组织架构"></a> 组织架构</h3>
+<p><img src="/images/arm/flash1.png" srcset="/img/loading.gif" lazyload alt="MCU自带FLASH组织"><br>
+STM32F429 本身没有自带 EEPROM，但是 STM32F429 具有 IAP（在应用编程）功能，所以我们可以把它的 FLASH 当成 EEPROM 来使用。对于F429IGT6来说，其FLASH容量为1024KB。FLASH模块分为：</p>
+<ul>
+<li>主存储器：该部分用来存放代码和数据常数（如 const 类型的数据）。分为两个 Bank，每个 Bank 分为 12 个扇区，前 4 个扇区为 16KB 大小，第五个扇区是 64KB 大小，剩下的 7 个扇区都是 128K大小，总共 1M 字节。两个 Bank 就是 2M 字节。不同容量的 STM32F429，拥有的扇区数不一样。以STM32F429IGT6为例，只有 Bank1，拥有 12 个扇区，1M 字节容量。主存储器的起始地址一般为 0X08000000，B0、B1 都接 GND 的时候，就是从0X08000000 开始运行代码的。</li>
+<li>系统存储器：主要用来存放 STM32F429的 bootloader代码，此代码在出厂时已经固化在 STM32F429 内，专门用来给主存储器下载代码。当 B0 接 V3.3，B1 接 GND 的时候，从该存储器启动（即进入串口下载模式）。</li>
+<li>OTP区域（一次性可编程区域）：共 528 字节，被分成两个部分，前面 512字节（32 字节为1块，分成16块），可以用来存储一些用户数据（一次性，写完一次，永远不可以擦除），后面 16 字节，用于锁定对应块。</li>
+<li>选项字节：用于配置读保护、BOR 级别、软件/硬件看门狗以及器件处于待机或停止模式下的复位。</li>
+</ul>
+<p>在执行闪存写操作时，任何对闪存的读操作都会锁住总线，在写操作完成后读操作才能正<br>
+确地进行；即在进行写或擦除操作时，不能进行代码或数据的读取操作。</p>
+<h3 id="读取"><a class="markdownIt-Anchor" href="#读取"></a> 读取</h3>
+<p>为了准确读取 Flash 数据，必须根据 CPU 时钟 (HCLK) 频率和器件电源电压在 Flash 存取控制寄存器 (FLASH_ACR) 中正确地设置等待周期数 (LATENCY)。当电源电压低于 2.1V 时，必须关闭预取缓冲器。</p>
+<p><img src="/images/arm/flash2.png" srcset="/img/loading.gif" lazyload alt="ACLK时钟频率和对应的FLASH等待周期"></p>
+<p>等待周期通过FLASH_ACR寄存器的LATENCY[2:0]三个位设置。</p>
+<p>STM32读取FLASH很简单，例如要从地址addr读取一个字（32位），只需要一句话：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">Data</span> <span class="hljs-operator">=</span> *(volatile uint32_t *)faddr<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<p>将 faddr 强制转换为 <code>volatile uint32_t</code> 指针，然后取该指针所指向的地址的值，即得到了 faddr 地址的值。类似的，将上面的 <code>volatile uint32_t</code> 改为 <code>volatile uint8_t</code>，即可读取指定地址的一个字节。此处的 <code>volatile</code> 关键字告诉编译器该地址的内容可能随时改变，因此禁止编译器对该地址做任何优化。通常用于表示硬件寄存器或外设的内存地址，因为这些内容的值可能由外部事件（如外部硬件）改变。</p>
+<h3 id="编程和擦除"><a class="markdownIt-Anchor" href="#编程和擦除"></a> 编程和擦除</h3>
+<p>执行任何 Flash编程操作（擦除或编程）时，CPU时钟频率（HCLK）不能低于 1MHz。在对 STM32F429 的 Flash 执行写入或擦除操作期间，任何读取 Flash 的尝试都会导致总线阻塞。只有在完成编程操作后，才能正确处理读操作。这意味着，写/擦除操作进行期间不能从 Flash 中执行代码或数据获取操作。</p>
+<p>STM32F429 用户闪存的编程一般由 6 个 32 位寄存器控制，他们分别是：</p>
+<ul>
+<li>FLASH 访问控制寄存器(FLASH_ACR)</li>
+<li>FLASH 秘钥寄存器(FLASH_KEYR)</li>
+<li>FLASH 选项秘钥寄存器(FLASH_OPTKEYR)</li>
+<li>FLASH 状态寄存器(FLASH_SR)</li>
+<li>FLASH 控制寄存器(FLASH_CR)</li>
+<li>FLASH 选项控制寄存器(FLASH_OPTCR)</li>
+</ul>
+<p>STM32F429复位后，FLASH 编程操作是被保护的，不能写入 FLASH_CR寄存器；通过写入特定的序列（<code>0X45670123</code> 和 <code>0XCDEF89AB</code>）到 FLASH_KEYR 寄存器才可解除写保护，只有在写保护被解除后，我们才能操作相关寄存器。</p>
+<p>FLASH_CR 的解锁序列为：</p>
+<ol>
+<li>写 <code>0X45670123</code> 到 FLASH_KEYR</li>
+<li>写 <code>0XCDEF89AB</code> 到 FLASH_KEYR</li>
+</ol>
+<p>通过这两个步骤，即可解锁 FLASH_CR，如果写入错误，那么 FLASH_CR 将被锁定，直到下次复位后才可以再次解锁。</p>
+<p>STM32F429 闪存的编程位数可以通过 FLASH_CR 的 PSIZE 字段配置，PSIZE 的设置必须<br>
+和电源电压匹配：<br>
+<img src="/images/arm/flash3.png" srcset="/img/loading.gif" lazyload alt="编程/擦除并行位数与电压关系"></p>
+<p>当开发板电压为3.3V时，<code>PSIZE</code>为<code>10</code>，并行位数32位。也就是擦除或编程都需要以32位为基础进行。</p>
+<p>FLASH在编程时必须要求目标写入地址的FLASH已经被擦除（值为<code>0xFFFFFFFF</code>），否则将无法写入。</p>
+<p>F429的FLASH标准编程步骤如下：</p>
+<ol>
+<li>检查FLASH_CR中的BSY位，确保总线空闲</li>
+<li>将FLASH_CR寄存器的PG位置1，激活FLASH编程</li>
+<li>针对所需存储地址（主存储器块或 OTP 区域内）执行数据写入操作：
+<ul>
+<li>并行位数为x32时按字写入（PSIZE=02）</li>
+</ul>
+</li>
+<li>等待BSY位清零</li>
+</ol>
+<p><em>注意</em>：<br>
+- 编程前确保写入地址已经擦除<br>
+- 先解锁FLASH_CR后编程</p>
+<p>扇区擦除步骤如下：</p>
+<ol>
+<li>检查FLASH_CR的LOOK是否解锁，如果没有则先解锁</li>
+<li>检查FLASH_CR中的BSY位，确保总线空闲</li>
+<li>FLASH_CR的SER位置1，并从主存储块的12个扇区中选择要擦除的扇区（SNB）</li>
+<li>FLASH_CR寄存器中STRT位置1，触发擦除</li>
+<li>等待BSY位清零</li>
+</ol>
+<h3 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h3>
+<h4 id="flash_acr-flash访问控制寄存器"><a class="markdownIt-Anchor" href="#flash_acr-flash访问控制寄存器"></a> FLASH_ACR - Flash访问控制寄存器</h4>
+<p><img src="/images/arm/flash4.png" srcset="/img/loading.gif" lazyload alt="FLASH_ACR"><br>
+重点为LATENCY[2:0]位，应根据MCU电压和频率设置，否则死机。</p>
+<h4 id="flash_keyr-flash密钥寄存器"><a class="markdownIt-Anchor" href="#flash_keyr-flash密钥寄存器"></a> FLASH_KEYR - Flash密钥寄存器</h4>
+<p><img src="/images/arm/flash5.png" srcset="/img/loading.gif" lazyload alt="FLASH_KEYR"><br>
+用于解锁FLASH_CR，必须按顺序写入KEY1和KEY2</p>
+<h4 id="flash_cr-flash控制寄存器"><a class="markdownIt-Anchor" href="#flash_cr-flash控制寄存器"></a> FLASH_CR - Flash控制寄存器</h4>
+<p><img src="/images/arm/flash6.png" srcset="/img/loading.gif" lazyload alt="FLASH_CR"></p>
+<ul>
+<li>LOCK位：用于指示 FLASH_CR 寄存器是否被锁住，该位在检测到正确的解锁序列后，硬件将其清零。在一次不成功的解锁操作后，在下次系统复位之前，该位将不再改变。</li>
+<li>PG位：用于选择编程操作，在往 FLASH 写数据的时候，该位需要置 1。</li>
+<li>SER位：位用于选择扇区擦除操作，在扇区擦除的时候，需要将该位置 1。</li>
+<li>PSIZE[1:0]位：设置编程宽度，一般设置 PSIZE =2 即可（32 位）。</li>
+<li>STRT位：该位用于开始一次擦除操作。在该位写入 1 ，将执行一次擦除操作。</li>
+<li>SNB[3:0]位：用于选择要擦除的扇区编号，取值范围为 0~15。</li>
+</ul>
+<h4 id="flash_sr-flash状态寄存器"><a class="markdownIt-Anchor" href="#flash_sr-flash状态寄存器"></a> FLASH_SR - Flash状态寄存器</h4>
+<p><img src="/images/arm/flash7.png" srcset="/img/loading.gif" lazyload alt="FLASH_SR"></p>
+<ul>
+<li>BSY位：确认BANK是否正在执行编程操作</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>FLASH、EEPROM和FLASH模拟EEPROM</div>
+      <div>http://akichen891.github.io/2025/01/02/FLASH、EEPROM和FLASH模拟EEPROM/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年1月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/28/CAN%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/" title="CAN及其应用">
+                        <span class="hidden-mobile">CAN及其应用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
