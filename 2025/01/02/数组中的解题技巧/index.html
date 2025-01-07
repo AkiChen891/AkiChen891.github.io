@@ -27,7 +27,7 @@
 <meta property="og:description" content="双指针 双指针能够将O(n2)O(n^2)O(n2)复杂度的算法降低为O(n)O(n)O(n)，并且常见于原地算法。两个指针能够在一个for循环内完成两个for循环的工作。  同向指针 283.移动零 1234567891011121314151617void moveZeroes(int* nums, int numsSize) &#123;    int slow &#x3D; 0;    for (">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-01-02T12:53:30.000Z">
-<meta property="article:modified_time" content="2025-01-06T07:20:47.452Z">
+<meta property="article:modified_time" content="2025-01-07T12:44:47.118Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -214,7 +214,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          820 字
+          1.3k 字
         
       </span>
     
@@ -225,7 +225,7 @@
         
         
         
-          7 分钟
+          11 分钟
         
       </span>
     
@@ -287,6 +287,14 @@
 <p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-duplicates-from-sorted-array">26.删除有序数组中的重复项</a></p>
 <figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">removeDuplicates</span><span class="hljs-params">(<span class="hljs-type">int</span>* nums, <span class="hljs-type">int</span> numsSize)</span> </span>&#123;<br>    <span class="hljs-type">int</span> current_pos = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; numsSize; i++)<br>    &#123;<br>        <span class="hljs-keyword">if</span>(nums[i] != nums[i<span class="hljs-number">-1</span>])    <br>        &#123;<br>            nums[current_pos] = nums[i];    <br>            current_pos++;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> current_pos;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>思路也是一致的，判断出当前元素是否和前一个不一致，如果不一致说明这个元素要保留，slow就会指向这个元素。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/intersection-of-two-arrays/">349.两个数组的交集</a><br>
+这题的分为两个部分：排序+双指针。双指针法只需要一次循环，前提是数组必须经过排序。排序完后的数组是升序的，两个数组分别使用两个指针从首位开始向后遍历并比较。以这两个数组为例：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-string">[4,9,5]</span><br><span class="hljs-string">[9,4,9,8,4]</span><br></code></pre></td></tr></table></figure>
+<p>排序之后的结果为</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-string">[4,5,9]</span><br><span class="hljs-string">[4,4,8,9,9]</span><br></code></pre></td></tr></table></figure>
+<p>两个指针分别开始遍历，如果指针1指向值大于指针2指向值，说明指针2位置偏左，对其++；如果指针1指向值小于指针2指向值，则说明指针1偏左，对其++；如果指针1和指针2指向值大小相等，该值属于交集，提出并保存在result中。</p>
+<p>这个做法会带来重复存入的问题，比如上面的算例中，result会先后存入两个4。为了避免该情况发生，在存入时需要做过滤，条件为result中待存入位置的前一个数不能等于当前要存入的这个数（<code>result[k-1] != nums1[i]</code>。如果待存入位置是result的第一位，则不用判断，直接存入<code>k == 0</code>。因为两个数组事先已经排过序，所以这个判断逻辑一定是正确的，不存在漏判断的问题。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Note: The returned array must be malloced, assume caller calls free().</span><br><span class="hljs-comment"> */</span><br><span class="hljs-built_in">int</span> compare(<span class="hljs-keyword">const</span> <span class="hljs-built_in">void</span> *a, <span class="hljs-keyword">const</span> <span class="hljs-built_in">void</span> *b)&#123;<br>    <span class="hljs-keyword">return</span> *(<span class="hljs-built_in">int</span> *)a - *(<span class="hljs-built_in">int</span> *)b;<br>&#125;<br><br><span class="hljs-built_in">int</span>* <span class="hljs-built_in">int</span>ersection(<span class="hljs-built_in">int</span>* nums1, <span class="hljs-built_in">int</span> nums1Size, <span class="hljs-built_in">int</span>* nums2, <span class="hljs-built_in">int</span> nums2Size, <span class="hljs-built_in">int</span>* returnSize) &#123;<br>    qsort(nums1, nums1Size, sizeof(<span class="hljs-built_in">int</span>), compare);<br>    qsort(nums2, nums2Size, sizeof(<span class="hljs-built_in">int</span>), compare);<br>    <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">int</span> j = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">int</span> k = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">int</span>* result = malloc(sizeof(<span class="hljs-built_in">int</span>) * (nums1Size &lt; nums2Size ? nums1Size : nums2Size));<br><br>    <span class="hljs-keyword">while</span> (i &lt; nums1Size &amp;&amp; j &lt; nums2Size)&#123;<br>        <span class="hljs-keyword">if</span> (nums1[i] &gt; nums2[j])&#123;<br>            j++;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums1[i] &lt; nums2[j])&#123;<br>            i++;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums1[i] == nums2[j])&#123;<br>            <span class="hljs-keyword">if</span> (k == <span class="hljs-number">0</span> || result[k - <span class="hljs-number">1</span>] != nums1[i])&#123;<br>                result[k++] = nums1[i];<br>            &#125;<br>            i++;<br>            j++;<br>        &#125;<br>    &#125;<br><br>    *returnSize = k;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h2 id="排序"><a class="markdownIt-Anchor" href="#排序"></a> 排序</h2>
 <h3 id="冒泡排序"><a class="markdownIt-Anchor" href="#冒泡排序"></a> 冒泡排序</h3>
 <figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">void <span class="hljs-keyword">bubble_sort(int* </span>nums, int numsSize)<br>&#123;<br>    for (int i = <span class="hljs-number">0</span><span class="hljs-comment">; i &lt; numsSize - 1; i++)</span><br>    &#123;<br>        for (int <span class="hljs-keyword">j </span>= <span class="hljs-number">0</span><span class="hljs-comment">; j &lt; numsSize - 1 - i; j++)</span><br>        &#123;<br>            if (nums[<span class="hljs-keyword">j] </span>&gt; nums[<span class="hljs-keyword">j </span>+ <span class="hljs-number">1</span>])<br>            &#123;<br>                int temp = nums[<span class="hljs-keyword">j];</span><br><span class="hljs-keyword"></span>                nums[<span class="hljs-keyword">j] </span>= nums[<span class="hljs-keyword">j </span>+ <span class="hljs-number">1</span>];<br>                nums[<span class="hljs-keyword">j </span>+ <span class="hljs-number">1</span>] = temp;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -372,7 +380,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年1月6日</div>
+          <div>2025年1月7日</div>
         </div>
       
       
