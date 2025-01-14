@@ -1,0 +1,730 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="参考文献：LVGL 移植到 STM32 通法 (https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Huae&#x2F;p&#x2F;18621614) 工程文件：Github  前言 LVGL（Light and Versatile Graphics Library）是一个开源的图形库，旨在为嵌入式系统提供高效、灵活的图形用户界面（GUI）解决方案。它具有小巧的内存占用和高性能的渲染能力，支持多种硬件平台，包括单片机、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LVGL9.2移植至正点原子阿波罗STM32F429">
+<meta property="og:url" content="http://akichen891.github.io/2025/01/10/LVGL9.2%E7%A7%BB%E6%A4%8D%E8%87%B3%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90%E9%98%BF%E6%B3%A2%E7%BD%97STM32F429/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="参考文献：LVGL 移植到 STM32 通法 (https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Huae&#x2F;p&#x2F;18621614) 工程文件：Github  前言 LVGL（Light and Versatile Graphics Library）是一个开源的图形库，旨在为嵌入式系统提供高效、灵活的图形用户界面（GUI）解决方案。它具有小巧的内存占用和高性能的渲染能力，支持多种硬件平台，包括单片机、">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://akichen891.github.io/images/lvgl/lvgl1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/lvgl/lvgl2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/lvgl/lvgl3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/lvgl/lvgl4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/lvgl/lvgl5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/lvgl/lvgl6.png">
+<meta property="article:published_time" content="2025-01-10T09:48:39.000Z">
+<meta property="article:modified_time" content="2025-01-14T14:55:46.981Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://akichen891.github.io/images/lvgl/lvgl1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>LVGL9.2移植至正点原子阿波罗STM32F429 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">LVGL9.2移植至正点原子阿波罗STM32F429</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-10 17:48" pubdate>
+          2025年1月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LVGL9.2移植至正点原子阿波罗STM32F429</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><em>参考文献</em>：LVGL 移植到 STM32 通法 (<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Huae/p/18621614">https://www.cnblogs.com/Huae/p/18621614</a>)<br>
+工程文件：<a target="_blank" rel="noopener" href="https://github.com/AkiChen891/LVGL_v9_blank">Github</a></p>
+<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
+<p>LVGL（Light and Versatile Graphics Library）是一个开源的图形库，旨在为嵌入式系统提供高效、灵活的图形用户界面（GUI）解决方案。它具有小巧的内存占用和高性能的渲染能力，支持多种硬件平台，包括单片机、DSP 和 ARM 处理器等。LVGL 支持丰富的控件（如按钮、标签、图标、滚动条等），并提供强大的主题、样式和动画功能，使得开发者能够轻松设计出美观且响应迅速的界面。此外，LVGL 还支持触摸屏、图形加速（如 DMA2D）、多线程等特性，非常适合用于嵌入式应用程序，如智能家居、工业控制、医疗设备等领域。</p>
+<p>本文将介绍一下最新的LVGL9.2在正点原子阿波罗STMF429IGT6开发板上的移植。正点原子自己的移植教程还是几年前的8.2版本，LVGL在这个版本之后对很多API进行了优化和裁剪，导致正点原子的教程现在已经不是很好用了。但是万变不离其宗，LVGL的主架构没有变，只需要一点细微的改变就可以进行移植。</p>
+<p>我使用的屏幕是正点原子7寸RGB屏，分辨率为1024 * 600.编译器为IAR EW 9.6</p>
+<p>在开始之前，确保你有：</p>
+<ul>
+<li>相关的外设</li>
+<li>正点原子例程提供的一系列外设驱动</li>
+<li>LVGL9.2版本源码</li>
+<li><strong>LVGL官方的文档</strong>：<a target="_blank" rel="noopener" href="https://docs.lvgl.io/master/">点击跳转</a></li>
+</ul>
+<p>我个人认为LVGL官方的文档非常重要，而且它甚至是有完整的官方授权的<a target="_blank" rel="noopener" href="https://lvgl.100ask.net/master/index.html">中文版本</a>的。大多数东西都可以在上面找到。</p>
+<h2 id="准备工作"><a class="markdownIt-Anchor" href="#准备工作"></a> 准备工作</h2>
+<h3 id="拷贝外设驱动"><a class="markdownIt-Anchor" href="#拷贝外设驱动"></a> 拷贝外设驱动</h3>
+<p>将所有和显示屏、触摸屏、SDRAM等有关的外设驱动加入工程。换句话说，你的工程需要做到在没有LVGL的环境下也能够通过最基本的显示函数在屏幕上显示东西的状态。如果你的工程在没有LVGL的环境下都没法通过正点原子例程里提供的函数显示东西，那显然是没有办法继续的。</p>
+<h3 id="拷贝lvgl库至工程文件夹"><a class="markdownIt-Anchor" href="#拷贝lvgl库至工程文件夹"></a> 拷贝LVGL库至工程文件夹</h3>
+<p>LVGL下载并解压之后，文件夹根目录内会包含很多文件夹及文件。在不需要demo或例程的情况下，我们只需要用到其中的这些文件/文件夹：</p>
+<ul>
+<li>examples文件夹中的porting文件夹</li>
+<li>src文件夹</li>
+<li>lv_conf_template.h</li>
+<li>lvgl.h</li>
+</ul>
+<p>在工程文件夹根目录创建一个lvgls文件夹：<br>
+<img src="/images/lvgl/lvgl1.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>然后：</p>
+<ol>
+<li>创建一个子文件夹，名为lvgl</li>
+<li>创建一个子文件夹，名为lvgl_app</li>
+<li>将之前提到的lv_conf_template.h重命名为lv_conf.h，移动到lvgls文件夹的根目录</li>
+<li>打开examples/porting文件夹，复制lv_port_disp_template.c、lv_port_disp_template.h、lv_port_indev_template.c、lv_port_indev_template.h四个文件到lvgls文件夹根目录，并且重命名四个文件，去掉&quot;_template&quot;。这是后面要用到的显示屏和触摸屏注册文件</li>
+<li>把src文件夹和lvgl.h复制到lvgls/lvgl文件夹中</li>
+</ol>
+<p>现在的lvgls文件夹是这样的：<br>
+<img src="/images/lvgl/lvgl2.png" srcset="/img/loading.gif" lazyload alt=""><br>
+lvgl文件夹：<br>
+<img src="/images/lvgl/lvgl3.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h3 id="添加lvgl库文件至工程"><a class="markdownIt-Anchor" href="#添加lvgl库文件至工程"></a> 添加LVGL库文件至工程</h3>
+<p>将以下文件全部添加进入工程（可以一股脑全部加，也可以按照原本的文件结构自己慢慢加）：</p>
+<ul>
+<li>src文件夹中的所有c文件，<strong>除了</strong>：
+<ul>
+<li>draw中的nxp、renesas、sdl</li>
+<li>drivers文件夹</li>
+</ul>
+</li>
+<li>lv_port_disp.c和lv_port_indev.c</li>
+</ul>
+<p>（千万别忘了src文件夹根目录下还有个lv_init.c）</p>
+<p>然后，添加头文件目录，到src为止就可以.</p>
+<p>我的添加完之后的工程结构长这个样子：<br>
+<img src="/images/lvgl/lvgl4.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h3 id="修改stack和heap大小"><a class="markdownIt-Anchor" href="#修改stack和heap大小"></a> 修改Stack和Heap大小</h3>
+<p>LVGL需要至少2KB的Stack和Heap。<br>
+<img src="/images/lvgl/lvgl5.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<h2 id="代码修改"><a class="markdownIt-Anchor" href="#代码修改"></a> 代码修改</h2>
+<h3 id="定时器"><a class="markdownIt-Anchor" href="#定时器"></a> 定时器</h3>
+<p>LVGL需要一个tick源来为其提供心跳，这里使用基本定时器TIM6完成，PSC为10-1，ARR为6000-1.在tim.c中添加如下的回调函数：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss">void <span class="hljs-built_in">HAL_TIM_PeriodElapsedCallback</span>(TIM_HandleTypeDef *htim)<br>&#123;<br>  if (htim == &amp;htim6)<br>  &#123;<br>    <span class="hljs-built_in">lv_tick_inc</span>(<span class="hljs-number">1</span>);   <span class="hljs-comment">/* LVGL systick */</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>别忘了在定时器初始化时打开TIM6的Time base，让定时器开始工作。</p>
+<h3 id="lv_confh"><a class="markdownIt-Anchor" href="#lv_confh"></a> lv_conf.h</h3>
+<p>启用宏：<code>#if 1 /*Set it to &quot;1&quot; to enable content*/</code><br>
+检查以下关键信息：</p>
+<ul>
+<li><code>/*Color depth: 1 (I1), 8 (L8), 16 (RGB565), 24 (RGB888), 32 (XRGB8888)*/#define LV_COLOR_DEPTH 16</code>：颜色深度，默认为RGB565</li>
+<li><code>#define LV_MEM_SIZE (64U * 1024U)          /*[bytes]*/</code>缓冲区大小<br>
+，默认64KB</li>
+</ul>
+<p>其他的东西理论上你看不懂也没关系，可以暂时不动，日后可以对照着注释慢慢研究。</p>
+<h3 id="lv_port_dispc"><a class="markdownIt-Anchor" href="#lv_port_dispc"></a> lv_port_disp.c</h3>
+<ul>
+<li>设置屏幕分辨率：</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MY_DISP_HOR_RES</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">warning</span> Please <span class="hljs-keyword">define</span> or replace the macro MY_DISP_HOR_RES with the actual screen width, default value 320 is used for now.</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> MY_DISP_HOR_RES    1024</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MY_DISP_VER_RES</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">warning</span> Please <span class="hljs-keyword">define</span> or replace the macro MY_DISP_VER_RES with the actual screen height, default value 240 is used for now.</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> MY_DISP_VER_RES    600</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br></code></pre></td></tr></table></figure>
+<p>注意，这里必须根据自己使用的屏幕分辨率来设置！如果尺寸设置的比实际屏幕小会导致实际的图像占不满整个屏幕，如果设置的比实际大会导致花屏、撕裂或干脆无法显示</p>
+<ul>
+<li>设置缓冲区</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">lv_port_disp_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">/*-------------------------</span><br><span class="hljs-comment">     * Initialize your display</span><br><span class="hljs-comment">     * -----------------------*/</span><br>    <span class="hljs-built_in">disp_init</span>();<br><br>    <span class="hljs-comment">/*------------------------------------</span><br><span class="hljs-comment">     * Create a display and set a flush_cb</span><br><span class="hljs-comment">     * -----------------------------------*/</span><br>    <span class="hljs-type">lv_display_t</span> * disp = <span class="hljs-built_in">lv_display_create</span>(MY_DISP_HOR_RES, MY_DISP_VER_RES);<br>    <span class="hljs-built_in">lv_display_set_flush_cb</span>(disp, disp_flush);<br><br>    <span class="hljs-comment">/* Example 1</span><br><span class="hljs-comment">     * One buffer for partial rendering*/</span><br>    LV_ATTRIBUTE_MEM_ALIGN<br>    <span class="hljs-type">static</span> <span class="hljs-type">uint8_t</span> buf_1_1[MY_DISP_HOR_RES * <span class="hljs-number">10</span> * BYTE_PER_PIXEL];            <span class="hljs-comment">/*A buffer for 10 rows*/</span><br>    <span class="hljs-built_in">lv_display_set_buffers</span>(disp, buf_1_1, <span class="hljs-literal">NULL</span>, <span class="hljs-built_in">sizeof</span>(buf_1_1), LV_DISPLAY_RENDER_MODE_PARTIAL);<br><br>    <span class="hljs-comment">// /* Example 2</span><br>    <span class="hljs-comment">//  * Two buffers for partial rendering</span><br>    <span class="hljs-comment">//  * In flush_cb DMA or similar hardware should be used to update the display in the background.*/</span><br>    <span class="hljs-comment">// LV_ATTRIBUTE_MEM_ALIGN</span><br>    <span class="hljs-comment">// static uint8_t buf_2_1[MY_DISP_HOR_RES * 10 * BYTE_PER_PIXEL];</span><br><br>    <span class="hljs-comment">// LV_ATTRIBUTE_MEM_ALIGN</span><br>    <span class="hljs-comment">// static uint8_t buf_2_2[MY_DISP_HOR_RES * 10 * BYTE_PER_PIXEL];</span><br>    <span class="hljs-comment">// lv_display_set_buffers(disp, buf_2_1, buf_2_2, sizeof(buf_2_1), LV_DISPLAY_RENDER_MODE_PARTIAL);</span><br><br>    <span class="hljs-comment">// /* Example 3</span><br>    <span class="hljs-comment">//  * Two buffers screen sized buffer for double buffering.</span><br>    <span class="hljs-comment">//  * Both LV_DISPLAY_RENDER_MODE_DIRECT and LV_DISPLAY_RENDER_MODE_FULL works, see their comments*/</span><br>    <span class="hljs-comment">// LV_ATTRIBUTE_MEM_ALIGN</span><br>    <span class="hljs-comment">// static uint8_t buf_3_1[MY_DISP_HOR_RES * MY_DISP_VER_RES * BYTE_PER_PIXEL];</span><br><br>    <span class="hljs-comment">// LV_ATTRIBUTE_MEM_ALIGN</span><br>    <span class="hljs-comment">// static uint8_t buf_3_2[MY_DISP_HOR_RES * MY_DISP_VER_RES * BYTE_PER_PIXEL];</span><br>    <span class="hljs-comment">// lv_display_set_buffers(disp, buf_3_1, buf_3_2, sizeof(buf_3_1), LV_DISPLAY_RENDER_MODE_DIRECT);</span><br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>我这里设置的是单缓冲区，实际按照自己需求来就可以。如果不是干那些高刷新率的活，单缓冲足够用了。原例程提供了三个缓冲区方式，分别是单缓冲、双缓冲和全尺寸双缓冲，选择合适的一个之后注释掉其他的几个就可以。</p>
+<ul>
+<li>显示设备初始化</li>
+</ul>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-comment">/*Initialize your display and the required peripherals.*/</span><br>static void <span class="hljs-built_in">disp_init</span>(void)<br>&#123;<br>    <span class="hljs-comment">/*You code here*/</span><br>    <span class="hljs-built_in">lcd_init</span>();<br>    <span class="hljs-built_in">lcd_display_dir</span>(<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在这里添加屏幕的初始化函数。</p>
+<ul>
+<li>设置刷屏</li>
+</ul>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-comment">/*Flush the content of the internal buffer the specific area on the display.</span><br><span class="hljs-comment"> *`px_map` contains the rendered image as raw pixel map and it should be copied to `area` on the display.</span><br><span class="hljs-comment"> *You can use DMA or any hardware acceleration to do this operation in the background but</span><br><span class="hljs-comment"> *&#x27;lv_display_flush_ready()&#x27; has to be called when it&#x27;s finished.*/</span><br>static void <span class="hljs-built_in">disp_flush</span>(lv_display_t * disp_drv, const lv_area_t * area, uint8_t * px_map)<br>&#123;<br>    <span class="hljs-built_in">if</span>(<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-comment">/*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/</span><br>        <span class="hljs-built_in">lcd_color_fill</span>(area-&gt;x1, area-&gt;y1, area-&gt;x2, area-&gt;y2, (uint16_t *)px_map);<br><br>    &#125;<br>    <span class="hljs-comment">/*IMPORTANT!!!</span><br><span class="hljs-comment">     *Inform the graphics library that you are ready with the flushing*/</span><br>    <span class="hljs-built_in">lv_display_flush_ready</span>(disp_drv);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>用正点原子例程中的lcd_color_fill()函数替代原来默认的画点函数。</p>
+<h3 id="lv_port_indevc"><a class="markdownIt-Anchor" href="#lv_port_indevc"></a> lv_port_indev.c</h3>
+<ul>
+<li>修改初始化函数，添加触摸屏的初始化函数</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">touchpad_init</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)</span><br>&#123;<br>    <span class="hljs-comment">/*Your code comes here*/</span><br>    tp_dev.<span class="hljs-keyword">init</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>修改触摸屏按下的识别动作</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/*Return true is the touchpad is pressed*/</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title">touchpad_is_pressed</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">/*Your code comes here*/</span><br>    tp_dev.<span class="hljs-built_in">scan</span>(<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">if</span> (tp_dev.sta &amp; TP_PRES_DOWN) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>修改坐标读取函数</li>
+</ul>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs gml"><span class="hljs-comment">/*Get the x and y coordinates if the touchpad is pressed*/</span><br><span class="hljs-keyword">static</span> void touchpad_get_xy(int32_t * <span class="hljs-variable language_">x</span>, int32_t * <span class="hljs-variable language_">y</span>)<br>&#123;<br>    <span class="hljs-comment">/*Your code comes here*/</span><br><br>    (*<span class="hljs-variable language_">x</span>) = tp_dev.<span class="hljs-variable language_">x</span>[<span class="hljs-number">0</span>];<br>    (*<span class="hljs-variable language_">y</span>) = tp_dev.<span class="hljs-variable language_">y</span>[<span class="hljs-number">0</span>];<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="mainc"><a class="markdownIt-Anchor" href="#mainc"></a> main.c</h3>
+<p>初始化一系列外设，对于lvgl相关的头文件则要按顺序初始化：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">lv_init</span>();<br><span class="hljs-built_in">lv_port_disp_init</span>();<br><span class="hljs-built_in">lv_port_indev_init</span>();<br></code></pre></td></tr></table></figure>
+<p>在while(1)主循环中添加time_handler</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs scss">while (<span class="hljs-number">1</span>)<br>&#123;<br>  <span class="hljs-comment">/* USER CODE END WHILE */</span><br><br>  <span class="hljs-comment">/* USER CODE BEGIN 3 */</span><br>  <span class="hljs-built_in">lv_timer_handler</span>();<br>  <span class="hljs-built_in">delay_ms</span>(<span class="hljs-number">5</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>到这里为止，可以加一点自己的测试代码，然后编译烧录，LVGL就能正常显示了。</p>
+<p><img src="/images/lvgl/lvgl6.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>如果碰到问题欢迎站内私信。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LVGL9.2移植至正点原子阿波罗STM32F429</div>
+      <div>http://akichen891.github.io/2025/01/10/LVGL9.2移植至正点原子阿波罗STM32F429/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月10日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年1月14日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/" title="数组中的解题技巧">
+                        <span class="hidden-mobile">数组中的解题技巧</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
