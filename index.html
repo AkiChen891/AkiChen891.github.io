@@ -173,7 +173,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/images/mostima.png') no-repeat center center; background-size: cover;">
+     style="background: url('/images/bgimg.JPG') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0)">
       <div class="banner-text text-center fade-in-up">
@@ -217,6 +217,39 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/02/15/Cpp%E4%B8%AD%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0/" target="_self">
+          Cpp中的虚函数与纯虚函数
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/15/Cpp%E4%B8%AD%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E7%BA%AF%E8%99%9A%E5%87%BD%E6%95%B0/" target="_self">
+        <div>
+          虚函数 123456class Animal &#123;public:	virtual void speak() &#123;		std::cout &lt;&lt; &quot;Animal speaks&quot; &lt;&lt; std::endl;	&#125;&#125;; 虚函数在基类中使用virtual关键字声明成员函数，并允许子类重写该函数，以提供特定于子类的实现。通俗一点的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-15 14:36" pubdate>
+              2025-02-15
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2025/01/10/LVGL9.2%E7%A7%BB%E6%A4%8D%E8%87%B3%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90%E9%98%BF%E6%B3%A2%E7%BD%97STM32F429/" target="_self">
           LVGL9.2移植至正点原子阿波罗STM32F429
         </a>
@@ -238,6 +271,27 @@
             </time>
           </div>
         
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
         
         
       </div>
@@ -646,60 +700,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2024-12-04 15:43" pubdate>
               2024-12-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/11/25/STM32%20UART%E6%8E%A5%E6%94%B6%E4%B8%8D%E5%9B%BA%E5%AE%9A%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE/" target="_self">
-          STM32 UART在循环DMA模式下接收大量不定字长数据并进行乒乓缓存
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/11/25/STM32%20UART%E6%8E%A5%E6%94%B6%E4%B8%8D%E5%9B%BA%E5%AE%9A%E5%AD%97%E8%8A%82%E6%95%B0%E6%8D%AE/" target="_self">
-        <div>
-          串口(uart)是一种低速的串行异步通信，适用于低速通信场景，通常使用的波特率小于或等于115200bps。 对于小于或者等于115200bps波特率的，而且数据量不大的通信场景，一般没必要使用DMA，或者说使用DMA并未能充分发挥出DMA的作用。 对于数量大，或者波特率提高时，必须使用DMA以释放CPU资源，因为高波特率可能带来这样的问题：   对于发送，使用循环发送，可能阻塞线程，需要消耗大量
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-11-25 15:14" pubdate>
-              2024-11-25
             </time>
           </div>
         
