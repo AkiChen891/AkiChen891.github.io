@@ -1,0 +1,703 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="语句 GNU 汇编语法适用于所有的架构，并不是 ARM 独享的，GNU 汇编由一系列的语句组成，每行一条语句，每条语句有三个可选部分：label: instruction @ comment  label：标号，表示地址位置 instruction：指令，汇编指令或伪指令 @ comment：注释  ARM中的指令、伪指令、伪操作、寄存器名等可以全部使用大写，也可以全部使用小写，但是不能大小写混">
+<meta property="og:type" content="article">
+<meta property="og:title" content="适用于Cortex-A的常见GNU汇编语法">
+<meta property="og:url" content="http://akichen891.github.io/2025/02/18/%E9%80%82%E7%94%A8%E4%BA%8ECortex-A%E7%9A%84%E5%B8%B8%E8%A7%81GNU%E6%B1%87%E7%BC%96%E8%AF%AD%E6%B3%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="语句 GNU 汇编语法适用于所有的架构，并不是 ARM 独享的，GNU 汇编由一系列的语句组成，每行一条语句，每条语句有三个可选部分：label: instruction @ comment  label：标号，表示地址位置 instruction：指令，汇编指令或伪指令 @ comment：注释  ARM中的指令、伪指令、伪操作、寄存器名等可以全部使用大写，也可以全部使用小写，但是不能大小写混">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-18T08:15:02.000Z">
+<meta property="article:modified_time" content="2025-02-18T09:36:01.964Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>适用于Cortex-A的常见GNU汇编语法 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">适用于Cortex-A的常见GNU汇编语法</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-18 16:15" pubdate>
+          2025年2月18日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">适用于Cortex-A的常见GNU汇编语法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="语句"><a class="markdownIt-Anchor" href="#语句"></a> 语句</h2>
+<p>GNU 汇编语法适用于所有的架构，并不是 ARM 独享的，GNU 汇编由一系列的语句组成，每行一条语句，每条语句有三个可选部分：<code>label: instruction @ comment</code></p>
+<ul>
+<li><code>label</code>：标号，表示地址位置</li>
+<li><code>instruction</code>：指令，汇编指令或伪指令</li>
+<li><code>@ comment</code>：注释</li>
+</ul>
+<p>ARM中的指令、伪指令、伪操作、寄存器名等可以全部使用大写，也可以全部使用小写，但是不能大小写混用。</p>
+<h2 id="伪操作伪指令"><a class="markdownIt-Anchor" href="#伪操作伪指令"></a> 伪操作（伪指令）</h2>
+<p>用户可通过<code>.section</code>伪操作来定义一个段，汇编系统预定义了一些段名，包括：</p>
+<ul>
+<li><code>.text</code>：代码段</li>
+<li><code>.data</code>：初始化的数据段</li>
+<li><code>.bss</code>：未初始化的数据段</li>
+<li><code>.rodata</code>：只读数据段</li>
+</ul>
+<p><code>.section</code>也可用于自定义段，每个段以段名开始，以下一段名或文件结尾结束。如<code>.section .testsection @顶一个testsection段</code></p>
+<p>汇编程序的默认入口标号是<code>_start</code>，不过我们也可以在链接脚本中使用<code>ENTRY</code>来指明其它的入口点，下面的代码就是使用<code>_start</code>作为入口标号：<br>
+``<br>
+.global _start</p>
+<p>_start:<br>
+ldr r0, =0x12 @r0=0x12<br>
+``<br>
+代码中<code>.global</code>是伪操作，表示<code>_start</code>是一个全局标号（性质类似于C语言中的全局变量）。</p>
+<p>常见的伪指令有：</p>
+<ul>
+<li><code>.global</code>：声明全局符号，如<code>.global main @声明main为全局符号</code></li>
+<li><code>.section</code>：定义段</li>
+<li><code>.word</code>：定义字数据</li>
+<li><code>.asciz</code>：定义以null结尾的字符串，如<code>.asciz &quot;Hello World&quot;</code></li>
+<li><code>.byte</code>：定义单字节数据，比如<code>.byte 0x12</code></li>
+<li><code>.short</code>：定义双字节数据，比如<code>.short 0x1234</code></li>
+<li><code>.long</code>：定义一个4字节数据，比如<code>.long 0x12345678</code></li>
+<li><code>.equ</code>：赋值，如<code>.equ num, 0x12</code>表示<code>num=0x12</code></li>
+<li><code>.align</code>：数据字节对齐，<code>.align 4</code>表示4字节对齐</li>
+<li><code>.end</code>：表示源文件结束</li>
+</ul>
+<h2 id="处理器内部数据传输指令"><a class="markdownIt-Anchor" href="#处理器内部数据传输指令"></a> 处理器内部数据传输指令</h2>
+<p>最常见的一类指令，包括：</p>
+<ul>
+<li>将数据从一个寄存器传递到另外一个寄存器</li>
+<li>将数据从一个寄存器传递到特殊寄存器，如 CPSR 和 SPSR 寄存器</li>
+<li>将立即数传递到寄存器</li>
+</ul>
+<h3 id="mov"><a class="markdownIt-Anchor" href="#mov"></a> MOV</h3>
+<p>将数据从一个寄存器拷贝到另一个寄存器，或将一个立即数传递到寄存器中。</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-keyword">MOV</span> <span class="hljs-built_in">R0</span>, <span class="hljs-built_in">R1</span>      @寄存器<span class="hljs-built_in">R1</span>中的数据传递给<span class="hljs-built_in">R0</span><br><span class="hljs-keyword">MOV</span> <span class="hljs-built_in">R0</span>, <span class="hljs-meta">#0x12   @立即数0x12传递给R0</span><br></code></pre></td></tr></table></figure>
+<h3 id="mrs"><a class="markdownIt-Anchor" href="#mrs"></a> MRS</h3>
+<p>将特殊寄存器（如CPSR和SPSR）中的数据传递给通用寄存器。<em>注意</em>：读取特殊寄存器数据时只能使用<code>MRS</code>指令。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">MRS</span> <span class="hljs-built_in">R0</span>, CPSR<br></code></pre></td></tr></table></figure>
+<h3 id="msr"><a class="markdownIt-Anchor" href="#msr"></a> MSR</h3>
+<p>将普通寄存器的数据传递至特殊寄存器，即写入特殊寄存器。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">MSR</span> CPSR, <span class="hljs-built_in">R0</span><br></code></pre></td></tr></table></figure>
+<h2 id="存储器访问指令"><a class="markdownIt-Anchor" href="#存储器访问指令"></a> 存储器访问指令</h2>
+<p>ARM无法直接访问存储器（如RAM）。以I.MX6UL为例，其寄存器为RAM类型，汇编配置寄存器时需借助存储器访问指令，将待配置的值写入到Rx(x=0~12)寄存器中，然后借助存储器访问指令将Rx中的数据写入之MX6UL的寄存器中，读取亦同。</p>
+<h3 id="ldr"><a class="markdownIt-Anchor" href="#ldr"></a> LDR</h3>
+<p>用于从存储器加载数据至寄存器Rx中，也可以将一个立即数加载到寄存器Rx中。加载立即数时，使用<code>=</code>而不是<code>#</code>，如<code>=0xFFFFFFFF</code>。</p>
+<p>在嵌入式开发中，LDR最常用的就是读取CPU的寄存器值：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">LDR <span class="hljs-built_in">R0</span>, =<span class="hljs-number">0x0209C004</span>     @将寄存器地址<span class="hljs-number">0x0209C004</span>加载到<span class="hljs-built_in">R0</span>中，准备寻址<br>LDR <span class="hljs-built_in">R1</span>, [<span class="hljs-built_in">R0</span>]            @读取地址<span class="hljs-number">0x0209C004</span>中的值到<span class="hljs-built_in">R1</span>中<br></code></pre></td></tr></table></figure>
+<h3 id="str"><a class="markdownIt-Anchor" href="#str"></a> STR</h3>
+<p>与LDR相反，STR用于将数据写入到存储器中。</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">LDR <span class="hljs-built_in">R0</span>, =<span class="hljs-number">0x0209C004</span>     @寄存器地址<span class="hljs-number">0x0209C004</span>写入<span class="hljs-built_in">R0</span><br>LDR <span class="hljs-built_in">R1</span>, =<span class="hljs-number">0x20000002</span>     @待写入值<span class="hljs-number">0x20000002</span>写入<span class="hljs-built_in">R1</span><br><span class="hljs-keyword">STR</span> <span class="hljs-built_in">R1</span>, [<span class="hljs-built_in">R0</span>]            @<span class="hljs-built_in">R1</span>中的值写入<span class="hljs-built_in">R0</span>中所保存的地址中<br></code></pre></td></tr></table></figure>
+<h2 id="跳转指令"><a class="markdownIt-Anchor" href="#跳转指令"></a> 跳转指令</h2>
+<h3 id="b指令"><a class="markdownIt-Anchor" href="#b指令"></a> B指令</h3>
+<p>B指令将PC寄存器的值设置为目标跳转地址，一旦执行B指令，ARM处理器就会立即跳转至指定的目标地址。如果待调用函数不会再返回到原来的执行处，就可以使用B指令。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">_start:</span><br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">sp</span>, <span class="hljs-number">=0x80200000</span>     <span class="hljs-comment">@设置栈指针</span><br>    <span class="hljs-keyword">b</span> main                  <span class="hljs-comment">@跳转到main函数</span><br></code></pre></td></tr></table></figure>
+<h3 id="bl指令"><a class="markdownIt-Anchor" href="#bl指令"></a> BL指令</h3>
+<p>相比B指令，BL指令在跳转之前会在寄存器 LR(R14) 中保存当前 PC 寄存器值，所以可以通过将 LR 寄存器中的值重新加载到 PC 中来继续从跳转之前的代码处运行，这是子程序调用一个基本但常用的手段，常见于各种中断服务程序。</p>
+<p>Cortex-A 处理器的 irq 中断服务函数都是汇编写的，主要用汇编来实现现场的保护和恢复、获取中断号等。但是具体的中断处理过程都是 C 函数，所以就会存在汇编中调用 C 函数的问题。而且当 C 语言版本的中断处理函数执行完成以后是需要返回到 irq 汇编中断服务函数，因为还要处理其他的工作，一般是恢复现场。这个时候就不能直接使用 B 指令了，因为 B 指令一旦跳转就再也不会回来了，这个时候要使用 BL 指令，示例代码如下：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-keyword">push</span> &#123;<span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r1</span>&#125;           @入栈，保存<span class="hljs-built_in">R0</span>, <span class="hljs-built_in">R1</span><br>cps <span class="hljs-meta">#0x13               @进入SVC模式，CPS指令用于直接修改CPSR寄存器的M[4:0]，让CPU进入不同的模式</span><br><br>bl system_irqhandler    @加载C语言中断处理函数至<span class="hljs-built_in">R2</span>寄存器<br><br>cps <span class="hljs-meta">#0x12               @进入IRQ模式</span><br><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r1</span>&#125;            @恢复现场<br>str <span class="hljs-built_in">r0</span>, &#123;<span class="hljs-built_in">r1</span>, <span class="hljs-number">0</span><span class="hljs-meta">#10&#125;      @中断执行完成，写EOIR</span><br></code></pre></td></tr></table></figure>
+<h2 id="led点灯示例"><a class="markdownIt-Anchor" href="#led点灯示例"></a> LED点灯示例</h2>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">.global</span> _start  <span class="hljs-comment">/* 全局标号 */</span><br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * 描述：	_start函数，程序从此函数开始执行此函数完成时钟使能、</span><br><span class="hljs-comment"> *		  GPIO初始化、最终控制GPIO输出低电平来点亮LED灯。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-symbol">_start:</span><br>	<span class="hljs-comment">/* 例程代码 */</span><br>	<span class="hljs-comment">/* 1、使能所有时钟 */</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020C4068</span> 	<span class="hljs-comment">/* CCGR0 */</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r1</span>, <span class="hljs-number">=0XFFFFFFFF</span>  <br>	<span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>, [<span class="hljs-built_in">r0</span>]		<br>	<br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020C406C</span>  	<span class="hljs-comment">/* CCGR1 */</span><br>	<span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>, [<span class="hljs-built_in">r0</span>]<br><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020C4070</span>  	<span class="hljs-comment">/* CCGR2 */</span><br>	<span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>, [<span class="hljs-built_in">r0</span>]<br>	<br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020C4074</span>  	<span class="hljs-comment">/* CCGR3 */</span><br>	<span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>, [<span class="hljs-built_in">r0</span>]<br>	<br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020C4078</span>  	<span class="hljs-comment">/* CCGR4 */</span><br>	<span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>, [<span class="hljs-built_in">r0</span>]<br>	<br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020C407C</span>  	<span class="hljs-comment">/* CCGR5 */</span><br>	<span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>, [<span class="hljs-built_in">r0</span>]<br>	<br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020C4080</span>  	<span class="hljs-comment">/* CCGR6 */</span><br>	<span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>, [<span class="hljs-built_in">r0</span>]<br>	<br><br>	<span class="hljs-comment">/* 2、设置GPIO1_IO03复用为GPIO1_IO03 */</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020E0068</span>	<span class="hljs-comment">/* 将寄存器SW_MUX_GPIO1_IO03_BASE加载到r0中 */</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r1</span>, <span class="hljs-number">=0X5</span>		<span class="hljs-comment">/* 设置寄存器SW_MUX_GPIO1_IO03_BASE的MUX_MODE为5 */</span><br>	<span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>,[<span class="hljs-built_in">r0</span>]<br><br>	<span class="hljs-comment">/* 3、配置GPIO1_IO03的IO属性	</span><br><span class="hljs-comment">	 *bit 16:0 HYS关闭</span><br><span class="hljs-comment">	 *bit [15:14]: 00 默认下拉</span><br><span class="hljs-comment">     *bit [13]: 0 kepper功能</span><br><span class="hljs-comment">     *bit [12]: 1 pull/keeper使能</span><br><span class="hljs-comment">     *bit [11]: 0 关闭开路输出</span><br><span class="hljs-comment">     *bit [7:6]: 10 速度100Mhz</span><br><span class="hljs-comment">     *bit [5:3]: 110 R0/6驱动能力</span><br><span class="hljs-comment">     *bit [0]: 0 低转换率</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X020E02F4</span>	<span class="hljs-comment">/*寄存器SW_PAD_GPIO1_IO03_BASE */</span><br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r1</span>, <span class="hljs-number">=0X10B0</span><br>    <span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>,[<span class="hljs-built_in">r0</span>]<br><br>	<span class="hljs-comment">/* 4、设置GPIO1_IO03为输出 */</span><br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X0209C004</span>	<span class="hljs-comment">/*寄存器GPIO1_GDIR */</span><br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r1</span>, <span class="hljs-number">=0X0000008</span>		<br>    <span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>,[<span class="hljs-built_in">r0</span>]<br><br>	<span class="hljs-comment">/* 5、打开LED0</span><br><span class="hljs-comment">	 * 设置GPIO1_IO03输出低电平</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X0209C000</span>	<span class="hljs-comment">/*寄存器GPIO1_DR */</span><br>   <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r1</span>, <span class="hljs-number">=0</span>		<br>   <span class="hljs-keyword">str</span> <span class="hljs-built_in">r1</span>,[<span class="hljs-built_in">r0</span>]<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * 描述：	loop死循环</span><br><span class="hljs-comment"> */</span><br><span class="hljs-symbol">loop:</span><br>	<span class="hljs-keyword">b</span> loop 				<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>适用于Cortex-A的常见GNU汇编语法</div>
+      <div>http://akichen891.github.io/2025/02/18/适用于Cortex-A的常见GNU汇编语法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月18日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年2月18日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/18/%E6%84%8F%E5%A4%96%E4%BF%AE%E6%94%B9-usr-sudo%E6%89%80%E5%B1%9E%E7%BB%84%E5%92%8C%E6%9D%83%E9%99%90%E5%90%8E%E7%9A%84%E6%81%A2%E5%A4%8D%E6%96%B9%E6%B3%95/" title="意外修改/usr/sudo所属组和权限后的恢复方法">
+                        <span class="hidden-mobile">意外修改/usr/sudo所属组和权限后的恢复方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
