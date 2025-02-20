@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言 LVGL是一个在使用时非常容易产生卡死故障的GUI库，大多数卡死都发生在动态阶段，包括且不仅限于：  启动并初始化第一个页面时 在多个页面间来回切换 触发组件回调时（例如button或timer） 长时间运行后  本文所提供的解决方案就是我自己摸索出来的，不一定适用于所有人，也不一定是最标准的办法。网上关于LVGL的教程很多，包括官方文档，但是很多方法都是不怎么规范的。官方的Github">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LVGL发生各种卡死现象的原因分析和排故">
+<meta property="og:url" content="http://akichen891.github.io/2025/02/20/LVGL%E5%8F%91%E7%94%9F%E5%90%84%E7%A7%8D%E5%8D%A1%E6%AD%BB%E7%8E%B0%E8%B1%A1%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90%E5%92%8C%E6%8E%92%E6%95%85/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言 LVGL是一个在使用时非常容易产生卡死故障的GUI库，大多数卡死都发生在动态阶段，包括且不仅限于：  启动并初始化第一个页面时 在多个页面间来回切换 触发组件回调时（例如button或timer） 长时间运行后  本文所提供的解决方案就是我自己摸索出来的，不一定适用于所有人，也不一定是最标准的办法。网上关于LVGL的教程很多，包括官方文档，但是很多方法都是不怎么规范的。官方的Github">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-20T06:59:32.000Z">
+<meta property="article:modified_time" content="2025-02-20T08:33:54.102Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>LVGL发生各种卡死现象的原因分析和排故 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">LVGL发生各种卡死现象的原因分析和排故</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-20 14:59" pubdate>
+          2025年2月20日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LVGL发生各种卡死现象的原因分析和排故</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
+<p>LVGL是一个在使用时非常容易产生卡死故障的GUI库，大多数卡死都发生在动态阶段，包括且不仅限于：</p>
+<ul>
+<li>启动并初始化第一个页面时</li>
+<li>在多个页面间来回切换</li>
+<li>触发组件回调时（例如button或timer）</li>
+<li>长时间运行后</li>
+</ul>
+<p>本文所提供的解决方案就是我自己摸索出来的，不一定适用于所有人，也不一定是最标准的办法。网上关于LVGL的教程很多，包括官方文档，但是很多方法都是不怎么规范的。官方的Github issue中也有很多奇奇怪怪的问题，哪怕是LVGL的作者也无法解决或定位错误。但是LVGL已经迭代到了V9版本，大多数因为自带库问题导致的错误已经得到修复，由LVGL本身带来的致命错误已经很少，大多数错误都来源于用户自身的不规范代码或者是用法。</p>
+<p>如果你的LVGL例程发生了卡死，首先应当按照以下步骤尝试解决：</p>
+<ol>
+<li>更新LVGL版本至最新。同时，确保你使用的函数在最新的LVGL中仍然可用。LVGL库函数迭代的很快，且自从v8.3之后几乎每个小版本都有大改，v9之后更是删了一大批我认为很好用的功能（比如<code>lv_label_recolor()</code>）。如果你抄了一个旧版本的函数并在新版本的lvgl环境下使用它，可能导致问题</li>
+<li>尝试在模拟器中复现代码，确认是否是LVGL库自身的问题</li>
+<li>如果LVGL工作在OS下，尝试在裸机中复现问题；如果裸机和OS下都发生问题，说明部分代码可能存在问题；如果裸机下工作正常，大概率是线程问题导致的LVGL错误。</li>
+</ol>
+<p>如果尝试过上述方法之后问题还没有解决，应考虑是用户代码造成的问题。</p>
+<h2 id="排故"><a class="markdownIt-Anchor" href="#排故"></a> 排故</h2>
+<p>在开始前，确保在<code>lv_conf.h</code>中启用内存监视和CPU占用监视，具体为：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-comment">/*1: Enable system monitor component*/</span><br><span class="hljs-comment">/*1: Enable system monitor component*/</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_USE_SYSMON   1</span><br><span class="hljs-meta">#if LV_USE_SYSMON</span><br>    <span class="hljs-comment">/*Get the idle percentage. E.g. uint32_t my_get_idle(void);*/</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_SYSMON_GET_IDLE lv_timer_get_idle</span><br><br>    <span class="hljs-comment">/*1: Show CPU usage and FPS count</span><br><span class="hljs-comment">     * Requires `LV_USE_SYSMON = 1`*/</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_USE_PERF_MONITOR 1       <span class="hljs-comment">/* 启用CPU性能监视 */</span></span><br>    <span class="hljs-meta">#if LV_USE_PERF_MONITOR</span><br>        <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_USE_PERF_MONITOR_POS LV_ALIGN_BOTTOM_RIGHT</span><br><br>        <span class="hljs-comment">/*0: Displays performance data on the screen, 1: Prints performance data using log.*/</span><br>        <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_USE_PERF_MONITOR_LOG_MODE 0</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><br>    <span class="hljs-comment">/*1: Show the used memory and the memory fragmentation</span><br><span class="hljs-comment">     * Requires `LV_USE_STDLIB_MALLOC = LV_STDLIB_BUILTIN`</span><br><span class="hljs-comment">     * Requires `LV_USE_SYSMON = 1`*/</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_USE_MEM_MONITOR 1        <span class="hljs-comment">/* 启用内存监视 */</span></span><br>    <span class="hljs-meta">#if LV_USE_MEM_MONITOR</span><br>        <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_USE_MEM_MONITOR_POS LV_ALIGN_BOTTOM_LEFT</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">/*LV_USE_SYSMON*/</span></span><br></code></pre></td></tr></table></figure>
+<h3 id="启动时卡死-白屏-花屏"><a class="markdownIt-Anchor" href="#启动时卡死-白屏-花屏"></a> 启动时卡死、白屏、花屏</h3>
+<p>非常常见的情况。首先在初始化后移除所有的对象创建函数，仅保留一个最基本的创建空白屏幕的函数，这么做是为了排除其他对象引起的干扰因素。</p>
+<p>然后，按照下列顺序检查：</p>
+<ol>
+<li>硬件问题。</li>
+</ol>
+<ul>
+<li>确保屏幕和MCU硬件连接正确。最好的方式是先不跑LVGL，而是用一个最基本的填色函数来测试屏幕是否工作正常。</li>
+<li>确保供电满足要求</li>
+<li>确保时钟源正确配置</li>
+</ul>
+<ol start="2">
+<li>检查MCU启动文件中栈和堆大小是否设置正确。 LVGL正常运行至少需要以下条件：</li>
+</ol>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs vbnet">Flash/ROM: &gt; <span class="hljs-number">64</span> kB <span class="hljs-keyword">for</span> the very essential components (&gt; <span class="hljs-number">180</span> kB <span class="hljs-built_in">is</span> recommended)<br><br><span class="hljs-symbol">RAM:</span><br><span class="hljs-keyword">Static</span> RAM usage: ~<span class="hljs-number">2</span> kB depending <span class="hljs-keyword">on</span> the used features <span class="hljs-built_in">and</span> <span class="hljs-type">object</span> types<br><br><span class="hljs-symbol">stack:</span> &gt; <span class="hljs-number">2</span>kB (&gt; <span class="hljs-number">8</span> kB <span class="hljs-built_in">is</span> recommended)<br><br>Dynamic data (heap): &gt; <span class="hljs-number">2</span> KB (&gt; <span class="hljs-number">48</span> kB <span class="hljs-built_in">is</span> recommended <span class="hljs-keyword">if</span> <span class="hljs-keyword">using</span> several objects).<br><span class="hljs-keyword">Set</span> <span class="hljs-keyword">by</span> LV_MEM_SIZE <span class="hljs-keyword">in</span> lv_conf.h.<br><br>Display buffer: &gt; <span class="hljs-string">&quot;Horizontal resolution&quot;</span> pixels (&gt; <span class="hljs-number">10</span> <span class="hljs-string">&quot;Horizontal resolution&quot;</span> <span class="hljs-built_in">is</span> recommended)<br><br>One frame buffer <span class="hljs-keyword">in</span> the MCU <span class="hljs-built_in">or</span> <span class="hljs-keyword">in</span> an external display controller<br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>检查<code>lv_conf.h</code>中内存缓存地址及大小是否设置正确：</li>
+</ol>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-meta">#if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN</span><br>    <span class="hljs-comment">/*Size of the memory available for `lv_malloc()` in bytes (&gt;= 2kB)*/</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_MEM_SIZE (300U * 1024U)          <span class="hljs-comment">/*[bytes]*/</span></span><br><br>    <span class="hljs-comment">/*Size of the memory expand for `lv_malloc()` in bytes*/</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_MEM_POOL_EXPAND_SIZE 0</span><br><br>    <span class="hljs-comment">/*Set an address for the memory pool instead of allocating it as a normal array. Can be in external SRAM too.*/</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> LV_MEM_ADR (0XC0000000+1024*600*2)     <span class="hljs-comment">/*0: unused*/</span></span><br>    <span class="hljs-comment">/*Instead of an address give a memory allocator that will be called to get a memory pool for LVGL. E.g. my_malloc*/</span><br>    <span class="hljs-meta">#if LV_MEM_ADR == 0</span><br>        <span class="hljs-meta">#<span class="hljs-keyword">undef</span> LV_MEM_POOL_INCLUDE</span><br>        <span class="hljs-meta">#<span class="hljs-keyword">undef</span> LV_MEM_POOL_ALLOC</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span>  <span class="hljs-comment">/*LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN*/</span></span><br></code></pre></td></tr></table></figure>
+<p>我这里使用的是外部SDRAM作为lvgl的显存地址，大小为300KB。如果启动时白屏，优先考虑增加<code>LV_MEM_SIZE</code>的大小，至少为64KB。如果增加至64KB还未能解决卡死的问题，如果原本现存位置是MCU内部SRAM，考虑将显存移至外部SDRAM；如果原本是外部SDRAM，考虑移动至内部SRAM。</p>
+<ol start="4">
+<li>检查<code>lv_port_disp.c</code>和<code>lv_port_indev.c</code></li>
+</ol>
+<p>确认以下项设置正确：</p>
+<ul>
+<li>屏幕分辨率：</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MY_DISP_HOR_RES</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">warning</span> Please <span class="hljs-keyword">define</span> or replace the macro MY_DISP_HOR_RES with the actual screen width, default value 320 is used for now.</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> MY_DISP_HOR_RES    1024</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> MY_DISP_VER_RES</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">warning</span> Please <span class="hljs-keyword">define</span> or replace the macro MY_DISP_VER_RES with the actual screen height, default value 240 is used for now.</span><br>    <span class="hljs-meta">#<span class="hljs-keyword">define</span> MY_DISP_VER_RES    600</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br></code></pre></td></tr></table></figure>
+<p>屏幕分辨率如果比实际屏幕大，会导致花屏；如果比实际小，可能导致显示错位。</p>
+<ul>
+<li>
+<p><code>disp_flush()</code>是否在初始化后被正确调用</p>
+</li>
+<li>
+<p>颜色深度是否选择正确，lvgl默认为RGB565</p>
+</li>
+<li>
+<p>是否选择了正确的输入设备，没有用到的输入设备所对应的初始化代码要注释掉。</p>
+</li>
+</ul>
+<p>如果LVGL初始化正确并进入了空白屏幕，那么至少屏幕左下角和右下角会分别显示内存监视和CPU监视的小窗口，且CPU监视窗口的数字应当是在动态变化的。</p>
+<h3 id="切换页面时卡死或花屏"><a class="markdownIt-Anchor" href="#切换页面时卡死或花屏"></a> 切换页面时卡死或花屏</h3>
+<p>通常认为，有两种切换屏幕的方式：</p>
+<ul>
+<li>通过<code>lv_obj_clean</code>或<code>lv_obj_del</code>删除旧页面，然后<code>lv_scr_load</code>创建新页面。比如：</li>
+</ul>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs abnf">lv_obj_t *act_scr <span class="hljs-operator">=</span> lv_scr_act()<span class="hljs-comment">;</span><br>lv_obj_del(act_scr)<span class="hljs-comment">;</span><br>create_main_scr()<span class="hljs-comment">;        </span><br>lv_scr_load(main_scr)<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>通过向页面添加或移除<code>LV_OBJ_FLAG_HIDDEN</code>来控制页面的可视化，这么做需要事先一次性创建完所有可能需要显示的页面并添加flag，比如：</li>
+</ul>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">lv_obj_add_flag</span>(main_screen, LV_OBJ_FLAG_HIDDEN); <span class="hljs-comment">/* 隐藏页面 */</span><br><span class="hljs-built_in">lv_obj_clear_flag</span>(main_screen, LV_OBJ_FLAG_HIDDEN); <span class="hljs-comment">/* 显示页面 */</span><br></code></pre></td></tr></table></figure>
+<p><em>建议</em>：<strong>不要</strong>使用第二种通过控制<code>FLAG_HIDDEN</code>来实现切换页面的方法，除非你真的确认第一种方法没法使用。因为：</p>
+<ul>
+<li>初始化时一次性创建大量页面及其子类对象会极大的增加CPU和内存负担。应尽可能降低同时操作多个对象的可能性。</li>
+<li>浪费内存，造成内存泄漏，页面管理混乱。</li>
+<li>在LVGL v9及以上版本使用时，大概率导致花屏（很多例子），推测是多个对象叠加带来的内存问题。</li>
+</ul>
+<p>如果修改为第一种方法后还出现错误，参照以下步骤：</p>
+<ol>
+<li>
+<p>确保LVGL版本为最新。LVGL v9中<code>lv_scr_load()</code>函数的执行步骤是：</p>
+<ol>
+<li>获取当前活动屏幕和其关联的显示器对象</li>
+<li>判断当前屏幕是否为待切换的目标屏幕，如果是，退出函数</li>
+<li>判断是否有切换动画正在执行，如果有，立即切换至目标屏幕</li>
+<li>切换后，删除旧屏幕，更新<code>acr_scr</code>指针至目标屏幕</li>
+</ol>
+<p>这里的切换逻辑已经写的非常合理了，如果还是有错误：</p>
+</li>
+<li>
+<p>确保使用<code>lv_obj_del()</code>而不是<code>lv_obj_clean()</code>来删除旧屏幕。两个函数的功能有区别，<code>lv_obj_del()</code>会立即删除对象本身和其子项，而<code>lv_obj_clean()</code>仅删除目标对象的子项，而不删除目标对象本身，这可能造成内存泄漏。</p>
+</li>
+<li>
+<p>调换<code>lv_obj_del()</code>和<code>lv_scr_load()</code>的位置，即先创建新屏幕，再删除旧屏幕。之前有Github issue报告称在创建新屏幕前就删除旧屏幕可能导致内存池问题，lvgl会访问空指针导致hardfault。</p>
+</li>
+<li>
+<p>确保旧屏幕（包括其子项）和新屏幕（包括其子项）之间的对象依赖关系正确。具体一点来说：</p>
+<ul>
+<li>新屏幕必须已经被创建（父对象必须实际存在且为静态）</li>
+<li>新屏幕中的子项不能指向、包含或引用不存在的对象。这么说的意思是，如果你是在切换屏幕时才创建新屏幕中的对象，那么这个对象在切换屏幕前是不存在的。如果子项试图访问一个并不实际存在的对象，即访问一个空指针，那么LVGL就会卡死。举个例子：</li>
+</ul>
+ <figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs abnf">static void btn_to_main_page_cb(lv_event_t *e)&#123;<br>if (lv_event_get_code(e) <span class="hljs-operator">=</span><span class="hljs-operator">=</span> LV_EVENT_CLICKED)&#123;<br>    lv_obj_t *act_scr <span class="hljs-operator">=</span> lv_scr_act()<span class="hljs-comment">;</span><br>    create_main_scr()<span class="hljs-comment">;        </span><br>    lv_scr_load(main_scr)<span class="hljs-comment">;  /* 切换至main_scr() *、`</span><br>    lv_obj_del(act_scr)<span class="hljs-comment">;</span><br>&#125;<br>&#125;<br><br>static void create_main_scr()&#123;<br>    /* ..... */<br>    lv_label_set_text_fmt(Example_label)<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这个例子里，我即将切换到的目标屏幕中包含一个对<code>Example_label</code>的操作，而<code>Example_label</code>可能是在其他屏幕初始化函数中被创建的，那么必须确保在切换前<code>Example_label</code>就已经存在。</p>
+</li>
+<li>
+<p>如果启用了定时器(lv_timer)，检查定时器创建位置和回调执行位置。假设<code>lv_timer_1</code>用于实时更新<code>test_scr</code>中的某个label组件，那么<code>lv_timer_1</code>应当只在进入<code>test_scr</code>后被创建，如果其他屏幕没有用到<code>lv_timer_1</code>，那么<code>lv_timer_1</code>在退出<code>test_scr</code>前就应当被销毁（先销毁定时器，再删除旧屏幕），尤其是当<code>lv_timer_1</code>的回调函数中包括对<code>test_scr</code>中子对象的引用、指向和删除操作时，因为一旦退出<code>test_scr</code>，回调函数所指向的对象就不再存在（被删除），即指向空指针，LVGL会立即卡死。</p>
+<p>推荐使用这种方式来管理定时器的创建：</p>
+ <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">lvgl_create_timers_1</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br><span class="hljs-comment">// 如果存在旧的定时器对象</span><br><span class="hljs-keyword">if</span> (timer_1 != <span class="hljs-literal">NULL</span>) &#123;<br>    <span class="hljs-built_in">lv_timer_del</span>(timer_1);  <span class="hljs-comment">// 删除旧的定时器</span><br>    timer_1 = <span class="hljs-literal">NULL</span>;         <span class="hljs-comment">// 清空指针</span><br>&#125;<br><br><span class="hljs-comment">// 创建新的定时器</span><br>timer_1 = <span class="hljs-built_in">lv_timer_create</span>(lvgl_timer_1_cb, <span class="hljs-number">500</span>, <span class="hljs-literal">NULL</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li>
+<p>如果到这里还没有解决问题，应使用IDE的debug功能进行单步调试，定位故障来源。下面是几个例子：</p>
+<ul>
+<li>函数卡死在<code>lv_tlsf.c</code>中的某个函数：内存管理出现问题，极大可能是访问或释放了不存在的内存（空指针），确保正确处理了对象之间的依赖关系。</li>
+<li>函数卡死在<code>delay</code>函数：函数停在这里是正常现象，这里的卡死指的是一直在delay中循环而不跳出，考虑时钟问题，可能的情况下降低屏幕时钟频率。</li>
+<li>函数跳转至<code>hardfault_handler()</code>：非LVGL自身原因带来的问题，必定是用户的代码产生了错误。</li>
+</ul>
+</li>
+</ol>
+<h3 id="触发组件回调时卡死"><a class="markdownIt-Anchor" href="#触发组件回调时卡死"></a> 触发组件回调时卡死</h3>
+<ol>
+<li>不要在回调中使用<code>while</code>、<code>for</code>或长时间的延时</li>
+<li>不要在回调函数中访问已经被删除或无效的对象，参加上一小节中的第5条。这一条看似不起眼，但很多人都不会意识到这个问题</li>
+<li>LVGL不是线程安全的。如果在OS中使用LVGL，考虑为回调函数添加标志位或互斥锁，避免竞态条件</li>
+<li>尽可能地优化代码，不要嵌套过多的API或一次性创建大量对象，github issue中有因为这么干而造成栈溢出的。</li>
+</ol>
+<h3 id="长时间运行后卡死"><a class="markdownIt-Anchor" href="#长时间运行后卡死"></a> 长时间运行后卡死</h3>
+<p>99%是内存问题。确保创建新对象后删除旧对象并释放内存。</p>
+<h2 id="后话"><a class="markdownIt-Anchor" href="#后话"></a> 后话</h2>
+<p>最后，一些好习惯，能够高效的进行debug：</p>
+<ul>
+<li>对LVGL申请的关键内存添加<code>static</code>，尤其是各种缓冲区</li>
+<li>发生错误时，从父类到子类、从大到小、从前到后依次定位故障来源，着重关注“动态阶段”，也就是创建对象、删除对象、刷新对象等等的这些操作</li>
+<li>善用搜索功能和官方文档</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LVGL发生各种卡死现象的原因分析和排故</div>
+      <div>http://akichen891.github.io/2025/02/20/LVGL发生各种卡死现象的原因分析和排故/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月20日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年2月20日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/18/C-%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8/" title="C++类构造函数初始化列表">
+                        <span class="hidden-mobile">C++类构造函数初始化列表</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
