@@ -1,0 +1,762 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="文件目录  bsp  clk   (时钟驱动)  bsp_clk.c bsp_clk.h   delay (延时驱动)  bsp_delay.c bsp_delay.h   led   (LED驱动)  bsp_led.c bsp_led.h     imx6ul  cc.h  (变量类型声明) fsl_common.h  (NXP官方SDK通用宏定义文档) fsl_iomuxc.h  (NXP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux下规范性Makefile规则">
+<meta property="og:url" content="http://akichen891.github.io/2025/03/02/Linux%E4%B8%8B%E8%A7%84%E8%8C%83%E6%80%A7Makefile%E8%A7%84%E5%88%99/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="文件目录  bsp  clk   (时钟驱动)  bsp_clk.c bsp_clk.h   delay (延时驱动)  bsp_delay.c bsp_delay.h   led   (LED驱动)  bsp_led.c bsp_led.h     imx6ul  cc.h  (变量类型声明) fsl_common.h  (NXP官方SDK通用宏定义文档) fsl_iomuxc.h  (NXP">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-02T07:27:16.000Z">
+<meta property="article:modified_time" content="2025-03-02T08:07:03.150Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Linux下规范性Makefile规则 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Linux下规范性Makefile规则</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-02 15:27" pubdate>
+          2025年3月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Linux下规范性Makefile规则</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="文件目录"><a class="markdownIt-Anchor" href="#文件目录"></a> 文件目录</h2>
+<ul>
+<li>bsp
+<ul>
+<li>clk   (时钟驱动)
+<ul>
+<li>bsp_clk.c</li>
+<li>bsp_clk.h</li>
+</ul>
+</li>
+<li>delay (延时驱动)
+<ul>
+<li>bsp_delay.c</li>
+<li>bsp_delay.h</li>
+</ul>
+</li>
+<li>led   (LED驱动)
+<ul>
+<li>bsp_led.c</li>
+<li>bsp_led.h</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>imx6ul
+<ul>
+<li>cc.h  (变量类型声明)</li>
+<li>fsl_common.h  (NXP官方SDK通用宏定义文档)</li>
+<li>fsl_iomuxc.h  (NXP官方SDK寄存器地址定义文档)</li>
+<li>imx6ul.h      (常用头文件)</li>
+<li>MCIMX6Y2.h    (NXP官方SDK寄存器结构体和相关位定义文档)</li>
+</ul>
+</li>
+<li>obj<br>
+.o文件目标地址</li>
+<li>project
+<ul>
+<li>main.c    (主函数)</li>
+<li>start.S   (启动文件)</li>
+</ul>
+</li>
+</ul>
+<h2 id="makefile"><a class="markdownIt-Anchor" href="#makefile"></a> Makefile</h2>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs makefile">CROSS_COMPILE 	?= arm-linux-gnueabihf-<br>TARGET		  	?= bsp<br><br>CC 				:= <span class="hljs-variable">$(CROSS_COMPILE)</span>gcc<br>LD				:= <span class="hljs-variable">$(CROSS_COMPILE)</span>ld<br>OBJCOPY 		:= <span class="hljs-variable">$(CROSS_COMPILE)</span>objcopy<br>OBJDUMP 		:= <span class="hljs-variable">$(CROSS_COMPILE)</span>objdump<br><br>INCDIRS 		:= imx6ul \<br>				   bsp/clk \<br>				   bsp/led \<br>				   bsp/delay <br>				   			   <br>SRCDIRS			:= project \<br>				   bsp/clk \<br>				   bsp/led \<br>				   bsp/delay <br>				   <br>				   <br>INCLUDE			:= <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> %, -I %, <span class="hljs-variable">$(INCDIRS)</span>)</span><br><br>SFILES			:= <span class="hljs-variable">$(<span class="hljs-built_in">foreach</span> <span class="hljs-built_in">dir</span>, <span class="hljs-variable">$(SRCDIRS)</span>, $(<span class="hljs-built_in">wildcard</span> <span class="hljs-variable">$(dir)</span>/*.S)</span>)<br>CFILES			:= <span class="hljs-variable">$(<span class="hljs-built_in">foreach</span> <span class="hljs-built_in">dir</span>, <span class="hljs-variable">$(SRCDIRS)</span>, $(<span class="hljs-built_in">wildcard</span> <span class="hljs-variable">$(dir)</span>/*.c)</span>)<br><br>SFILENDIR		:= <span class="hljs-variable">$(<span class="hljs-built_in">notdir</span>  <span class="hljs-variable">$(SFILES)</span>)</span><br>CFILENDIR		:= <span class="hljs-variable">$(<span class="hljs-built_in">notdir</span>  <span class="hljs-variable">$(CFILES)</span>)</span><br><br>SOBJS			:= <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> %, obj/%, $(SFILENDIR:.S=.o)</span>)<br>COBJS			:= <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> %, obj/%, $(CFILENDIR:.c=.o)</span>)<br>OBJS			:= <span class="hljs-variable">$(SOBJS)</span> <span class="hljs-variable">$(COBJS)</span><br><br>VPATH			:= <span class="hljs-variable">$(SRCDIRS)</span><br><br><span class="hljs-meta"><span class="hljs-keyword">.PHONY</span>: clean</span><br>	<br><span class="hljs-variable">$(TARGET)</span>.bin : <span class="hljs-variable">$(OBJS)</span><br>	<span class="hljs-variable">$(LD)</span> -Timx6ul.lds -o <span class="hljs-variable">$(TARGET)</span>.elf <span class="hljs-variable">$^</span><br>	<span class="hljs-variable">$(OBJCOPY)</span> -O binary -S <span class="hljs-variable">$(TARGET)</span>.elf <span class="hljs-variable">$@</span><br>	<span class="hljs-variable">$(OBJDUMP)</span> -D -m arm <span class="hljs-variable">$(TARGET)</span>.elf &gt; <span class="hljs-variable">$(TARGET)</span>.dis<br><br><span class="hljs-variable">$(SOBJS)</span> : obj/%.o : %.S<br>	<span class="hljs-variable">$(CC)</span> -Wall -nostdlib -c -O2  <span class="hljs-variable">$(INCLUDE)</span> -o <span class="hljs-variable">$@</span> <span class="hljs-variable">$&lt;</span><br><br><span class="hljs-variable">$(COBJS)</span> : obj/%.o : %.c<br>	<span class="hljs-variable">$(CC)</span> -Wall -nostdlib -c -O2  <span class="hljs-variable">$(INCLUDE)</span> -o <span class="hljs-variable">$@</span> <span class="hljs-variable">$&lt;</span><br>	<br><span class="hljs-section">clean:</span><br>	rm -rf <span class="hljs-variable">$(TARGET)</span>.elf <span class="hljs-variable">$(TARGET)</span>.dis <span class="hljs-variable">$(TARGET)</span>.bin <span class="hljs-variable">$(COBJS)</span> <span class="hljs-variable">$(SOBJS)</span><br><br></code></pre></td></tr></table></figure>
+<h2 id="细节"><a class="markdownIt-Anchor" href="#细节"></a> 细节</h2>
+<h3 id="工具配置"><a class="markdownIt-Anchor" href="#工具配置"></a> 工具配置</h3>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs makefile">CROSS_COMPILE 	?= arm-linux-gnueabihf-     <span class="hljs-comment"># 交叉编译工具前缀（ARM架构）</span><br>TARGET		  	?= bsp                      <span class="hljs-comment"># 目标程序名称，默认输出文件名为 `bsp`</span><br><br>CC 				:= <span class="hljs-variable">$(CROSS_COMPILE)</span>gcc      <span class="hljs-comment"># C 编译器</span><br>LD				:= <span class="hljs-variable">$(CROSS_COMPILE)</span>ld       <span class="hljs-comment"># 链接器</span><br>OBJCOPY 		:= <span class="hljs-variable">$(CROSS_COMPILE)</span>objcopy  <span class="hljs-comment"># 二进制转换工具</span><br>OBJDUMP 		:= <span class="hljs-variable">$(CROSS_COMPILE)</span>objdump  <span class="hljs-comment"># 反汇编工具</span><br></code></pre></td></tr></table></figure>
+<h3 id="目录与文件管理"><a class="markdownIt-Anchor" href="#目录与文件管理"></a> 目录与文件管理</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">INCDIRS := imx6ul \            <span class="hljs-comment"># 头文件搜索目录列表，&quot;\&quot;为换行符</span><br>           bsp/clk \<br>           bsp/led \<br>           bsp/delay<br><br>SRCDIRS := project \           <span class="hljs-comment"># 源码搜索目录列表，&quot;\&quot;为换行符</span><br>           bsp/clk \<br>           bsp/led \<br>           bsp/delay<br><br>INCLUDE := $(patsubst %, -I %, $(INCDIRS))  <span class="hljs-comment"># 将 INCDIRS 转换为 gcc 的 `-I` 选项</span><br></code></pre></td></tr></table></figure>
+<p><code>patsubst</code>:</p>
+<ul>
+<li>
+<p>函数用法：<code>$(patsubst &lt;pattern&gt;,&lt;replacement&gt;,&lt;text&gt;</code></p>
+</li>
+<li>
+<p>名称：模式字符串替换函数——patsubst。</p>
+</li>
+<li>
+<p>功能：查找<code>&lt;text&gt;</code>中的单词（单词以“空格”、“Tab”或“回车”“换行”分隔）是否符合模式<code>&lt;pattern&gt;</code>，如果匹配的话，则以<code>&lt;replacement&gt;</code>替换。这里，<code>&lt;pattern&gt;</code>可以包括通配符“%”，表示任意长度的字串。如果<code>&lt;replacement&gt;</code>中也包含“%”，那么<code>&lt;replacement&gt;</code>中的这个“%”将是<code>&lt;pattern&gt;</code>中的那个“%”所代表的字串。（可以用“\”来转义，以“%”来表示真实含义的“%”字符）</p>
+</li>
+<li>
+<p>返回：函数返回被替换过后的字符串。</p>
+</li>
+<li>
+<p>示例：<code>$(patsubst %.c,%.o, a.c b.c)</code>，把字串“a.c b.c”符合模式[%.c]的单词替换成[%.o]，返回结果是“a.o b.o”</p>
+</li>
+</ul>
+<h3 id="源码文件收集"><a class="markdownIt-Anchor" href="#源码文件收集"></a> 源码文件收集</h3>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs makefile">SFILES := <span class="hljs-variable">$(<span class="hljs-built_in">foreach</span> <span class="hljs-built_in">dir</span>, <span class="hljs-variable">$(SRCDIRS)</span>, $(<span class="hljs-built_in">wildcard</span> <span class="hljs-variable">$(dir)</span>/*.S)</span>)  <span class="hljs-comment"># 所有 .S 汇编文件</span><br>CFILES := <span class="hljs-variable">$(<span class="hljs-built_in">foreach</span> <span class="hljs-built_in">dir</span>, <span class="hljs-variable">$(SRCDIRS)</span>, $(<span class="hljs-built_in">wildcard</span> <span class="hljs-variable">$(dir)</span>/*.c)</span>)  <span class="hljs-comment"># 所有 .c C 文件</span><br><br>SFILENDIR := <span class="hljs-variable">$(<span class="hljs-built_in">notdir</span> <span class="hljs-variable">$(SFILES)</span>)</span>  <span class="hljs-comment"># 去除路径，保留文件名（如 `start.S`）</span><br>CFILENDIR := <span class="hljs-variable">$(<span class="hljs-built_in">notdir</span> <span class="hljs-variable">$(CFILES)</span>)</span>  <span class="hljs-comment"># 去除路径，保留文件名（如 `main.c`）</span><br><br>SOBJS := <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> %, obj/%, $(SFILENDIR:.S=.o)</span>)  <span class="hljs-comment"># 汇编文件对应的 .o 文件（放在 obj 目录）</span><br>COBJS := <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> %, obj/%, $(CFILENDIR:.c=.o)</span>)  <span class="hljs-comment"># C 文件对应的 .o 文件（放在 obj 目录）</span><br>OBJS  := <span class="hljs-variable">$(SOBJS)</span> <span class="hljs-variable">$(COBJS)</span>                        <span class="hljs-comment"># 所有目标文件</span><br><br>VPATH := <span class="hljs-variable">$(SRCDIRS)</span>  <span class="hljs-comment"># 指定源码搜索路径，Make 会在这些目录中查找依赖文件</span><br></code></pre></td></tr></table></figure>
+<p><code>foreach</code>：</p>
+<ul>
+<li>
+<p>用法：<code>$(foreach &lt;var&gt;, &lt;list&gt;, &lt;expr&gt;)</code></p>
+</li>
+<li>
+<p>功能：遍历 <code>&lt;list&gt;</code> 中的每个元素，将元素赋值给 <code>&lt;var&gt;</code>，然后展开 <code>&lt;expr&gt;</code>，最终将所有展开结果合并成一个空格分隔的字符串。</p>
+</li>
+<li>
+<p>示例中的用法：遍历 <code>SRCDIRS</code> 中的每个目录，收集所有 <code>.S</code> 和 <code>.c</code> 文件的完整路径。</p>
+<ol>
+<li><code>dir</code> 依次取 <code>SRCDIRS</code> 中的值（如 <code>project</code>, <code>bsp/clk</code> 等）</li>
+<li><code>$(wildcard $(dir)/*.S)</code> 展开为 <code>dir</code> 目录下所有 <code>.S</code> 文件的路径（如 <code>project/start.S, bsp/clk/clk.S</code>）。</li>
+<li>最终 <code>SFILES</code> 是所有 <code>.S</code> 文件的路径列表，<code>CFILES</code> 是所有 <code>.c</code> 文件的路径列表。</li>
+</ol>
+</li>
+</ul>
+<p><code>wildcard</code>：</p>
+<ul>
+<li>用法：<code>$(wildcard &lt;pattern&gt;)</code></li>
+<li>功能：匹配符合 <code>&lt;pattern&gt;</code> 的文件路径，支持通配符 * 和 ?。</li>
+<li>示例中的用法:在 <code>foreach</code> 循环中，为每个 <code>dir</code> 目录生成文件列表。</li>
+</ul>
+<h3 id="生成二进制文件"><a class="markdownIt-Anchor" href="#生成二进制文件"></a> 生成二进制文件</h3>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crystal"><span class="hljs-variable">$(</span>TARGET).bin : <span class="hljs-variable">$(</span>OBJS)                       <span class="hljs-comment"># 依赖所有 .o 文件</span><br>	<span class="hljs-variable">$(</span>LD) -Timx6ul.lds -o <span class="hljs-variable">$(</span>TARGET).elf <span class="hljs-variable">$^</span>    <span class="hljs-comment"># 1. 链接生成 ELF 文件</span><br>	<span class="hljs-variable">$(</span>OBJCOPY) -O binary -S <span class="hljs-variable">$(</span>TARGET).elf <span class="hljs-variable">$@</span>  <span class="hljs-comment"># 2. 提取二进制文件</span><br>	<span class="hljs-variable">$(</span>OBJDUMP) -D -m arm <span class="hljs-variable">$(</span>TARGET).elf &gt; <span class="hljs-variable">$(</span>TARGET).dis  <span class="hljs-comment"># 3. 生成反汇编文件</span><br></code></pre></td></tr></table></figure>
+<h3 id="编译规则"><a class="markdownIt-Anchor" href="#编译规则"></a> 编译规则</h3>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mel">$(SOBJS) : obj/%.o : %.S      # 编译 .S 汇编文件（需预处理的汇编）<br>	$(CC) -Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $&lt;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>-nostdlib</code>：不链接标准库，适用于裸机程序</li>
+<li><code>-O2</code>：优化等级为2</li>
+<li><code>$(INCLUDE)</code>：包含头文件目录的<code>-I</code>选项</li>
+</ul>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mel">$(COBJS) : obj/%.o : %.c      # 编译 .c C 文件<br>	$(CC) -Wall -nostdlib -c -O2 $(INCLUDE) -o $@ $&lt;<br></code></pre></td></tr></table></figure>
+<h3 id="清理规则"><a class="markdownIt-Anchor" href="#清理规则"></a> 清理规则</h3>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">clean:</span><br>	rm -rf <span class="hljs-variable">$(TARGET)</span>.elf <span class="hljs-variable">$(TARGET)</span>.dis <span class="hljs-variable">$(TARGET)</span>.bin <span class="hljs-variable">$(COBJS)</span> <span class="hljs-variable">$(SOBJS)</span><br></code></pre></td></tr></table></figure>
+<h2 id="完整流程"><a class="markdownIt-Anchor" href="#完整流程"></a> 完整流程：</h2>
+<ol>
+<li>收集源码路径：
+<ul>
+<li><code>SFILES = project/start.S bsp/clk/clk.S</code></li>
+<li><code>CFILES = project/main.c bsp/clk/clk.c</code></li>
+</ul>
+</li>
+<li>提取文件名：
+<ul>
+<li><code>SFILENDIR = start.S clk.S</code></li>
+<li><code>CFILENDIR = main.c clk.c</code></li>
+</ul>
+</li>
+<li>生成目标文件列表
+<ul>
+<li><code>SOBJS = obj/start.o obj/clk.o</code></li>
+<li><code>COBJS = obj/main.o obj/clk.o</code></li>
+<li><code>OBJS = obj/start.o obj/clk.o obj/main.o obj/clk.o</code></li>
+</ul>
+</li>
+<li>编译时
+<ul>
+<li>Make 根据 <code>VPATH</code> 在 <code>project</code> 和 <code>bsp/clk</code> 目录中查找 <code>start.S</code> 和 <code>clk.c</code> 等文件。</li>
+</ul>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux下规范性Makefile规则</div>
+      <div>http://akichen891.github.io/2025/03/02/Linux下规范性Makefile规则/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/20/LVGL%E5%8F%91%E7%94%9F%E5%90%84%E7%A7%8D%E5%8D%A1%E6%AD%BB%E7%8E%B0%E8%B1%A1%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90%E5%92%8C%E6%8E%92%E6%95%85/" title="LVGL发生各种卡死现象的原因分析和排故">
+                        <span class="hidden-mobile">LVGL发生各种卡死现象的原因分析和排故</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
