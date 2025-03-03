@@ -27,15 +27,15 @@
 <meta property="og:description" content="时钟来源和生成  包括以下三个时钟来源：  外部晶振，高速晶振频率24Mhz，低速晶振频率32.768KHz 低压差分信号 (LVDS) I&#x2F;O 端口，用于从外部获取时钟信号 锁相环(PLL)，主时钟包含七个 PLL。其中两个 PLL 分别配备四个相位小数分频器 (PFD)，以生成额外的频率。  七个PLL包括：  PLL1(ARM_PLL)，ARM内核时钟，最高可倍频至1.3GHz(但MCU最">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/%E6%97%B6%E9%92%9F%E7%94%9F%E6%88%90%E6%9D%A5%E6%BA%90">
-<meta property="og:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/%E6%97%B6%E9%92%9F%E6%A0%91(1)">
-<meta property="og:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/%E6%97%B6%E9%92%9F%E6%A0%91(2)">
-<meta property="og:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/ARM%E6%97%B6%E9%92%9F">
-<meta property="og:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/CCM_CACRR%E5%AF%84%E5%AD%98%E5%99%A8">
-<meta property="og:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/CCM_ANALOG_PLL_ARMn%E5%AF%84%E5%AD%98%E5%99%A8">
-<meta property="og:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/PLL1%E6%97%B6%E9%92%9F%E6%BA%90">
-<meta property="og:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/CCM_CCSR%E5%AF%84%E5%AD%98%E5%99%A8">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/clock_2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/clock_3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/clock_4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/clock_5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/clock_6.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/clock_7.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/clock_8.png">
 <meta property="article:published_time" content="2025-03-03T06:52:08.000Z">
-<meta property="article:modified_time" content="2025-03-03T08:06:26.062Z">
+<meta property="article:modified_time" content="2025-03-03T08:14:58.953Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/%E6%97%B6%E9%92%9F%E7%94%9F%E6%88%90%E6%9D%A5%E6%BA%90">
@@ -303,23 +303,23 @@
 <li>PLL7(USB2_PLL)，专门为 USB2 PHY（USBPHY2，也称为 OTG PHY）提供时钟，固定倍频 20，输出频率480MHz</li>
 </ul>
 <h2 id="ccm时钟树"><a class="markdownIt-Anchor" href="#ccm时钟树"></a> CCM时钟树</h2>
-<p><img src="%E6%97%B6%E9%92%9F%E6%A0%91(1)" srcset="/img/loading.gif" lazyload alt="/images/linux/clock_2.png"></p>
-<p><img src="%E6%97%B6%E9%92%9F%E6%A0%91(2)" srcset="/img/loading.gif" lazyload alt="/images/linux/clock_3.png"></p>
+<p><img src="/images/linux/clock_2.png" srcset="/img/loading.gif" lazyload alt="时钟树(1)"></p>
+<p><img src="/images/linux/clock_3.png" srcset="/img/loading.gif" lazyload alt="时钟树(2)"></p>
 <p>具体参见手册第629页。</p>
 <h2 id="时钟配置"><a class="markdownIt-Anchor" href="#时钟配置"></a> 时钟配置</h2>
 <p>以ARM时钟配置为例：</p>
-<p><img src="ARM%E6%97%B6%E9%92%9F" srcset="/img/loading.gif" lazyload alt="/images/linux/clock_4.png"></p>
+<p><img src="/images/linux/clock_4.png" srcset="/img/loading.gif" lazyload alt="ARM时钟"></p>
 <p>时钟从PLL1的996MHz开始，通过寄存器CCM_CACRR的ARM_PODF位进行分频，可选1/2/4/8分频，然后得到ARM时钟ARM_CLK_ROOT。灰色的/2分频并未实际效果。其中PLL1频率可通过寄存器CCM_ANALOG_PLL_ARMn设置。</p>
-<p><img src="CCM_CACRR%E5%AF%84%E5%AD%98%E5%99%A8" srcset="/img/loading.gif" lazyload alt="/images/linux/clock_5.png"></p>
-<p><img src="CCM_ANALOG_PLL_ARMn%E5%AF%84%E5%AD%98%E5%99%A8" srcset="/img/loading.gif" lazyload alt="/images/linux/clock_6.png"></p>
+<p><img src="/images/linux/clock_5.png" srcset="/img/loading.gif" lazyload alt="CCM_CACRR寄存器"></p>
+<p><img src="/images/linux/clock_6.png" srcset="/img/loading.gif" lazyload alt="CCM_ANALOG_PLL_ARMn寄存器"></p>
 <p>修改PLL1时钟时要首先要切换内核时钟源。</p>
-<p><img src="PLL1%E6%97%B6%E9%92%9F%E6%BA%90" srcset="/img/loading.gif" lazyload alt="/images/linux/clock_7.png"></p>
+<p><img src="/images/linux/clock_7.png" srcset="/img/loading.gif" lazyload alt="PLL1时钟源"></p>
 <ol>
 <li>PLL1最终输出时钟频率。</li>
 <li>选择器，用于选择pll1的时钟源，由CCM_CCSR的PLL1_SW_CLK_SEL位决定。默认为pll1_main_clk，但如果要调整pll1_main_clk频率，则首先应将pll_sw_clk切换至step_clk，调整完成后再切换回来。</li>
 <li>选择器，用于选择step_clk的时钟源，由CCM_CCSR的STEP_SEL位决定。默认为osc_clk，即外部高速晶振。</li>
 </ol>
-<p><img src="CCM_CCSR%E5%AF%84%E5%AD%98%E5%99%A8" srcset="/img/loading.gif" lazyload alt="/images/linux/clock_8.png"></p>
+<p><img src="/images/linux/clock_8.png" srcset="/img/loading.gif" lazyload alt="CCM_CCSR寄存器"></p>
 <p>至此，修改I.MX6U主频的步骤可以归纳为：</p>
 <ol>
 <li>设置CCM_CCSR的STEP_SEL位，设置step_clk时钟源为外部24MHz高速晶振</li>
