@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://akichen891.github.io/images/linux/GIC_2.png">
 <meta property="og:image" content="http://akichen891.github.io/images/linux/GIC_3.png">
 <meta property="article:published_time" content="2025-03-04T04:51:55.000Z">
-<meta property="article:modified_time" content="2025-03-04T11:41:28.480Z">
+<meta property="article:modified_time" content="2025-03-04T13:34:43.622Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/linux/GIC_1.png">
@@ -218,7 +218,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.2k 字
+          5.5k 字
         
       </span>
     
@@ -229,7 +229,7 @@
         
         
         
-          44 分钟
+          46 分钟
         
       </span>
     
@@ -568,8 +568,66 @@
 </ol>
 <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">lr</span>&#125;					<span class="hljs-comment">/* 执行完C语言中断服务函数，lr出栈 */</span><br><span class="hljs-keyword">cps</span> <span class="hljs-number">#0x12</span>					<span class="hljs-comment">/* 进入IRQ模式 */</span><br><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r1</span>&#125;				<br><span class="hljs-keyword">str</span> <span class="hljs-built_in">r0</span>, [<span class="hljs-built_in">r1</span>, <span class="hljs-number">#0X10</span>]			<span class="hljs-comment">/* 中断执行完成，写EOIR */</span><br></code></pre></td></tr></table></figure>
 <ol start="6">
-<li>恢复中断前状态并返回。ARM在进入IRQ异常时，硬件会自动将LR_irq设为<code>PC + 4</code>，但由于流水线效应，实际应返回到<code>PC - 4</code>，即被中断指令的地址。</li>
+<li>恢复中断前状态并返回。</li>
 </ol>
+<p>这里是一个很容易搞错的点。ARM使用三级流水线机制：取指-&gt;译指-&gt;执行，而我们总以执行位置作为参考点，因此PC永远是当前执行位置<code>+8</code>；LR存放函数调用结束后返回继续执行的地址，也就是当前执行指令的下一条(<code>+4</code>)。进入IRQ中断时，中断总是在执行一条指令后再进入，此时PC更新为<code>+12</code>，相应的LR变为<code>+8</code>，然后LR被入栈保存。如果中断结束后，直接将LR出栈，程序会从<code>+8</code>处开始运行，那么<code>+4</code>处的指令就直接被跳过了。因此，中断结束后将LR出栈时，要将LR<code>-4</code>。</p>
+<p>用表格可以解释为：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th>状态A：中断前</th>
+<th>状态B：进入中断后</th>
+<th>状态C：中断恢复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x00</td>
+<td>MOV R1, R0</td>
+<td>准备执行</td>
+<td>已执行</td>
+<td></td>
+</tr>
+<tr>
+<td>0x04</td>
+<td>MOV R2, R1</td>
+<td>LR</td>
+<td></td>
+<td>LR（恢复为状态A时的PC值-4）</td>
+</tr>
+<tr>
+<td>0x08</td>
+<td>MOV R3, R2</td>
+<td>PC</td>
+<td>LR（已入栈）</td>
+<td></td>
+</tr>
+<tr>
+<td>0x0c</td>
+<td>MOV R4 ,R3</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>PC值</td>
+<td>0x08</td>
+<td>0x12</td>
+<td>由LR值决定</td>
+</tr>
+<tr>
+<td></td>
+<td>LR值</td>
+<td>0x04</td>
+<td>0x08</td>
+<td>0x04</td>
+</tr>
+</tbody>
+</table>
+<p>再通俗一点：PC始终指向当前执行指令+8，发生中断时，入栈保存的LR实际上是PC的地址，如果返回时将LR直接赋给PC，中间就跳过了一个指令，因此LR出栈后要<code>-4</code>才能赋给PC。</p>
 <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">r0</span>&#125;						<br><span class="hljs-keyword">msr</span> <span class="hljs-built_in">spsr_cxsf</span>, <span class="hljs-built_in">r0</span>			<span class="hljs-comment">/* 恢复spsr */</span><br><br><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">r0</span>-<span class="hljs-built_in">r3</span>, <span class="hljs-built_in">r12</span>&#125;			<span class="hljs-comment">/* r0-r3,r12出栈 */</span><br><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">lr</span>&#125;					<span class="hljs-comment">/* lr出栈 */</span><br><span class="hljs-keyword">subs</span> <span class="hljs-built_in">pc</span>, <span class="hljs-built_in">lr</span>, <span class="hljs-number">#4</span>				<span class="hljs-comment">/* 将计算后的地址（lr-4）赋给pc */</span>	<br></code></pre></td></tr></table></figure>
 <h3 id="中断驱动文件c函数"><a class="markdownIt-Anchor" href="#中断驱动文件c函数"></a> 中断驱动文件（C函数）</h3>
 <ol>
