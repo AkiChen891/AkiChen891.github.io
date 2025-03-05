@@ -2,9 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://akichen891.github.io/2025/03/05/DDR3%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2025-03-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/</loc>
     
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -364,7 +373,7 @@
 
   <url>
     <loc>http://akichen891.github.io/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -373,64 +382,57 @@
 
   
   <url>
-    <loc>http://akichen891.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/</loc>
-    <lastmod>2025-03-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://akichen891.github.io/categories/C/</loc>
-    <lastmod>2025-03-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://akichen891.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-linux%E5%BC%80%E5%8F%91/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://akichen891.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://akichen891.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/</loc>
+    <lastmod>2025-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://akichen891.github.io/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://akichen891.github.io/categories/%E7%94%B5%E6%B0%94%E5%B7%A5%E7%A8%8B/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://akichen891.github.io/categories/%E7%94%B5%E5%AD%90%E4%B8%8E%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://akichen891.github.io/categories/%E5%BB%BA%E7%AB%99%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://akichen891.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2025-03-04</lastmod>
+    <lastmod>2025-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
