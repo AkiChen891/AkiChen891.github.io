@@ -27,8 +27,12 @@
 <meta property="og:description" content="RAM和ROM  RAM：Random-access memory，随机存储器，随时读写，速度快，掉电后数据丢失。内存条即为常见的RAM。ARM中栈、堆(malloc申请的内存)、全局区（.bss段、.data段）都存放在RAM中。 ROM：Read-only memory，只读存储器。容量大，速度慢，掉电后数据留存。  对于IMX6U，256&#x2F;512MB的DDR3为RAM，512MB的NANF">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://akichen891.github.io/images/linux/sram_1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/sram_2.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/sram_3.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/sram_4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/sram_5.png">
 <meta property="article:published_time" content="2025-03-05T13:28:29.000Z">
-<meta property="article:modified_time" content="2025-03-05T13:50:51.342Z">
+<meta property="article:modified_time" content="2025-03-06T07:58:53.518Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/linux/sram_1.png">
@@ -216,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          430 字
+          1.8k 字
         
       </span>
     
@@ -227,7 +231,7 @@
         
         
         
-          4 分钟
+          16 分钟
         
       </span>
     
@@ -308,6 +312,101 @@
 3. DDR2 SDRAM<br>
 4. DDR3 SDRAM<br>
 5. DDR4 SDRAM</p>
+<p>STM32F429/F767等都支持SDRAM。就以 STM32 开发板最常用的华邦 W9825G6KH 为例，W9825G6KH 是一款 16 位宽(数据位为 16 位)、32MB 的 SDRAM、速度一般为 133MHz、166MHz 或 200MHz：</p>
+<p><img src="/images/linux/sram_2.png" srcset="/img/loading.gif" lazyload alt="W9825G6KH框图"></p>
+<ol>
+<li>控制线
+<ul>
+<li>CLK：时钟线，SDRAM中“同步”二字表明其必定需要时钟线</li>
+<li>CKE：时钟使能信号线</li>
+<li>CS：片选信号</li>
+<li>RAS：行选通信号。与SRAM不同，SDRAM通过行、列来确定具体的存储区域，类似于“坐标”，因此有行地址和列地址之分</li>
+<li>CAS：列选通信号</li>
+<li>WE：写使能信号</li>
+</ul>
+</li>
+<li>A10地址线：除了地址线外，A10线还控制Auto-precharge（预充电）。SDRAM内部分为多个BANK，读写完成后如果要对同一个BANK中的另一行进行寻址，则必须将原来的有效行关闭，然后发送新的行/列地址。关闭现在正工作的行，打开新行的操作就叫做预充电。</li>
+<li>地址线：A0-A12，共13根，包含行地址和列地址。如W9825G6KH的A0-A8是列地址(9位)，A0-A12是行地址(13位)，可寻址范围为2<sup>9*2</sup>13=4194304B=4MB。 考虑到位宽为2，4MB * 2=8MB，共4个BANK，因此容量为32MB。</li>
+<li>BANK选择线：在一片 SDRAM 中因为技术、成本等原因，不可能做一个全容量的 BANK。而且，因为 SDRAM 的工作原理，单一的 BANK 会带来严重的寻址冲突，减低内存访问效率。为此，厂商在一片 SDRAM 中分割出多块 BANK，一般都是 2 的 n 次方，比如 2，4，8 等。如果有4个BANK，那么BANK选择则需要两根线，同理8个BANK就需要三根线。</li>
+<li>BANK区域</li>
+<li>数据线：16位宽，共16根数据线</li>
+<li>高低字节选择线</li>
+</ol>
+<h2 id="ddr"><a class="markdownIt-Anchor" href="#ddr"></a> DDR</h2>
+<p>Double Data Rate SDRAM，双倍速率SDRAM。</p>
+<ul>
+<li>DDR1:一个CLK周期内，在上升沿和下降沿各传输一次数据，该过程被称为prefetch（预取）</li>
+<li>DDR2：在DDR1的基础上将预取增加到了4bit</li>
+<li>DDR3：在DDR2的基础上将预取增加到了8bit，DDR3又细分为以下型号：
+<ul>
+<li>LPDDR3：低功耗，电压为1.2V</li>
+<li>DDR3：标压，电压为1.5V，台式机多使用该类</li>
+<li>DDR3L：低压，电压为1.35V，手机、嵌入式设备、笔记本等多使用该类</li>
+</ul>
+</li>
+</ul>
+<h2 id="ddr3"><a class="markdownIt-Anchor" href="#ddr3"></a> DDR3</h2>
+<p>以NT5CC256M16ER-EK为例：<br>
+<img src="/images/linux/sram_3.png" srcset="/img/loading.gif" lazyload alt="DDR3L框图"></p>
+<ol>
+<li>控制线
+<ul>
+<li>ODT：片上终端使能，使能和禁止片内终端电阻</li>
+<li>ZQ：输出驱动校准的外部参考引脚，应外接240欧电阻至VSSQ</li>
+<li>RESET：复位</li>
+<li>CKE：时钟使能</li>
+<li>A12：地址线，复用为BC引脚，在READ和WRITE命令期间会被采样以决定burst chop是否执行</li>
+<li>CK和CK#：时钟信号。DDR3使用差分时钟线，所有的控制和地址信号都会在CK的上升沿和CK#的下降沿交叉处被采集</li>
+<li>CS#：片选信号</li>
+<li>RAS#、CAS#、WE#：行选通，列选通和写使能信号</li>
+</ul>
+</li>
+<li>地址线：A0-A14，列地址为A0-A9共10根，行地址为A0-A14共15根，一个BANK大小即为2^10 * 2^15 * 2=64MB。IC共有8个BANK，加起来就是512MB。</li>
+<li>BANK选择线：8个BANK，需要3根选择线</li>
+<li>BANK区域</li>
+<li>数据线：16位宽，共需16根数据线</li>
+<li>数据选通引脚：DQS和DQS#，差分信号</li>
+<li>数据输入屏蔽引脚：DM</li>
+</ol>
+<h2 id="ddr3关键时间参数"><a class="markdownIt-Anchor" href="#ddr3关键时间参数"></a> DDR3关键时间参数</h2>
+<ol>
+<li>传输速率：如1066MT/S、1600MT/S、1866MT/S 等</li>
+<li>tRCD参数：RAS-to-CAS Delay，即行寻址到列寻址之间的延迟。DDR的寻址流程是先指定 BANK 地址，然后再指定行地址，最后指定列地址确定最终要寻址的单元。BANK 地址和行地址是同时发出的，这个命令叫做“行激活”(Row Active)。行激活以后就发送列地址和具体的操作命令(读还是写)，这两个是同时发出的，因此一般也用“读/写命令”表示列寻址。在行有效(行激活)到读写命令发出的这段时间间隔叫做 tRCD。该参数在初始化DDR3时需要配置</li>
+<li>CL参数：CAS Latency，列地址选通潜伏期，列地址发出后，数据从存储单元到内存芯片IO接口上的时间。一般tRCD和CL大小一样</li>
+<li>AL参数：Additive Latency，前置CAS后读写操作并没有提前，依旧需要AL来保证足够的延迟（潜伏）期。AL和CL相加组成了RL（Read Latency）</li>
+<li>tRC参数：两个 ACTIVE 命令，或者 ACTIVE 命令到 REFRESH 命令之间的周期</li>
+<li>tRAS参数：ACTIVE 命令到 PRECHARGE 命令之间的最小时间，DDR3L 的数据手册同样也会给出此参数</li>
+</ol>
+<h2 id="imx6u-mmdc控制器"><a class="markdownIt-Anchor" href="#imx6u-mmdc控制器"></a> I.MX6U MMDC控制器</h2>
+<h3 id="io"><a class="markdownIt-Anchor" href="#io"></a> IO</h3>
+<p>MMDC 是 I.MX6U的内存控制器，是一个多模的 DDR 控制器，可以连接 16 位宽的 DDR3/DDR3L、16 位<br>
+宽的 LPDDR2，MMDC 是一个可配置、高性能的 DDR 控制器。MMDC 外设包含一个内核(MMDC_CORE)和 PHY(MMDC_PHY)，内核和 PHY 的功能如下：</p>
+<ul>
+<li>MMDC内核：负责通过AXI接口与系统通信、DDR命令生成、DDR命令优化、读写数据路径</li>
+<li>MMDCPHY：负责时序调整和校准，保障数据在400MHz内被准确捕获</li>
+</ul>
+<p>因为硬件要求严格，I.MX6U的DDR引脚没有复用：<br>
+<img src="/images/linux/sram_4.png" srcset="/img/loading.gif" lazyload alt="DDR信号IO"></p>
+<h3 id="时钟源"><a class="markdownIt-Anchor" href="#时钟源"></a> 时钟源</h3>
+<p><img src="/images/linux/sram_5.png" srcset="/img/loading.gif" lazyload alt="MMDC时钟源"></p>
+<ol>
+<li>pre_periph2时钟选择器，由CBCMR的PRE_PERIPH2_CLK_SEL 位控制：<br>
+| PRE_PERIPH2_CLK_SEL(bit22:21) | 时钟源       |<br>
+| ----------------------------- | --------- |<br>
+| 00                             | PLL2      |<br>
+| 01                             | PLL2_PFD2 |<br>
+| 10                            | PLL2_PFD0 |<br>
+| 11                            | PLL4      |<br>
+先前的时钟配置已经将PLL2_PFD2设置为396MHz（约400MHz），因此DDR频率也为400MHz</li>
+<li>periph2_clk 时钟选择器，由 CBCDR 寄存器的 PERIPH2_CLK_SEL 位(bit26)控制，置0时选择pll2_main_clk作为periph2_clk的时钟源，因此<code>periph2_clk = PLL2_PFD0 = 396MHz</code></li>
+<li>分频器，由 CBCDR 寄存器的 FABRIC_MMDC_PODF 位(bit5:3)设置，0 - 7 对应1 - 8 分频，此处应设置1分频，即该位置0</li>
+</ol>
+<h3 id="ddr驱动"><a class="markdownIt-Anchor" href="#ddr驱动"></a> DDR驱动</h3>
+<ol>
+<li>使用excel表生成inc文件</li>
+<li>加载inc至NXP DDR Test Tool，连接USB OTG线，设置MCU从USB启动，开始校准</li>
+<li>校准后的寄存器数据回填至inc文件，重新下载，进行压力测试</li>
+</ol>
 
                 
               </div>
@@ -365,7 +464,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月5日</div>
+          <div>2025年3月6日</div>
         </div>
       
       
