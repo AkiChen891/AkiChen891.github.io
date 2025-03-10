@@ -30,8 +30,10 @@
 <meta property="og:image" content="http://akichen891.github.io/images/linux/uboot_2.png">
 <meta property="og:image" content="http://akichen891.github.io/images/linux/uboot_3.png">
 <meta property="og:image" content="http://akichen891.github.io/images/linux/uboot_4.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/uboot_5.png">
+<meta property="og:image" content="http://akichen891.github.io/images/linux/uboot_6.png">
 <meta property="article:published_time" content="2025-03-07T05:58:29.000Z">
-<meta property="article:modified_time" content="2025-03-07T09:28:39.219Z">
+<meta property="article:modified_time" content="2025-03-10T07:58:00.505Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/linux/uboot_1.png">
@@ -219,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          843 字
+          1.3k 字
         
       </span>
     
@@ -230,7 +232,7 @@
         
         
         
-          8 分钟
+          11 分钟
         
       </span>
     
@@ -365,6 +367,27 @@
 <p>打开<code>/include/configs/mx6ull_aki.h</code>，修改所有<code>panel=TFT43AB</code>为<code>panel=ATK-LCD-7-1024x600</code>（共两处）</p>
 <p>重新编译，烧录，启动。LCD此时会在uboot启动后显示NXP的Logo，serial也能够正常显示屏幕信息。</p>
 <p><img src="/images/linux/uboot_4.png" srcset="/img/loading.gif" lazyload alt="serial信息"></p>
+<h2 id="联网"><a class="markdownIt-Anchor" href="#联网"></a> 联网</h2>
+<p>物理部分：路由器WAN连接校园网，LAN1接电脑，LAN2接开发板ENET2（网卡1）。</p>
+<p>VMware需开启桥接模式：<br>
+<img src="/images/linux/uboot_5.png" srcset="/img/loading.gif" lazyload alt="桥接模式"></p>
+<p>虚拟网络编辑器中一般会自动设置桥接网卡，不用手动设置。桥接模式下虚拟机和物理主机一样存在于局域网中，可以和主机相通，和互联网相通，和局域网中其它主机相通。</p>
+<p>配置成桥接模式后虚拟机的IP、网关、DNS、netmask等全部会自动配置。在虚拟机中<code>ifconfig</code>：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ens33</span>: flags=<span class="hljs-number">4163</span>&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu <span class="hljs-number">1500</span><br>        <span class="hljs-attribute">inet</span> <span class="hljs-number">192.168.1.105</span>  netmask <span class="hljs-number">255.255.255.0</span>  broadcast <span class="hljs-number">192.168.1.255</span><br>        <span class="hljs-attribute">ether</span> <span class="hljs-number">00</span>:<span class="hljs-number">0</span>c:<span class="hljs-number">29</span>:<span class="hljs-number">0</span>d:<span class="hljs-number">4</span>a:<span class="hljs-number">09</span>  txqueuelen <span class="hljs-number">1000</span>  (以太网)<br>        <span class="hljs-attribute">RX</span> packets <span class="hljs-number">4642</span>  bytes <span class="hljs-number">4241810</span> (<span class="hljs-number">4</span>.<span class="hljs-number">2</span> MB)<br>        <span class="hljs-attribute">RX</span> errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span>  overruns <span class="hljs-number">0</span>  frame <span class="hljs-number">0</span><br>        <span class="hljs-attribute">TX</span> packets <span class="hljs-number">2980</span>  bytes <span class="hljs-number">400799</span> (<span class="hljs-number">400</span>.<span class="hljs-number">7</span> KB)<br>        <span class="hljs-attribute">TX</span> errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">5</span> overruns <span class="hljs-number">0</span>  carrier <span class="hljs-number">0</span>  collisions <span class="hljs-number">0</span><br><br><span class="hljs-attribute">lo</span>: flags=<span class="hljs-number">73</span>&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span class="hljs-number">65536</span><br>        <span class="hljs-attribute">inet</span> <span class="hljs-number">127.0.0.1</span>  netmask <span class="hljs-number">255.0.0.0</span><br>        <span class="hljs-attribute">inet6</span> ::<span class="hljs-number">1</span>  prefixlen <span class="hljs-number">128</span>  scopeid <span class="hljs-number">0</span>x10&lt;host&gt;<br>        <span class="hljs-attribute">loop</span>  txqueuelen <span class="hljs-number">1000</span>  (本地环回)<br>        <span class="hljs-attribute">RX</span> packets <span class="hljs-number">1298</span>  bytes <span class="hljs-number">110055</span> (<span class="hljs-number">110</span>.<span class="hljs-number">0</span> KB)<br>        <span class="hljs-attribute">RX</span> errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span>  overruns <span class="hljs-number">0</span>  frame <span class="hljs-number">0</span><br>        <span class="hljs-attribute">TX</span> packets <span class="hljs-number">1298</span>  bytes <span class="hljs-number">110055</span> (<span class="hljs-number">110</span>.<span class="hljs-number">0</span> KB)<br>        <span class="hljs-attribute">TX</span> errors <span class="hljs-number">0</span>  dropped <span class="hljs-number">0</span> overruns <span class="hljs-number">0</span>  carrier <span class="hljs-number">0</span>  collisions <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<p>此时主机的IPv4地址为192.168.1.100，可以看到桥接模式已经生效，主机和虚拟机处于同一个网段下。</p>
+<p>在uboot内设置开发板网络配置：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">setenv</span> ipaddr <span class="hljs-number">192.168.1.55</span><br><span class="hljs-attribute">setenv</span> ethaddr b8:ae:<span class="hljs-number">1</span>d:<span class="hljs-number">01</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span><br><span class="hljs-attribute">setenv</span> gatewayip <span class="hljs-number">192.168.1.1</span><br><span class="hljs-attribute">setenv</span> netmask <span class="hljs-number">255.255.255.0</span><br><span class="hljs-attribute">setenv</span> serverip <span class="hljs-number">192.168.1.105</span>   # Ubuntu IP<br></code></pre></td></tr></table></figure>
+<p>然后<code>saveenv</code>，保存变量。</p>
+<p>如果对静态IP没有要求，或者想要简单一点，可以直接在Uboot内使用<code>DHCP</code>命令。DHCP会自动申请可用IP，自动配置网关、DNS、子网掩码等。</p>
+<p>此时在Uboot内ping 虚拟机地址<code>192.168.1.105</code>，应当是能Ping通的。为防止IP被复用，关闭虚拟机，再Ping一次虚拟机，如果无法Ping通，说明配置正确：<br>
+<img src="/images/linux/uboot_6.png" srcset="/img/loading.gif" lazyload alt="Ping测试"></p>
+<p>反过来，从虚拟机Ping开发板，肯定是Ping不通的（Ping通了说明有问题，这个IP被其他的什么东西复用了），因为此时Linux内核还未启动，网口不会被使能。</p>
+<p>此时，三台机器的IP地址分别为：</p>
+<ul>
+<li>主机：192.168.1.100</li>
+<li>虚拟机：192.168.1.105</li>
+<li>开发板：192.168.1.104</li>
+</ul>
 
                 
               </div>
@@ -401,7 +424,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月7日</div>
+          <div>2025年3月10日</div>
         </div>
       
       
