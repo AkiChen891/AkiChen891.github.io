@@ -1,0 +1,786 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#233BA7">
+  <meta name="author" content="Aki Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="字符设备 字符设备是 Linux 驱动中最基本的一类设备驱动，字符设备就是一个一个字节，按照字节流进行读写操作的设备，读写数据是分先后顺序的。最常见的点灯、按键、IIC、SPI，LCD 等等都是字符设备，这些设备的驱动就叫做字符设备驱动。  字符设备驱动工作流程  加载&#x2F;卸载驱动模块 Linux的驱动有两种工作方式：  驱动编译进kernel，kernel启动时自动运行驱动程序 驱动编译为模块(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux字符设备驱动框架">
+<meta property="og:url" content="http://akichen891.github.io/2025/03/14/Linux%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="字符设备 字符设备是 Linux 驱动中最基本的一类设备驱动，字符设备就是一个一个字节，按照字节流进行读写操作的设备，读写数据是分先后顺序的。最常见的点灯、按键、IIC、SPI，LCD 等等都是字符设备，这些设备的驱动就叫做字符设备驱动。  字符设备驱动工作流程  加载&#x2F;卸载驱动模块 Linux的驱动有两种工作方式：  驱动编译进kernel，kernel启动时自动运行驱动程序 驱动编译为模块(">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-14T06:02:25.000Z">
+<meta property="article:modified_time" content="2025-03-14T12:01:13.516Z">
+<meta property="article:author" content="Aki Chen">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Linux字符设备驱动框架 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Linux字符设备驱动框架</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-14 14:02" pubdate>
+          2025年3月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Linux字符设备驱动框架</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="字符设备"><a class="markdownIt-Anchor" href="#字符设备"></a> 字符设备</h2>
+<p>字符设备是 Linux 驱动中最基本的一类设备驱动，字符设备就是一个一个字节，按照字节流进行读写操作的设备，读写数据是分先后顺序的。最常见的点灯、按键、IIC、SPI，LCD 等等都是字符设备，这些设备的驱动就叫做字符设备驱动。</p>
+<h2 id="字符设备驱动工作流程"><a class="markdownIt-Anchor" href="#字符设备驱动工作流程"></a> 字符设备驱动工作流程</h2>
+<h3 id="加载卸载驱动模块"><a class="markdownIt-Anchor" href="#加载卸载驱动模块"></a> 加载/卸载驱动模块</h3>
+<p>Linux的驱动有两种工作方式：</p>
+<ul>
+<li>驱动编译进kernel，kernel启动时自动运行驱动程序</li>
+<li>驱动编译为模块(<code>.ko</code>)，kernel启动后调用<code>insmod</code>加载驱动模块</li>
+</ul>
+<p>模块有加载和卸载两种操作：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">module_init</span>(xxx_init);  <span class="hljs-comment">//注册模块加载</span><br><span class="hljs-built_in">module_exit</span>(xxx_exit);  <span class="hljs-comment">//注册模块卸载</span><br></code></pre></td></tr></table></figure>
+<p><code>module_init</code>用于向Kernel注册一个模块加载函数，当<code>insmod</code>时，该函数就会被Kernel调用。</p>
+<p>字符设备驱动的模块加载和卸载模板如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">/* 驱动入口 */</span><br><span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> __<span class="hljs-function"><span class="hljs-keyword">init</span> <span class="hljs-title">xxx_init</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)</span><br>&#123;<br>    <span class="hljs-comment">/* 入口函数具体内容 */</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/* 驱动出口 */</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> __<span class="hljs-function">exit <span class="hljs-title">xxx_exit</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)</span><br>&#123;<br>    <span class="hljs-comment">/* 出口函数具体内容 */</span><br>&#125;<br><br><span class="hljs-comment">/* 将上面两个函数指定为驱动的入口和出口函数 */</span><br>module_init(xxx_init); <br>module_exit(xxx_exit); <br></code></pre></td></tr></table></figure>
+<p>驱动编译完成后，Kernel有两种命令用于加载驱动模块：<code>insmod</code>和<code>modprobe</code>：</p>
+<ul>
+<li><code>insmod</code>是最简单的模块加载命令，用于加载指定的<code>.ko</code>模块，比如<code>insmod drv.ko</code>。但<code>insmod</code>不能解决模块的依赖关系。</li>
+<li><code>modprobe</code>可以自动分析模块的依赖关系，然后加载所有的依赖模块到Kernel中。</li>
+</ul>
+<p>模块卸载则使用<code>rmmod</code>或<code>modprobe -r</code>。</p>
+<p>推荐：加载使用<code>modprobe</code>，卸载使用<code>rmmod</code>。</p>
+<h3 id="注册与注销"><a class="markdownIt-Anchor" href="#注册与注销"></a> 注册与注销</h3>
+<p>模块加载成功后需要注册字符设备，卸载模块时也需要注销相关字符设备：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">register_chrdev</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> major, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name, <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> file_operation *fops)</span></span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">unregister_chrdev</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> major, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name)</span></span><br></code></pre></td></tr></table></figure>
+<p><code>register_chrdev</code>用于注册字符设备，形参有：</p>
+<ul>
+<li><code>major</code>：主设备号</li>
+<li><code>name</code>：设备名</li>
+<li><code>fops</code>：结构体<code>file_operations</code>类型指针，指向操作函数集合变量</li>
+</ul>
+<p><code>unregister_chrdev</code>用于注册字符设备，形参有：</p>
+<ul>
+<li><code>major</code>：主设备号</li>
+<li><code>name</code>：设备名</li>
+</ul>
+<p>一半字符设备的注册在入口函数中进行，注销在出口函数中执行：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">static</span> <span class="hljs-keyword">struct</span> file_operations test_fops;<br><br><span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> __<span class="hljs-function"><span class="hljs-keyword">init</span> <span class="hljs-title">xxx_init</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)</span><br>&#123;<br>    <span class="hljs-built_in">int</span> retvalue = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">/* 注册字符设备驱动 */</span><br>    retvalue = register_chrdev(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;chrtest&quot;</span>, &amp;test_ops);  <span class="hljs-comment">/* 主设备号200，设备名&quot;chrtest&quot; */</span><br>    <span class="hljs-keyword">if</span> (retvalue &lt; <span class="hljs-number">0</span>)<br>    &#123;<br>        error_handler();<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> __<span class="hljs-function">exit <span class="hljs-title">xxx_exit</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)</span><br>&#123;<br>    <span class="hljs-comment">/* 注销字符设备驱动 */</span><br>    unregister_chrdev(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;chrtest&quot;</span>);<br>&#125;<br><br><span class="hljs-comment">/* 将个函数指定为驱动的入口和出口函数 */</span><br>module_init(xxx_init);<br>module_exit(xxx_exit);<br></code></pre></td></tr></table></figure>
+<p>终端中<code>car /proc/devices</code>可查看当前已被使用的设备号</p>
+<h3 id="实现设备的具体操作函数"><a class="markdownIt-Anchor" href="#实现设备的具体操作函数"></a> 实现设备的具体操作函数</h3>
+<p>在对<code>test_fops</code>进行初始化之前，首先要分析需求，即<code>chrtest</code>这个设备需要实现哪些功能：</p>
+<ol>
+<li>对<code>chrtest</code>能够进行打开和关闭操作。这是最基本的要求</li>
+<li>对<code>chrtest</code>进行读写操作。假设设备控制着一段缓冲区（内存），应用需要通过<code>read</code>和<code>write</code>对缓冲区进行读写操作，因此需要实现<code>file_operations</code>中的<code>read</code>和<code>write</code>两个函数。</li>
+</ol>
+<p>修改代码：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-comment">/* 打开设备 */</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title">chrtest_open</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> inode *inode, <span class="hljs-keyword">struct</span> file *filp)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/* 从设备读取 */</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">ssize_t</span> <span class="hljs-title">chrtest_read</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> file *filp, <span class="hljs-type">char</span> __user *buf, <span class="hljs-type">size_t</span> cnt, <span class="hljs-type">loff_t</span> *offt)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/* 向设备写数据 */</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">ssize_t</span> <span class="hljs-title">chrtest_write</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> file *filp, <span class="hljs-type">const</span> <span class="hljs-type">char</span> __user *buf, <span class="hljs-type">size_t</span> cnt, <span class="hljs-type">loff_t</span> *offt)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/* 关闭/释放设备 */</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title">chrtest_release</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> inode *inode, <span class="hljs-keyword">struct</span> file *filp)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/* 初始化file_operations结构体 */</span><br><span class="hljs-type">static</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">file_operations</span> test_fops = &#123;<br>    .owner = THIS_MODULE, <br>    .open = chrtest_open,<br>    .read = chrtest_read,<br>    .write = chrtest_write,<br>    .release = chrtest_release,<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> __init <span class="hljs-title">xxx_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> retvalue = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">/* 注册字符设备驱动 */</span><br>    retvalue = <span class="hljs-built_in">register_chrdev</span>(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;chrtest&quot;</span>, &amp;test_ops);  <span class="hljs-comment">/* 主设备号200，设备名&quot;chrtest&quot; */</span><br>    <span class="hljs-keyword">if</span> (retvalue &lt; <span class="hljs-number">0</span>)<br>    &#123;<br>        <span class="hljs-built_in">error_handler</span>();<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> __exit <span class="hljs-title">xxx_exit</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">/* 注销字符设备驱动 */</span><br>    <span class="hljs-built_in">unregister_chrdev</span>(<span class="hljs-number">200</span>, <span class="hljs-string">&quot;chrtest&quot;</span>);<br>&#125;<br><br><span class="hljs-comment">/* 将个函数指定为驱动的入口和出口函数 */</span><br><span class="hljs-built_in">module_init</span>(xxx_init);<br><span class="hljs-built_in">module_exit</span>(xxx_exit);<br></code></pre></td></tr></table></figure>
+<p>这里的函数形参需要使用Linux驱动框架所规定的标准格式：</p>
+<ul>
+<li><code>struct inode *inode</code>：指向设备文件的 索引节点，描述了文件的元数据（如权限、文件类型等）</li>
+<li><code>struct file *filp</code>：表示 已打开的文件，包含文件的当前状态、访问模式等信息。</li>
+<li><code>char __user *buf</code>：用户空间的缓冲区，内核需要将数据拷贝到这个缓冲区</li>
+<li><code>size_t cnt</code>：写入的字节数，表示用户请求写入的长度</li>
+<li><code>loff_t *offt</code>：文件偏移量，用于支持文件的随机访问</li>
+</ul>
+<h3 id="添加license和作者信息"><a class="markdownIt-Anchor" href="#添加license和作者信息"></a> 添加LICENSE和作者信息</h3>
+<p>LICENSE不添加编译会报错：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">MODULE_LICENSE</span>();<br></code></pre></td></tr></table></figure>
+<h3 id="设备号分配"><a class="markdownIt-Anchor" href="#设备号分配"></a> 设备号分配</h3>
+<h4 id="静态分配"><a class="markdownIt-Anchor" href="#静态分配"></a> 静态分配</h4>
+<p>WIP</p>
+<h4 id="动态分配"><a class="markdownIt-Anchor" href="#动态分配"></a> 动态分配</h4>
+<p>推荐使用动态分配设备号：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">alloc_chrdev_region</span><span class="hljs-params">(<span class="hljs-type">dev_t</span> *dev, <span class="hljs-type">unsigned</span> baseminor, <span class="hljs-type">unsigned</span> count, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name)</span></span><br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>dev</code>：保存申请到的设备号</li>
+<li><code>baseminor</code>：次设备号起始地址，alloc_chrdev_region 可以申请一段连续的多个设备号，这些设备号的主设备号一样，但是次设备号不同，次设备号以 baseminor 为起始地址地址开始递增。一般 baseminor 为 0，也就是说次设备号从 0 开始。</li>
+<li><code>count</code>：要申请的设备号数量</li>
+<li><code>name</code>：设备名</li>
+</ul>
+<p>释放设备号函数：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">unregister_chrdev_region</span><span class="hljs-params">(<span class="hljs-type">dev_t</span> from, <span class="hljs-type">unsigned</span> count)</span></span><br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>from</code>：要释放的设备号</li>
+<li><code>count</code>：从<code>from</code>开始要释放的设备号数量</li>
+</ul>
+<h4 id="cdev"><a class="markdownIt-Anchor" href="#cdev"></a> cdev</h4>
+<p>cdev 是 Linux 内核中用于表示字符设备的一个结构体。它是 Linux 字符设备驱动中非常重要的一部分，主要用于管理字符设备的注册和文件操作的绑定。当注册一个字符设备时，cdev 会帮助内核处理与设备相关的操作。</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-keyword">struct</span> <span class="hljs-type">cdev</span> &#123;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-type">kobject</span> kobj;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-type">module</span> *owner;<br>    const <span class="hljs-keyword">struct</span> <span class="hljs-type">file_operations</span> *ops;  <span class="hljs-comment">// 设备的文件操作结构</span><br>    <span class="hljs-keyword">struct</span> <span class="hljs-type">list_head</span> list;  <span class="hljs-comment">// 链接到系统设备列表</span><br>    dev_t dev;  <span class="hljs-comment">// 设备号</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>cdev 的主要任务是将文件操作函数（例如：open、read、write 等）和设备进行关联。当设备被打开、读写或释放时，内核会通过 cdev 结构体找到相应的操作函数并调用它们。</p>
+<p>cdev应当按照顺序被使用：</p>
+<ol>
+<li>初始化</li>
+</ol>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dts">struct cdev chrdev_<span class="hljs-attr">cdev</span><span class="hljs-punctuation">;</span><br>cdev_init(<span class="hljs-variable">&amp;chrdev_cdev</span>, <span class="hljs-variable">&amp;fops</span>)<span class="hljs-punctuation">;</span><br></code></pre></td></tr></table></figure>
+<p>这个操作可以通过<code>cdev_alloc()</code>来一次性完成：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">struct</span> cdev *cdev_alloc(<span class="hljs-keyword">void</span>)<br>&#123;<br>	<span class="hljs-keyword">struct</span> cdev *p = kzalloc(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> cdev), GFP_KERNEL);<br>	<span class="hljs-keyword">if</span> (p) &#123;<br>		INIT_LIST_HEAD(&amp;p-&gt;list);<br>		kobject_init(&amp;p-&gt;kobj, &amp;ktype_cdev_dynamic);<br>	&#125;<br>	<span class="hljs-keyword">return</span> p;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>注册字符设备：使用 <code>cdev_add</code> 函数将其注册到内核。这样，内核就能够在收到对该设备的请求时，调用对应的文件操作函数。</li>
+</ol>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stata">int <span class="hljs-keyword">ret</span> = cdev_add(&amp;chrdev_cdev, dev_num, 1);<br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">ret</span> &lt; 0) &#123;<br>    printk(<span class="hljs-string">&quot;Failed to add cdev\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">ret</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>注销字符设备</li>
+</ol>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">cdev_del</span>(&amp;chrdev_cdev);<br></code></pre></td></tr></table></figure>
+<h4 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h4>
+<p>驱动中还会用到<code>copy_to_user</code>函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">long</span> <span class="hljs-title">copy_to_user</span><span class="hljs-params">(<span class="hljs-type">void</span> __user *to, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *from, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> n)</span></span><br></code></pre></td></tr></table></figure>
+<p>该函数用于将内核空间中的数据复制到用户空间。</p>
+<h2 id="测试app"><a class="markdownIt-Anchor" href="#测试app"></a> 测试APP</h2>
+<h3 id="c库文件操作"><a class="markdownIt-Anchor" href="#c库文件操作"></a> C库文件操作</h3>
+<h4 id="open"><a class="markdownIt-Anchor" href="#open"></a> open()</h4>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-type">int</span> <span class="hljs-built_in">open</span>(<span class="hljs-keyword">const</span> <span class="hljs-type">char</span> *pathname, <span class="hljs-type">int</span> flags)<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>pathname</code>:要打开的设备或者文件名</li>
+<li><code>flags</code>：文件打开模式，以下三种模式必选其一：
+<ul>
+<li><code>O_RDONLY</code> 只读模式</li>
+<li><code>O_WRONLY</code> 只写模式</li>
+<li><code>O_RDWR</code> 读写模式</li>
+</ul>
+</li>
+</ul>
+<p>如果文件打开成功的话返回文件的文件描述符.</p>
+<h3 id="read"><a class="markdownIt-Anchor" href="#read"></a> read()</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">read</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> count)</span></span><br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>fd</code>:要读取的文件描述符，读取文件之前要先用 open 函数打开文件，open 函数打开文件成功以后会得到文件描述符</li>
+<li><code>buf</code>:数据读取到此 buf 中</li>
+<li><code>count</code>:要读取的数据长度，也就是字节数</li>
+</ul>
+<p>读取成功的话返回读取到的字节数；如果返回 0 表示读取到了文件末尾；如果返回负值，表示读取失败。</p>
+<h3 id="write"><a class="markdownIt-Anchor" href="#write"></a> write()</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> count)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>fd</code>:要进行写操作的文件描述符，写文件之前要先用 open 函数打开文件，open 函数打开文件成功以后会得到文件描述符</li>
+<li><code>buf</code>:要写入的数据</li>
+<li><code>count</code>:要写入的数据长度，也就是字节数</li>
+</ul>
+<p>返回值：写入成功的话返回写入的字节数；如果返回 0 表示没有写入任何数据；如果返回<br>
+负值，表示写入失败</p>
+<h3 id="close"><a class="markdownIt-Anchor" href="#close"></a> close()</h3>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">close</span><span class="hljs-params">(<span class="hljs-type">int</span> fd)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>0 表示关闭成功，负值表示关闭失败。</p>
+<h2 id="完整流程"><a class="markdownIt-Anchor" href="#完整流程"></a> 完整流程</h2>
+<ol>
+<li>定义设备信息，用于注册设备至kernel</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">static</span> <span class="hljs-type">dev_t</span> chrdev_devno;<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>定义文件操作结构体，用于封装用于操作外设的功能函数</li>
+</ol>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-type">static</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">file_operations</span> chrdev_fops = &#123;<br>    .owner = THIS_MODULE,<br>    .open = chrdev_open,<br>    .read = chrdev_read,<br>    .write = chrdev_write,<br>    .release = chrdev_release,<br>&#125;;<br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>实现设备操作函数</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title">chrdev_open</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> inode *inode, <span class="hljs-keyword">struct</span> file *filp)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">ssize_t</span> <span class="hljs-title">chrdev_read</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> file *filp, <span class="hljs-type">char</span> __user *buf, <span class="hljs-type">size_t</span> cnt, <span class="hljs-type">loff_t</span> *offt)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">ssize_t</span> <span class="hljs-title">chrdev_write</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> file *filp, <span class="hljs-type">const</span> <span class="hljs-type">char</span> __user *buf, <span class="hljs-type">size_t</span> cnt, <span class="hljs-type">loff_t</span> *offt)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title">chrdev_release</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> inode *inode, <span class="hljs-keyword">struct</span> file *filp)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ol start="4">
+<li>初始化和清理</li>
+</ol>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> __<span class="hljs-function"><span class="hljs-keyword">init</span> <span class="hljs-title">chrdev_init</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)</span> &#123;<br>    <span class="hljs-built_in">int</span> ret;<br>    ret = alloc_chrdev_region(&amp;chrdev_devno, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&quot;chrdevbase&quot;</span>);   <span class="hljs-comment">//动态分配设备号</span><br>    <span class="hljs-keyword">if</span> (ret &lt; <span class="hljs-number">0</span>) &#123;<br>        printk(<span class="hljs-string">&quot;Failed to register device\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> ret;<br>    &#125;<br>    cdev_init(&amp;chrdev_cdev, &amp;chrdev_fops);      <span class="hljs-comment">//注册cdev</span><br>    ret = cdev_add(&amp;chrdev_cdev, chrdev_devno, <span class="hljs-number">1</span>);      <span class="hljs-comment">//添加cdev</span><br>    <span class="hljs-keyword">if</span> (ret &lt; <span class="hljs-number">0</span>) &#123;<br>        unregister_chrdev_region(chrdev_devno, <span class="hljs-number">1</span>);<br>        printk(<span class="hljs-string">&quot;Failed to add cdev\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> ret;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> __<span class="hljs-function">exit <span class="hljs-title">chrdev_exit</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)</span> &#123;<br>    cdev_del(&amp;chrdev_cdev);     <span class="hljs-comment">//销毁cdev</span><br>    unregister_chrdev_region(chrdev_devno, <span class="hljs-number">1</span>);      <span class="hljs-comment">//注销设备号</span><br>&#125;<br><br>module_init(hello_init);<br>module_exit(hello_exit);<br></code></pre></td></tr></table></figure>
+<ol start="5">
+<li>创建节点。如果应用程序要想使用设备，还必须创建字符设备节点：</li>
+</ol>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mknod</span> /dev/chrdev c <span class="hljs-number">249</span> <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<p>然后应用程序才能将设备号和具体的设备连接起来并使用.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux字符设备驱动框架</div>
+      <div>http://akichen891.github.io/2025/03/14/Linux字符设备驱动框架/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月14日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月14日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/11/Linux%E5%86%85%E6%A0%B8%E7%A7%BB%E6%A4%8D/" title="IMX6ULL Linux内核移植">
+                        <span class="hidden-mobile">IMX6ULL Linux内核移植</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
