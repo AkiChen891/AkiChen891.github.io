@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://akichen891.github.io/images/linux/linux_1.png">
 <meta property="article:published_time" content="2025-03-11T09:08:23.000Z">
-<meta property="article:modified_time" content="2025-03-14T06:02:45.312Z">
+<meta property="article:modified_time" content="2025-03-20T06:22:11.842Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/linux/linux_1.png">
@@ -216,7 +216,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          928 字
+          1.3k 字
         
       </span>
     
@@ -227,7 +227,7 @@
         
         
         
-          8 分钟
+          11 分钟
         
       </span>
     
@@ -336,32 +336,47 @@
 <p>表明将从eMMC/SD卡的第2分区启动 Linux。然后，修改<code>bootcmd</code>：</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">setenv</span> bootcmd &#x27;tftp <span class="hljs-number">80800000</span> zImage;tftp <span class="hljs-number">83000000</span> imx6ull-<span class="hljs-number">14</span>x14-evk.dtb;bootz <span class="hljs-number">80800000</span> - <span class="hljs-number">83000000</span>`<br></code></pre></td></tr></table></figure>
 <p>表明将通过TFTP从虚拟机拉取内核镜像和设备树并启动内核。然后，<code>boot</code>，启动内核。</p>
-<h2 id="linux添加新板子"><a class="markdownIt-Anchor" href="#linux添加新板子"></a> Linux添加新板子</h2>
-<p>复制一份新的defconfig：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> <span class="hljs-built_in">arch</span>/arm/configs<br><span class="hljs-built_in">cp</span> imx_v7_mfg_defconfig imx_aki_defconfig<br></code></pre></td></tr></table></figure>
-<p>打开<code>imx_aki_defconfig</code>，找到<code>CONFIG_ARCH_MULTI_V6=y</code>，注释掉，表明禁用armv6相关选项。至此，可以在顶层目录使用<code>make imx6ull_aki_defconfig</code>来编译linux内核。</p>
-<p>然后添加设备树：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> <span class="hljs-built_in">arch</span>/arm/boot/dts<br><span class="hljs-built_in">cp</span> imx6ull-14x14-evk.dts imx6ull-aki.dts<br></code></pre></td></tr></table></figure>
-<p>然后，修改<code>arch/arm/boot/dts/Makefile</code>，找到<code>dtb-$(CONFIG_SOC_IMX6ULL)</code>，加入<code>imx6ull-aki.dtb</code>。至此linux内核已经添加了客制化的开发板，写一个shell脚本以方便编译：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#!/bin/sh</span><br>make <span class="hljs-attribute">ARCH</span>=arm <span class="hljs-attribute">CROSS_COMPILE</span>=arm-linux-gnueabihf- distclean<br>make <span class="hljs-attribute">ARCH</span>=arm <span class="hljs-attribute">CROSS_COMPILE</span>=arm-linux-gnueabihf imx_aki_defconfig<br>make <span class="hljs-attribute">ARCH</span>=arm <span class="hljs-attribute">CROSS_COMPILE</span>=arm-linux-gnueabihf- menuconfig<br>make <span class="hljs-attribute">ARCH</span>=arm <span class="hljs-attribute">CROSS_COMPILE</span>=arm-linux-gnueabihf- all -j16<br></code></pre></td></tr></table></figure>
-<p>然后进入uboot，尝试启动内核。</p>
 <h2 id="配置主频-emmc和网络驱动"><a class="markdownIt-Anchor" href="#配置主频-emmc和网络驱动"></a> 配置主频、EMMC和网络驱动</h2>
+<h3 id="主频设置"><a class="markdownIt-Anchor" href="#主频设置"></a> 主频设置</h3>
 <p>WIP</p>
+<h3 id="emmc设置"><a class="markdownIt-Anchor" href="#emmc设置"></a> EMMC设置</h3>
+<p>6.6版本的Kernel已经默认禁用1.8V供电，同时自动启用了8位宽的EMMC总线，所以不用进行其他的设置。</p>
+<h3 id="网络驱动"><a class="markdownIt-Anchor" href="#网络驱动"></a> 网络驱动</h3>
+<p>和uboot中进行过的很像。已知NXP原版设备树中的SPI4节点中的两个引脚和SR8201F的冲突，因此打开<code>/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi</code>这个底层设备树，找到<code>pinctrl_spi4: spi4grp</code>这个节点，删掉包含<code>GPIO5 7</code>和<code>GPIO5 8</code>的两行。然后前往<code>SPI4</code>的子节点，把status改成<code>disable</code>，直接禁用掉SPI4。</p>
+<p>然后，修改pinctrl复用信息，来到<code>&amp;iomuxc</code>节点，在节点末尾新增两个<code>pinctrl group</code>：</p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey"><span class="hljs-title">pinctrl_enet1_reset:</span> enet1resetgrp &#123;<br><span class="hljs-built_in">    fsl,</span>pins = &lt;<br>        <span class="hljs-comment">/* used for enet1 reset */</span><br>        MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07 <span class="hljs-number">0</span>x10B0 <br>    &gt;<span class="hljs-comment">;</span><br>&#125;<span class="hljs-comment">;</span><br><br><span class="hljs-title">pinctrl_enet2_reset:</span> enet2resetgrp &#123;<br><span class="hljs-built_in">    fsl,</span>pins = &lt;<br>        <span class="hljs-comment">/* used for enet2 reset */</span><br>        MX6ULL_PAD_SNVS_TAMPER8__GPIO5_IO08 <span class="hljs-number">0</span>x10B0 <br>    &gt;<span class="hljs-comment">;</span><br>&#125;<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<p>按照步骤还需要修改ENET1和ENET2的网络时钟引脚配置，但是6.6版本的kernel设备树已经添加了，就不用手动操作了。</p>
+<p>继续，在<code>fec1</code>和<code>fec2</code>节点里加入刚刚设置好的复位引脚的<code>pinctrl group</code>信息：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-meta">&amp;fec1 &#123;</span><br>    .....<br>    pinctrl<span class="hljs-punctuation">-</span><span class="hljs-number">0</span> <span class="hljs-punctuation">=</span> &lt;<span class="hljs-meta">&amp;pinctrl_enet1</span><br>                 <span class="hljs-meta">&amp;pinctrl_enet1_reset&gt;;</span><br>    .....<br>&#125;<br><br><span class="hljs-meta">&amp;fec2 &#123;</span><br>    .....<br>    pinctrl<span class="hljs-punctuation">-</span><span class="hljs-number">0</span> <span class="hljs-punctuation">=</span> &lt;<span class="hljs-meta">&amp;pinctrl_enet2</span><br>                 <span class="hljs-meta">&amp;pinctrl_enet2_reset&gt;;</span><br>    .....<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>继续，检查设备树<code>fec1</code>和<code>fec2</code>节点下<code>mdio</code>子节点中的PHY地址是否正确。新版kernel默认都是设置好的。</p>
+<p>然后，在<code>defconfig</code>里告知kernel使用realtek的PHY驱动：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">CONFIG_REALTEK_PHY</span>=y<br></code></pre></td></tr></table></figure>
+<p>最后，根据SR8201F复位后至少延时150ms才能开始使用的要求，修改<code>drivers/net/ethernet/freescale/fec_main.c</code>，在<code>static void fec_reset_phy()</code>函数的末尾加入:</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">msleep</span>(<span class="hljs-number">200</span>);<br></code></pre></td></tr></table></figure>
+<p>重新编译kernel，然后启动，通过<code>ifconfig</code>观察网卡是否工作正常（正常情况下ETH1会自动启动）：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">ifconfig eth0 up    <span class="hljs-comment">//启动ETH0网卡</span><br>ifconfig eth1 up    <span class="hljs-comment">//启动ETH1网卡</span><br>ifconfig eth0 <span class="hljs-number">192.168</span><span class="hljs-selector-class">.xx</span><span class="hljs-selector-class">.xx</span><br>ifconfig eth1 <span class="hljs-number">192.168</span><span class="hljs-selector-class">.xx</span>.xx<br></code></pre></td></tr></table></figure>
 <h2 id="构建根文件系统"><a class="markdownIt-Anchor" href="#构建根文件系统"></a> 构建根文件系统</h2>
-<p>使用busybox构建，在busybox根目录的顶层Makefile中添加<code>ARCH</code>和<code>CORSS_COMPILE</code>，然后修改支持中文字符（WIP）。</p>
+<p>使用busybox构建，在busybox根目录的顶层Makefile中添加<code>ARCH</code>和<code>CORSS_COMPILE</code>，然后：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-built_in">make</span> defconfig<br><span class="hljs-built_in">make</span> menuconfig<br></code></pre></td></tr></table></figure>
+<p>进入图形化配置界面：</p>
 <ul>
-<li>配置busybox（WIP），编译</li>
-<li>添加库文件（WIP）</li>
-<li>uboot中设置<code>bootargs</code>，准备挂载：</li>
+<li>选中Settings-&gt;Build static binary</li>
+<li>选中Setttings-&gt;vi-style line editing commands</li>
+<li>取消选中Linux Module Utilities-&gt;Simpilified modutils</li>
 </ul>
-<p>(格式)</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ruby">root=<span class="hljs-regexp">/dev/nfs</span> nfsroot=[&lt;server-ip&gt;<span class="hljs-symbol">:</span>]&lt;root-dir&gt;[,&lt;nfs-options&gt;] ip=&lt;client-ip&gt;<span class="hljs-symbol">:&lt;server-ip&gt;</span><span class="hljs-symbol">:&lt;gw-ip&gt;</span><span class="hljs-symbol">:&lt;netmask&gt;</span><span class="hljs-symbol">:&lt;hostname&gt;</span><span class="hljs-symbol">:&lt;device&gt;</span><span class="hljs-symbol">:&lt;autoconf&gt;</span><span class="hljs-symbol">:&lt;dns0-ip&gt;</span><span class="hljs-symbol">:&lt;dns1-ip&gt;</span><br></code></pre></td></tr></table></figure>
+<p>编译busybox时必须使用静态库，动态库会缺库文件导致dns解析没法正常使用。</p>
+<p>然后，</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">make <br>make install CONFIG_PREFIX=<span class="hljs-regexp">/home/</span>aki<span class="hljs-regexp">/linux/</span>nfs/rootfs<br></code></pre></td></tr></table></figure>
+<p><em>注意</em>：1.37.0版本busybox报告有一个bug，即：</p>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs verilog">compilation<br>of tc<span class="hljs-variable">.c</span> fails <span class="hljs-keyword">with</span>: <br><br>networking/tc<span class="hljs-variable">.c</span>: In <span class="hljs-keyword">function</span> ‘cbq_print_opt’:<br>networking/tc<span class="hljs-variable">.c</span>:<span class="hljs-number">236</span>:<span class="hljs-number">27</span>: error: ‘TCA_CBQ_MAX’ undeclared (first <span class="hljs-keyword">use</span> in <span class="hljs-keyword">this</span><br><span class="hljs-keyword">function</span>); did you mean ‘TCA_CBS_MAX’?<br>  <span class="hljs-number">236</span> |         <span class="hljs-keyword">struct</span> rtattr *tb[TCA_CBQ_MAX+<span class="hljs-number">1</span>];<br>      |                           ^~~~~~~~~~~<br>      |                           TCA_CBS_MAX<br>————————————————<br></code></pre></td></tr></table></figure>
+<p>和CBQ队列管理有关的大量宏会报错，解决方法是把<code>tc.c</code>从<code>/busybox/networking</code>文件夹里删除。</p>
+<p>然后，需要将编译器所包含的库文件全部打包到根目录下。</p>
+<p>使用NFS挂载时，bootargs要设成：</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">setenv</span> bootargs &#x27;console=ttymxc0,<span class="hljs-number">115200</span> root=/dev/nfs nfsroot=<span class="hljs-number">192.168.1.105</span>:/home/aki/linux/nfs/rootfs,vers=<span class="hljs-number">3</span>,proto=tcp rw ip=<span class="hljs-number">192.168.1.103:192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">105</span>:<span class="hljs-number">192.168.1.1:255</span>.<span class="hljs-number">255</span>.<span class="hljs-number">255</span>.<span class="hljs-number">0</span>::eth0:<span class="hljs-literal">off</span>&#x27;<br></code></pre></td></tr></table></figure>
 <p><em>注意</em>：这里通过<code>vers=3</code>强制使用NFS v3版本，否则会挂载失败。</p>
-<ul>
-<li>完善根文件系统（WIP）</li>
-</ul>
-
+<p>如果碰到hotplug：can’t create /proc/sys/kernel/hotplug: nonexistent directory问题：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752/article/details/146395215?spm=1001.2014.3001.5502">参见</a></p>
+<p><code>fstab</code>要加一行：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mdev</span>  /dev  ramfs defaults <span class="hljs-number">0</span> <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -418,7 +433,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月14日</div>
+          <div>2025年3月20日</div>
         </div>
       
       

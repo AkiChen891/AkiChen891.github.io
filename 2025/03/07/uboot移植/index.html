@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://akichen891.github.io/images/linux/uboot_6.png">
 <meta property="og:image" content="http://akichen891.github.io/images/linux/uboot_9.png">
 <meta property="article:published_time" content="2025-03-07T05:58:29.000Z">
-<meta property="article:modified_time" content="2025-03-18T13:54:23.159Z">
+<meta property="article:modified_time" content="2025-03-19T08:09:58.578Z">
 <meta property="article:author" content="Aki Chen">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/linux/uboot_7.png">
@@ -334,11 +334,12 @@
 <h3 id="初始化检查"><a class="markdownIt-Anchor" href="#初始化检查"></a> 初始化检查</h3>
 <p>检查<code>/common/board_r.c</code>，其中从网络初始化入口<code>initr_net</code>开始Uboot会进行网络设置，其中<code>initr_net</code>会调用<code>eth_initialize()</code>进行网络初始化，然后调用<code>reset_phy()</code>对PHY进行复位，而<code>phy_init()</code>中有以下条件宏语句：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">phy_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>...<br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_PHY_MICREL_KSZ8XXX</span><br>    <span class="hljs-built_in">phy_micrel_ksz8xxx_init</span>();<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span> </span><br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_PHY_MICREL_KSZ90X1</span><br>    <span class="hljs-built_in">phy_micrel_ksz90x1_init</span>();<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>...<br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_PHY_SMSC</span><br>    <span class="hljs-built_in">phy_smsc_init</span>();<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>...<br>    <span class="hljs-built_in">genphy_init</span>();<br> <br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>显然这是根据<code>defconfig</code>里的键值来对应不同的PHY初始化函数。阿尔法开发板上的LAN8720A是SMSC公司生产的，因此根据<code>phy_init</code>，<code>defconfig</code>里要设置<code>CONFIG_PHY_SMSC=y</code>才会触发<code>phy_smsc_init()</code>这个函数。</p>
+<p>显然这是根据<code>defconfig</code>里的键值来对应不同的PHY初始化函数。阿尔法开发板上的SR8201F是Realtek公司生产的，因此根据<code>phy_init</code>，<code>defconfig</code>里要设置<code>CONFIG_PHY_REALTEK=y</code>才会触发<code>phy_realtek_init()</code>这个函数。</p>
 <p>打开<code>/configs/imx6ull_14x14_evk_emmc_defconfig</code>，删除或屏蔽：</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">CONFIG_PHY_MICREL</span>=y<br><span class="hljs-attr">CONFIG_PHY_MICREL_KSZ8XXX</span>=y<br></code></pre></td></tr></table></figure>
 <p>添加：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">CONFIG_PHY_SMSC</span>=y<br></code></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">CONFIG_PHY_REALTEK</span>=y<br></code></pre></td></tr></table></figure>
+<p>（不过这里我一开始错误的改成了<code>CONFIG_PHY_SMSC=y</code>，发现网络也能正常使用，不知道为什么）</p>
 <h3 id="配置fec复位管脚"><a class="markdownIt-Anchor" href="#配置fec复位管脚"></a> 配置fec复位管脚</h3>
 <p><code>fecmxc_probe</code>函数中还调用了<code>fec_gpio_reset()</code>来复位fec网卡：</p>
 <figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xl">#<span class="hljs-keyword">if</span> CONFIG_IS_ENABLED(DM_GPIO)<br>	fec_gpio_reset(priv);<br>#endif<br>	<span class="hljs-comment">/* Reset chip. */</span><br>	<span class="hljs-function"><span class="hljs-title">writel</span>(readl(&amp;priv-&gt;</span><span class="hljs-function"><span class="hljs-title">eth</span>-&gt;</span>ecntrl) | FEC_ECNTRL_RESET,<br>	       &amp;<span class="hljs-function"><span class="hljs-title">priv</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">eth</span>-&gt;</span>ecntrl);<br>	start = get_timer(<span class="hljs-number">0</span>);<br>	<span class="hljs-function"><span class="hljs-title">while</span> (readl(&amp;priv-&gt;</span><span class="hljs-function"><span class="hljs-title">eth</span>-&gt;</span>ecntrl) &amp; FEC_ECNTRL_RESET) &#123;<br>		<span class="hljs-keyword">if</span> (get_timer(start) &gt; (CONFIG_SYS_HZ * <span class="hljs-number">5</span>)) &#123;<br>			printf(<span class="hljs-string">&quot;FEC MXC: Timeout resetting chip\n&quot;</span>);<br>			goto err_timeout;<br>		&#125;<br>		udelay(<span class="hljs-number">10</span>);<br>	&#125;<br></code></pre></td></tr></table></figure>
@@ -527,7 +528,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月18日</div>
+          <div>2025年3月19日</div>
         </div>
       
       
