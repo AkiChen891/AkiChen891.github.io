@@ -217,15 +217,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2025/03/24/Linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/" target="_self">
-          Linux并发与竞争
+        <a href="/2025/03/26/Linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" target="_self">
+          Linux内核定时器
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/24/Linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/26/Linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" target="_self">
         <div>
-          原子操作 原子操作能够在无锁条件下实现线程安全操作，避免多个线程同时修改变量导致数据竞争。比较适用于简单的计数或标志变量等小型共享数据。但是原子操作只能保证单个原子变量的原子性，不能保护复杂数据结构。并且虽然其不会导致线程阻塞，但可能导致活锁，即多个线程不断重试并竞争CPU资源。 驱动中通过原子操作来保护进程的方式为：  在设备结构体中声明原子变量  1234struct gpioled_dev
+          新版本Kernel下定时器API得到了比较好的优化，以正点原子阿尔法基于4.4版本kernel的旧版API为例做对比：  定时器回调函数：  旧版： 12345678void timer_function(unsigned long arg) &#123; struct timer_dev *dev = (struct timer_dev *)arg; static int sta = 1; /*
         </div>
       </a>
 
@@ -233,8 +233,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2025-03-24 16:36" pubdate>
-              2025-03-24
+            <time datetime="2025-03-26 13:58" pubdate>
+              2025-03-26
             </time>
           </div>
         
@@ -271,15 +271,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2025/03/21/pinctrl/" target="_self">
-          pinctrl
+        <a href="/2025/03/24/Linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/" target="_self">
+          Linux并发与竞争
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/21/pinctrl/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/24/Linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/" target="_self">
         <div>
-          
+          原子操作 原子操作能够在无锁条件下实现线程安全操作，避免多个线程同时修改变量导致数据竞争。比较适用于简单的计数或标志变量等小型共享数据。但是原子操作只能保证单个原子变量的原子性，不能保护复杂数据结构。并且虽然其不会导致线程阻塞，但可能导致活锁，即多个线程不断重试并竞争CPU资源。 驱动中通过原子操作来保护进程的方式为：  在设备结构体中声明原子变量  1234struct gpioled_dev
         </div>
       </a>
 
@@ -287,8 +287,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2025-03-21 18:06" pubdate>
-              2025-03-21
+            <time datetime="2025-03-24 16:36" pubdate>
+              2025-03-24
             </time>
           </div>
         
@@ -303,7 +303,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux/" class="category-chain-item">嵌入式(Linux)</a>
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
   
   
 
