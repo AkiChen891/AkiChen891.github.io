@@ -1,11 +1,24 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="双指针 双指针能够将O(n2)O(n^2)O(n2)复杂度的算法降低为O(n)O(n)O(n)，并且常见于原地算法。两个指针能够在一个for循环内完成两个for循环的工作。  同向指针 283.移动零 1234567891011121314151617void moveZeroes(int* nums, int numsSize) &#123;    int slow &#x3D; 0;    for (">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数组中的解题技巧">
@@ -16,186 +29,277 @@
 <meta property="article:published_time" content="2025-01-02T12:53:30.000Z">
 <meta property="article:modified_time" content="2025-01-07T12:44:48.000Z">
 <meta property="article:author" content="Aki">
-<meta name="twitter:card" content="summary">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon_mos.png">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>数组中的解题技巧</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>数组中的解题技巧 - Aki&#39;s Blog</title>
 
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-		<script type="text/x-mathjax-config">
-		  MathJax.Hub.Config({
-			tex2jax: {
-			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-			  inlineMath: [['$','$']]
-			}
-		  });
-		</script>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-	
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="上一篇" href="/2025/01/10/LVGL9.2%E7%A7%BB%E6%A4%8D%E8%87%B3%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90%E9%98%BF%E6%B3%A2%E7%BD%97STM32F429/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="下一篇" href="/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&text=数组中的解题技巧"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&is_video=false&description=数组中的解题技巧"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=数组中的解题技巧&body=Check out this article: http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&name=数组中的解题技巧&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&t=数组中的解题技巧"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E6%8C%87%E9%92%88"><span class="toc-number">1.</span> <span class="toc-text"> 双指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E5%90%91%E6%8C%87%E9%92%88"><span class="toc-number">1.1.</span> <span class="toc-text"> 同向指针</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text"> 排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="toc-number">2.1.</span> <span class="toc-text"> 冒泡排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="toc-number">2.2.</span> <span class="toc-text"> 快速排序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">3.</span> <span class="toc-text"> 其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#boyer-moore-%E6%8A%95%E7%A5%A8%E7%AE%97%E6%B3%95%E4%BC%97%E6%95%B0%E9%97%AE%E9%A2%98"><span class="toc-number">3.1.</span> <span class="toc-text"> Boyer-Moore 投票算法（众数问题）</span></a></li></ol></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        数组中的解题技巧
-    </h1>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">Aki</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2025-01-02T12:53:30.000Z" class="dt-published" itemprop="datePublished">2025-01-02</time>
-        
-      
-    </div>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
-      
-    <div class="article-category">
-        <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
-    </div>
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
-      
 
-    </div>
-  </header>
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
-  <div class="content e-content" itemprop="articleBody">
-    <h2 id="双指针"><a class="markdownIt-Anchor" href="#双指针"></a> 双指针</h2>
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">数组中的解题技巧</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-02 20:53" pubdate>
+          2025年1月2日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">数组中的解题技巧</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="双指针"><a class="markdownIt-Anchor" href="#双指针"></a> 双指针</h2>
 <p>双指针能够将<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>复杂度的算法降低为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>，并且常见于原地算法。两个指针能够在一个for循环内完成两个for循环的工作。</p>
 <h3 id="同向指针"><a class="markdownIt-Anchor" href="#同向指针"></a> 同向指针</h3>
 <p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/move-zeroes">283.移动零</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">void moveZeroes(int* nums, int numsSize) &#123;</span><br><span class="line">    int slow = 0;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; numsSize; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if (nums[i] != 0)       //不要判断nums[i] == 0，否则会很麻烦</span><br><span class="line">        &#123;</span><br><span class="line">            nums[slow] = nums[i];</span><br><span class="line">            slow++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i = slow; i &lt; numsSize; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        nums[i] = 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">moveZeroes</span><span class="hljs-params">(<span class="hljs-type">int</span>* nums, <span class="hljs-type">int</span> numsSize)</span> </span>&#123;<br>    <span class="hljs-type">int</span> slow = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; numsSize; i++)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (nums[i] != <span class="hljs-number">0</span>)       <span class="hljs-comment">//不要判断nums[i] == 0，否则会很麻烦</span><br>        &#123;<br>            nums[slow] = nums[i];<br>            slow++;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = slow; i &lt; numsSize; i++)<br>    &#123;<br>        nums[i] = <span class="hljs-number">0</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>在这里，slow作为慢指针，用于指示去掉0之后的“新元素”，而循环中的<code>i</code>作为快指针，负责处理遍历。快指针走的比慢指针快，因此慢指针对元素做的原地处理不会和后面的快指针操作发生冲突。</p>
 <p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-element">27.移除元素</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">int removeElement(int* nums, int numsSize, int val) &#123;</span><br><span class="line">    //int fast = 0;</span><br><span class="line">    int slow = 0;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; numsSize; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if (nums[i] != val)</span><br><span class="line">        &#123;</span><br><span class="line">            nums[slow] = nums[i];</span><br><span class="line">            slow++; </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return slow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">removeElement</span><span class="hljs-params">(<span class="hljs-type">int</span>* nums, <span class="hljs-type">int</span> numsSize, <span class="hljs-type">int</span> val)</span> </span>&#123;<br>    <span class="hljs-comment">//int fast = 0;</span><br>    <span class="hljs-type">int</span> slow = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; numsSize; i++)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (nums[i] != val)<br>        &#123;<br>            nums[slow] = nums[i];<br>            slow++; <br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> slow;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>思路和上一题相同。主要判断条件都是“不等于”，因为slow要指向的对象是待储存元素（slow要重新在数组内为这些元素分配位置），而不是等于<code>val</code>的元素。</p>
 <p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-duplicates-from-sorted-array">26.删除有序数组中的重复项</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">int removeDuplicates(int* nums, int numsSize) &#123;</span><br><span class="line">    int current_pos = 1;</span><br><span class="line">    for (int i = 1; i &lt; numsSize; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if(nums[i] != nums[i-1])    </span><br><span class="line">        &#123;</span><br><span class="line">            nums[current_pos] = nums[i];    </span><br><span class="line">            current_pos++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return current_pos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">removeDuplicates</span><span class="hljs-params">(<span class="hljs-type">int</span>* nums, <span class="hljs-type">int</span> numsSize)</span> </span>&#123;<br>    <span class="hljs-type">int</span> current_pos = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; numsSize; i++)<br>    &#123;<br>        <span class="hljs-keyword">if</span>(nums[i] != nums[i<span class="hljs-number">-1</span>])    <br>        &#123;<br>            nums[current_pos] = nums[i];    <br>            current_pos++;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> current_pos;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>思路也是一致的，判断出当前元素是否和前一个不一致，如果不一致说明这个元素要保留，slow就会指向这个元素。</p>
 <p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/intersection-of-two-arrays/">349.两个数组的交集</a><br>
 这题的分为两个部分：排序+双指针。双指针法只需要一次循环，前提是数组必须经过排序。排序完后的数组是升序的，两个数组分别使用两个指针从首位开始向后遍历并比较。以这两个数组为例：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[4,9,5]</span><br><span class="line">[9,4,9,8,4]</span><br></pre></td></tr></table></figure>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-string">[4,9,5]</span><br><span class="hljs-string">[9,4,9,8,4]</span><br></code></pre></td></tr></table></figure>
 <p>排序之后的结果为</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[4,5,9]</span><br><span class="line">[4,4,8,9,9]</span><br></pre></td></tr></table></figure>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-string">[4,5,9]</span><br><span class="hljs-string">[4,4,8,9,9]</span><br></code></pre></td></tr></table></figure>
 <p>两个指针分别开始遍历，如果指针1指向值大于指针2指向值，说明指针2位置偏左，对其++；如果指针1指向值小于指针2指向值，则说明指针1偏左，对其++；如果指针1和指针2指向值大小相等，该值属于交集，提出并保存在result中。</p>
 <p>这个做法会带来重复存入的问题，比如上面的算例中，result会先后存入两个4。为了避免该情况发生，在存入时需要做过滤，条件为result中待存入位置的前一个数不能等于当前要存入的这个数（<code>result[k-1] != nums1[i]</code>。如果待存入位置是result的第一位，则不用判断，直接存入<code>k == 0</code>。因为两个数组事先已经排过序，所以这个判断逻辑一定是正确的，不存在漏判断的问题。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Note: The returned array must be malloced, assume caller calls free().</span><br><span class="line"> */</span><br><span class="line">int compare(const void *a, const void *b)&#123;</span><br><span class="line">    return *(int *)a - *(int *)b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int* intersection(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) &#123;</span><br><span class="line">    qsort(nums1, nums1Size, sizeof(int), compare);</span><br><span class="line">    qsort(nums2, nums2Size, sizeof(int), compare);</span><br><span class="line">    int i = 0;</span><br><span class="line">    int j = 0;</span><br><span class="line">    int k = 0;</span><br><span class="line">    int* result = malloc(sizeof(int) * (nums1Size &lt; nums2Size ? nums1Size : nums2Size));</span><br><span class="line"></span><br><span class="line">    while (i &lt; nums1Size &amp;&amp; j &lt; nums2Size)&#123;</span><br><span class="line">        if (nums1[i] &gt; nums2[j])&#123;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        else if (nums1[i] &lt; nums2[j])&#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        else if (nums1[i] == nums2[j])&#123;</span><br><span class="line">            if (k == 0 || result[k - 1] != nums1[i])&#123;</span><br><span class="line">                result[k++] = nums1[i];</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    *returnSize = k;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Note: The returned array must be malloced, assume caller calls free().</span><br><span class="hljs-comment"> */</span><br><span class="hljs-built_in">int</span> compare(<span class="hljs-keyword">const</span> <span class="hljs-built_in">void</span> *a, <span class="hljs-keyword">const</span> <span class="hljs-built_in">void</span> *b)&#123;<br>    <span class="hljs-keyword">return</span> *(<span class="hljs-built_in">int</span> *)a - *(<span class="hljs-built_in">int</span> *)b;<br>&#125;<br><br><span class="hljs-built_in">int</span>* <span class="hljs-built_in">int</span>ersection(<span class="hljs-built_in">int</span>* nums1, <span class="hljs-built_in">int</span> nums1Size, <span class="hljs-built_in">int</span>* nums2, <span class="hljs-built_in">int</span> nums2Size, <span class="hljs-built_in">int</span>* returnSize) &#123;<br>    qsort(nums1, nums1Size, sizeof(<span class="hljs-built_in">int</span>), compare);<br>    qsort(nums2, nums2Size, sizeof(<span class="hljs-built_in">int</span>), compare);<br>    <span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">int</span> j = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">int</span> k = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">int</span>* result = malloc(sizeof(<span class="hljs-built_in">int</span>) * (nums1Size &lt; nums2Size ? nums1Size : nums2Size));<br><br>    <span class="hljs-keyword">while</span> (i &lt; nums1Size &amp;&amp; j &lt; nums2Size)&#123;<br>        <span class="hljs-keyword">if</span> (nums1[i] &gt; nums2[j])&#123;<br>            j++;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums1[i] &lt; nums2[j])&#123;<br>            i++;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums1[i] == nums2[j])&#123;<br>            <span class="hljs-keyword">if</span> (k == <span class="hljs-number">0</span> || result[k - <span class="hljs-number">1</span>] != nums1[i])&#123;<br>                result[k++] = nums1[i];<br>            &#125;<br>            i++;<br>            j++;<br>        &#125;<br>    &#125;<br><br>    *returnSize = k;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h2 id="排序"><a class="markdownIt-Anchor" href="#排序"></a> 排序</h2>
 <h3 id="冒泡排序"><a class="markdownIt-Anchor" href="#冒泡排序"></a> 冒泡排序</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">void bubble_sort(int* nums, int numsSize)</span><br><span class="line">&#123;</span><br><span class="line">    for (int i = 0; i &lt; numsSize - 1; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for (int j = 0; j &lt; numsSize - 1 - i; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            if (nums[j] &gt; nums[j + 1])</span><br><span class="line">            &#123;</span><br><span class="line">                int temp = nums[j];</span><br><span class="line">                nums[j] = nums[j + 1];</span><br><span class="line">                nums[j + 1] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">void <span class="hljs-keyword">bubble_sort(int* </span>nums, int numsSize)<br>&#123;<br>    for (int i = <span class="hljs-number">0</span><span class="hljs-comment">; i &lt; numsSize - 1; i++)</span><br>    &#123;<br>        for (int <span class="hljs-keyword">j </span>= <span class="hljs-number">0</span><span class="hljs-comment">; j &lt; numsSize - 1 - i; j++)</span><br>        &#123;<br>            if (nums[<span class="hljs-keyword">j] </span>&gt; nums[<span class="hljs-keyword">j </span>+ <span class="hljs-number">1</span>])<br>            &#123;<br>                int temp = nums[<span class="hljs-keyword">j];</span><br><span class="hljs-keyword"></span>                nums[<span class="hljs-keyword">j] </span>= nums[<span class="hljs-keyword">j </span>+ <span class="hljs-number">1</span>];<br>                nums[<span class="hljs-keyword">j </span>+ <span class="hljs-number">1</span>] = temp;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="快速排序"><a class="markdownIt-Anchor" href="#快速排序"></a> 快速排序</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
 <h2 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h2>
 <h3 id="boyer-moore-投票算法众数问题"><a class="markdownIt-Anchor" href="#boyer-moore-投票算法众数问题"></a> Boyer-Moore 投票算法（众数问题）</h3>
 <p>Boyer-Moore 投票算法是一种用于寻找**众数（Majority Element）**的高效算法。众数定义为一个数组中出现次数超过总长度一半的元素。该算法的时间复杂度为 O(n)，空间复杂度为 O(1)，非常高效。核心思想是利用计数器（count）维护当前候选元素的“优势”，如果某个元素在整个数组中出现次数超过一半，算法最终能锁定这个元素。</p>
@@ -218,149 +322,364 @@
 </li>
 </ol>
 <p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/majority-element">169.多数元素</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">int majorityElement(int* nums, int numsSize) &#123;</span><br><span class="line">    int count = 0;      /* 计数器 */</span><br><span class="line">    int candidate = 0;  /* 候选人 */</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; numsSize; i++)&#123;</span><br><span class="line">        if (count == 0)&#123;        /* 如果计数器为0，选中当前元素为候选人 */</span><br><span class="line">            candidate = nums[i];</span><br><span class="line">            count = 1;</span><br><span class="line">        &#125;else if (nums[i] == candidate)&#123;    /* 如果当前元素为候选人 */</span><br><span class="line">            count++;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            count--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return candidate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-built_in">int</span> majorityElement(<span class="hljs-built_in">int</span>* nums, <span class="hljs-built_in">int</span> numsSize) &#123;<br>    <span class="hljs-built_in">int</span> <span class="hljs-keyword">count</span> = <span class="hljs-number">0</span>;      <span class="hljs-comment">/* 计数器 */</span><br>    <span class="hljs-built_in">int</span> candidate = <span class="hljs-number">0</span>;  <span class="hljs-comment">/* 候选人 */</span><br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; numsSize; i++)&#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">count</span> == <span class="hljs-number">0</span>)&#123;        <span class="hljs-comment">/* 如果计数器为0，选中当前元素为候选人 */</span><br>            candidate = nums[i];<br>            <span class="hljs-keyword">count</span> = <span class="hljs-number">1</span>;<br>        &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nums[i] == candidate)&#123;    <span class="hljs-comment">/* 如果当前元素为候选人 */</span><br>            <span class="hljs-keyword">count</span>++;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">count</span>--;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> candidate;<br>&#125;<br></code></pre></td></tr></table></figure>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="category-chain-item">数据结构</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>数组中的解题技巧</div>
+      <div>http://akichen891.github.io/2025/01/02/数组中的解题技巧/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年1月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
   </div>
-</article>
 
 
 
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/10/LVGL9.2%E7%A7%BB%E6%A4%8D%E8%87%B3%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90%E9%98%BF%E6%B3%A2%E7%BD%97STM32F429/" title="LVGL9.2移植至正点原子阿波罗STM32F429">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LVGL9.2移植至正点原子阿波罗STM32F429</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/" title="FLASH、EEPROM和FLASH模拟EEPROM">
+                        <span class="hidden-mobile">FLASH、EEPROM和FLASH模拟EEPROM</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">首页</a></li>
-        
-          <li><a href="/_posts/">文章</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li>
-        
-          <li><a href="/about/">关于</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E6%8C%87%E9%92%88"><span class="toc-number">1.</span> <span class="toc-text"> 双指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E5%90%91%E6%8C%87%E9%92%88"><span class="toc-number">1.1.</span> <span class="toc-text"> 同向指针</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text"> 排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="toc-number">2.1.</span> <span class="toc-text"> 冒泡排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="toc-number">2.2.</span> <span class="toc-text"> 快速排序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">3.</span> <span class="toc-text"> 其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#boyer-moore-%E6%8A%95%E7%A5%A8%E7%AE%97%E6%B3%95%E4%BC%97%E6%95%B0%E9%97%AE%E9%A2%98"><span class="toc-number">3.1.</span> <span class="toc-text"> Boyer-Moore 投票算法（众数问题）</span></a></li></ol></li></ol>
+            
+          </article>
+        </div>
       </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&text=数组中的解题技巧"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&is_video=false&description=数组中的解题技巧"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=数组中的解题技巧&body=Check out this article: http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&title=数组中的解题技巧"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&name=数组中的解题技巧&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/&t=数组中的解题技巧"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
     </div>
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2020-2025
-    Aki
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
 
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
-    <!-- styles -->
+  </div>
+</div>
 
+    
 
+    
+  </main>
 
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
+  <footer>
+    <div class="footer-inner">
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
   
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功！");
-      e.clearSelection();
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
     })
-  })
   </script>
 
 
-<script src="/js/main.js"></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-<!-- search -->
 
-<!-- Baidu Analytics -->
 
-<!-- Cloudflare Analytics -->
 
-<!-- Disqus Comments -->
 
-<!-- utterances Comments -->
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
 
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

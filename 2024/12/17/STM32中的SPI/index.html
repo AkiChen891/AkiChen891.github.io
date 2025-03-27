@@ -1,11 +1,24 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="SPI简介  接口、工作原理与传输方式 SPI接口共有四个Pin:  MISO（Master In &#x2F; Slave Out）主设备数据输入，从设备数据输出。 MOSI（Master Out &#x2F; Slave In）主设备数据输出，从设备数据输入。 SCLK（Serial Clock）时钟信号，由主设备产生。 CS（Chip Select）从设备片选信号，由主设备产生。  SPI的工作原理：在主机和">
 <meta property="og:type" content="article">
 <meta property="og:title" content="STM32中的SPI">
@@ -23,163 +36,254 @@
 <meta property="article:published_time" content="2024-12-17T12:13:52.000Z">
 <meta property="article:modified_time" content="2024-12-19T13:58:04.000Z">
 <meta property="article:author" content="Aki">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/arm/spi1.png">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon_mos.png">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>STM32中的SPI</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>STM32中的SPI - Aki&#39;s Blog</title>
 
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-		<script type="text/x-mathjax-config">
-		  MathJax.Hub.Config({
-			tex2jax: {
-			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-			  inlineMath: [['$','$']]
-			}
-		  });
-		</script>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-	
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="上一篇" href="/2024/12/28/CAN%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="下一篇" href="/2024/12/13/STM32%E4%B8%AD%E7%9A%84I2C%E9%80%9A%E4%BF%A1%E3%80%90AP3216C%E5%85%89%E4%BC%A0%E6%84%9F%E5%99%A8%E3%80%91/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&text=STM32中的SPI"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&is_video=false&description=STM32中的SPI"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=STM32中的SPI&body=Check out this article: http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&name=STM32中的SPI&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&t=STM32中的SPI"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#spi%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text"> SPI简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%B8%8E%E4%BC%A0%E8%BE%93%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text"> 接口、工作原理与传输方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#spi%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">1.2.</span> <span class="toc-text"> SPI寄存器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nor-flash-w25q256"><span class="toc-number">2.</span> <span class="toc-text"> NOR Flash （W25Q256）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text"> 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8status-register"><span class="toc-number">2.2.</span> <span class="toc-text"> 状态寄存器（Status Register）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E4%B8%8E%E5%B7%A5%E4%BD%9C%E6%97%B6%E5%BA%8F"><span class="toc-number">2.3.</span> <span class="toc-text"> 指令与工作时序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E4%BD%BF%E8%83%BDwrite-enable-06h"><span class="toc-number">2.3.1.</span> <span class="toc-text"> 写使能（Write Enable）- 06H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E7%A6%81%E7%94%A8write-disable-04h"><span class="toc-number">2.3.2.</span> <span class="toc-text"> 写禁用（Write Disable） - 04H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8-05h35h15h"><span class="toc-number">2.3.3.</span> <span class="toc-text"> 读取状态寄存器 - 05H&#x2F;35H&#x2F;15H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E9%80%80%E5%87%BA4%E5%AD%97%E8%8A%82%E5%9C%B0%E5%9D%80%E6%A8%A1%E5%BC%8F-b7he9h"><span class="toc-number">2.3.4.</span> <span class="toc-text"> 进入&#x2F;退出4字节地址模式 - B7H&#x2F;E9H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E6%93%8D%E4%BD%9C32%E4%BD%8D%E5%9C%B0%E5%9D%80%E6%A8%A1%E5%BC%8F-13h"><span class="toc-number">2.3.5.</span> <span class="toc-text"> 读操作（32位地址模式） - 13H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E7%BC%96%E7%A8%8Bpage-program-02h"><span class="toc-number">2.3.6.</span> <span class="toc-text"> 页编程（Page Program） - 02H</span></a></li></ol></li></ol></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        STM32中的SPI
-    </h1>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">Aki</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2024-12-17T12:13:52.000Z" class="dt-published" itemprop="datePublished">2024-12-17</time>
-        
-      
-    </div>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
-      
-    <div class="article-category">
-        <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/">嵌入式（裸机开发）</a>
-    </div>
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
-      
 
-    </div>
-  </header>
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
-  <div class="content e-content" itemprop="articleBody">
-    <h2 id="spi简介"><a class="markdownIt-Anchor" href="#spi简介"></a> SPI简介</h2>
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">STM32中的SPI</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-17 20:13" pubdate>
+          2024年12月17日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">STM32中的SPI</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="spi简介"><a class="markdownIt-Anchor" href="#spi简介"></a> SPI简介</h2>
 <h3 id="接口-工作原理与传输方式"><a class="markdownIt-Anchor" href="#接口-工作原理与传输方式"></a> 接口、工作原理与传输方式</h3>
 <p>SPI接口共有四个Pin:</p>
 <ul>
@@ -261,7 +365,7 @@
 <p>NOR Flash 是一种非易失性存储器，广泛应用于嵌入式系统中，尤其是在需要快速读取数据的场景。它与 NAND Flash 的主要区别在于存储单元的结构和读写性能。NOR Flash 使用并行的地址和数据总线，其存储单元是基于 NOR 门（一个逻辑门）。这种结构使得它能够按字节（Byte）直接读取数据。由于 NOR Flash 支持按字节随机访问，因此在读取速度上优于 NAND Flash。它适合于存储固件、代码等经常读取的应用。其写入操作较慢，通常需要先将整个块（block）擦除后才能进行写入。每个单元的擦写次数有限，通常为数万到数十万次，因此在需要频繁写入的场景中，NOR Flash 的耐用性较差。NOR Flash 主要应用于嵌入式系统，如存储引导程序、固件（BIOS）等。它也广泛应用于汽车、智能设备、消费电子等领域，用作存储启动代码、配置数据等。对于低功耗设备，NOR Flash 适合用于电池供电且不频繁写入的应用。总的来说，NOR Flash 主要优势是其快速的读取能力，适合存储代码和配置等经常读取的内容，而写入和擦除操作较为缓慢。</p>
 <p>NOR与NAND在数据写入前都需要有<strong>擦除</strong>操作。</p>
 <p>NM25Q128 支持标准的 SPI，还支持双输出/四输出的 SPI，最大 SPI 时钟可以到 104Mhz（双输出时相当于 208Mhz，四输出时相当于 416M）。</p>
-<p><img src="/images/arm/spi1.png" alt="W25Q256 IC引脚"></p>
+<p><img src="/images/arm/spi1.png" srcset="/img/loading.gif" lazyload alt="W25Q256 IC引脚"></p>
 <ul>
 <li>CS：片选引脚，低电平有效</li>
 <li>DO：MISO引脚</li>
@@ -285,33 +389,33 @@
 <p>W25Q256的最小擦除单位为一个扇区，也就是每次必须擦除4K个字节。这样我们需要给W25Q256开辟一个至少4K字节的缓存区，这样对SRAM要求比较高，要求芯片必须有4K以上的SRAM才能很好的操作。</p>
 <h3 id="状态寄存器status-register"><a class="markdownIt-Anchor" href="#状态寄存器status-register"></a> 状态寄存器（Status Register）</h3>
 <p>W25Q256拥有3个状态寄存器，分别为SR1，SR2和SR3.具体作用可参见手册7.1节。下面是比较重要的一些寄存器位：<br>
-<img src="/images/arm/spi5.png" alt="SR1"></p>
+<img src="/images/arm/spi5.png" srcset="/img/loading.gif" lazyload alt="SR1"></p>
 <ul>
 <li>S0：BUSY位，只读。置1表示设备忙（有操作正在进行），置0表示设备空闲，准备好接收其他指令。</li>
 <li>S1：写使能锁存器（WEL），只读。置1表示写使能，置0表示写禁用。</li>
 </ul>
-<p><img src="/images/arm/spi6.png" alt="SR3"></p>
+<p><img src="/images/arm/spi6.png" srcset="/img/loading.gif" lazyload alt="SR3"></p>
 <ul>
 <li>S17：ADP位。置0时，设备启动将会引导至3字节地址模式，该模式下若要访问128Mb以外的flash则必须启用附加地址寄存器（Extended Addr Reg）；置1时，设备启动引导至4字节地址模式。</li>
 </ul>
 <h3 id="指令与工作时序"><a class="markdownIt-Anchor" href="#指令与工作时序"></a> 指令与工作时序</h3>
 <h4 id="写使能write-enable-06h"><a class="markdownIt-Anchor" href="#写使能write-enable-06h"></a> 写使能（Write Enable）- 06H</h4>
 <p>写使能指令用于将SR1的WEL位置1.该指令必须在所有页操作（Page Program）、扇区擦除、块擦除、芯片擦除和写入状态寄存器操作前调用。</p>
-<p><img src="/images/arm/spi6.png" alt="写使能指令时序"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line">* @brief IC 写使能 Write Enable</span><br><span class="line">* @param NULL</span><br><span class="line">* @retval NULL</span><br><span class="line">*/</span><br><span class="line">void w25q256_write_enable(void)</span><br><span class="line">&#123;</span><br><span class="line">    NORFLASH_CS(0);     </span><br><span class="line"></span><br><span class="line">    uint8_t code = 0x06;</span><br><span class="line">    HAL_SPI_Transmit(&amp;hspi5, (uint8_t *)&amp;code, 1, 1000);</span><br><span class="line"></span><br><span class="line">    NORFLASH_CS(1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/arm/spi6.png" srcset="/img/loading.gif" lazyload alt="写使能指令时序"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"> <span class="hljs-comment">/**</span><br><span class="hljs-comment">* <span class="hljs-doctag">@brief</span> IC 写使能 Write Enable</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> NULL</span><br><span class="hljs-comment">* <span class="hljs-doctag">@retval</span> NULL</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">w25q256_write_enable</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span><br>&#123;<br>    NORFLASH_CS(<span class="hljs-number">0</span>);     <br><br>    <span class="hljs-type">uint8_t</span> <span class="hljs-variable">code</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x06</span>;<br>    HAL_SPI_Transmit(&amp;hspi5, (uint8_t *)&amp;code, <span class="hljs-number">1</span>, <span class="hljs-number">1000</span>);<br><br>    NORFLASH_CS(<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 <h4 id="写禁用write-disable-04h"><a class="markdownIt-Anchor" href="#写禁用write-disable-04h"></a> 写禁用（Write Disable） - 04H</h4>
 <p>该指令会将SR1-WEL置0.一般情况下，WEL位会在所有页操作（Page Program）、扇区擦除、块擦除、芯片擦除、写入状态寄存器操作和IC复位后自动置为0.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line">* @brief IC 关闭写使能 Write Disable</span><br><span class="line">* @param NULL</span><br><span class="line">* @retval NULL</span><br><span class="line">*/</span><br><span class="line">void w25q256_write_disable(void)</span><br><span class="line">&#123;</span><br><span class="line">    NORFLASH_CS(0);</span><br><span class="line"></span><br><span class="line">    uint8_t code = 0x04;</span><br><span class="line">    HAL_SPI_Transmit(&amp;hspi5, (uint8_t *)&amp;code, 1, 1000);</span><br><span class="line"></span><br><span class="line">    NORFLASH_CS(1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"> <span class="hljs-comment">/**</span><br><span class="hljs-comment">* <span class="hljs-doctag">@brief</span> IC 关闭写使能 Write Disable</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> NULL</span><br><span class="hljs-comment">* <span class="hljs-doctag">@retval</span> NULL</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">w25q256_write_disable</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span><br>&#123;<br>    NORFLASH_CS(<span class="hljs-number">0</span>);<br><br>    <span class="hljs-type">uint8_t</span> <span class="hljs-variable">code</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x04</span>;<br>    HAL_SPI_Transmit(&amp;hspi5, (uint8_t *)&amp;code, <span class="hljs-number">1</span>, <span class="hljs-number">1000</span>);<br><br>    NORFLASH_CS(<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 <h4 id="读取状态寄存器-05h35h15h"><a class="markdownIt-Anchor" href="#读取状态寄存器-05h35h15h"></a> 读取状态寄存器 - 05H/35H/15H</h4>
 <p>该指令用于读取状态寄存器中的值，<code>05H</code>用于读取SR1，<code>35H</code>读取SR2，<code>15H</code>读取SR3.该指令可以在任何时候被调用，通过位操作用于确认BUSY位是否为0（<code>&amp;0x01</code>），以确认IC是否准备好接收另一条指令。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* @brief 读取IC状态寄存器 Read Status Register</span><br><span class="line"> * @note        SR-1</span><br><span class="line"> *              BIT7  6   5   4   3   2   1   0</span><br><span class="line"> *              SPR   RV  TB BP2 BP1 BP0 WEL BUSY</span><br><span class="line"> *              SPR:默认为0，保护位，配合WP使用</span><br><span class="line"> *              TB,BP2,BP1,BP0:FLASH区域写保护设置</span><br><span class="line"> *              WEL:写使能锁定</span><br><span class="line"> *              BUSY:忙标记为（1：忙；0：空闲）</span><br><span class="line"> *              默认:0x00</span><br><span class="line"> *</span><br><span class="line"> *              SR-2</span><br><span class="line"> *              BIT7  6   5   4   3   2   1   0</span><br><span class="line"> *              SUS   CMP LB3 LB2 LB1 (R) QE  SRP1</span><br><span class="line"> *</span><br><span class="line"> *              SR-3</span><br><span class="line"> *              BIT7      6    5    4   3   2   1   0</span><br><span class="line"> *              HOLD/RST  DRV1 DRV0 (R) (R) WPS ADP ADS</span><br><span class="line">* @param sr:状态寄存器编号</span><br><span class="line">* @retval rxbyte：接收到的8位寄存器值</span><br><span class="line">*/</span><br><span class="line">uint8_t w25q256_read_status_reg(uint8_t sr)</span><br><span class="line">&#123;</span><br><span class="line">    uint8_t rxbyte, readsr = 0;</span><br><span class="line"></span><br><span class="line">    NORFLASH_CS(0);</span><br><span class="line"></span><br><span class="line">    switch (sr)</span><br><span class="line">    &#123;</span><br><span class="line">        case 1:</span><br><span class="line">            readsr = 0x05;      /* SR1读指令 */</span><br><span class="line">            break;</span><br><span class="line">        </span><br><span class="line">        case 2:</span><br><span class="line">            readsr = 0x35;      /* SR2读指令 */</span><br><span class="line">            break;</span><br><span class="line">        </span><br><span class="line">        case 3:</span><br><span class="line">            readsr = 0x15;      /* SR3读指令 */</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    HAL_SPI_Transmit(&amp;hspi5, (uint8_t *)&amp;readsr, sizeof(readsr), 1000);   /* 主机发送对应指令 */</span><br><span class="line">    HAL_SPI_Receive(&amp;hspi5, (uint8_t *)&amp;rxbyte, sizeof(rxbyte), 1000);</span><br><span class="line"></span><br><span class="line">    NORFLASH_CS(1);</span><br><span class="line"></span><br><span class="line">    return rxbyte;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @brief       等待空闲</span><br><span class="line"> * @param       NULL</span><br><span class="line"> * @retval      NULL</span><br><span class="line"> */</span><br><span class="line">static void norflash_wait_busy(void)</span><br><span class="line">&#123;</span><br><span class="line">    while ((w25q256_read_status_reg(1) &amp; 0x01) == 0x01);               /* 等待BUSY位清空 */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs markdown">/**<br><span class="hljs-bullet">*</span> @brief 读取IC状态寄存器 Read Status Register<br><span class="hljs-bullet"> *</span> @note        SR-1<br><span class="hljs-bullet"> *</span>              BIT7  6   5   4   3   2   1   0<br><span class="hljs-bullet"> *</span>              SPR   RV  TB BP2 BP1 BP0 WEL BUSY<br><span class="hljs-bullet"> *</span>              SPR:默认为0，保护位，配合WP使用<br><span class="hljs-bullet"> *</span>              TB,BP2,BP1,BP0:FLASH区域写保护设置<br><span class="hljs-bullet"> *</span>              WEL:写使能锁定<br><span class="hljs-bullet"> *</span>              BUSY:忙标记为（1：忙；0：空闲）<br><span class="hljs-bullet"> *</span>              默认:0x00<br><span class="hljs-bullet"> *</span><br> *              SR-2<br><span class="hljs-bullet"> *</span>              BIT7  6   5   4   3   2   1   0<br><span class="hljs-bullet"> *</span>              SUS   CMP LB3 LB2 LB1 (R) QE  SRP1<br><span class="hljs-bullet"> *</span><br> *              SR-3<br><span class="hljs-bullet"> *</span>              BIT7      6    5    4   3   2   1   0<br><span class="hljs-bullet"> *</span>              HOLD/RST  DRV1 DRV0 (R) (R) WPS ADP ADS<br><span class="hljs-bullet">*</span> @param sr:状态寄存器编号<br><span class="hljs-bullet">*</span> @retval rxbyte：接收到的8位寄存器值<br><span class="hljs-emphasis">*/</span><br><span class="hljs-emphasis">uint8_t w25q256_read_status_reg(uint8_t sr)</span><br><span class="hljs-emphasis">&#123;</span><br><span class="hljs-emphasis">    uint8_t rxbyte, readsr = 0;</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">    NORFLASH_CS(0);</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">    switch (sr)</span><br><span class="hljs-emphasis">    &#123;</span><br><span class="hljs-emphasis">        case 1:</span><br><span class="hljs-emphasis">            readsr = 0x05;      /*</span> SR1读指令 <span class="hljs-emphasis">*/</span><br><span class="hljs-emphasis">            break;</span><br><span class="hljs-emphasis">        </span><br><span class="hljs-emphasis">        case 2:</span><br><span class="hljs-emphasis">            readsr = 0x35;      /*</span> SR2读指令 <span class="hljs-emphasis">*/</span><br><span class="hljs-emphasis">            break;</span><br><span class="hljs-emphasis">        </span><br><span class="hljs-emphasis">        case 3:</span><br><span class="hljs-emphasis">            readsr = 0x15;      /*</span> SR3读指令 <span class="hljs-emphasis">*/</span><br><span class="hljs-emphasis">            break;</span><br><span class="hljs-emphasis">    &#125;</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">    HAL_SPI_Transmit(&amp;hspi5, (uint8_t *</span>)&amp;readsr, sizeof(readsr), 1000);   /* 主机发送对应指令 <span class="hljs-emphasis">*/</span><br><span class="hljs-emphasis">    HAL_SPI_Receive(&amp;hspi5, (uint8_t *</span>)&amp;rxbyte, sizeof(rxbyte), 1000);<br><br><span class="hljs-code">    NORFLASH_CS(1);</span><br><span class="hljs-code"></span><br><span class="hljs-code">    return rxbyte;</span><br><span class="hljs-code">&#125;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@brief</span>       等待空闲</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span>       <span class="hljs-variable">NULL</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@retval</span>      <span class="hljs-variable">NULL</span></span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">norflash_wait_busy</span>(<span class="hljs-params"><span class="hljs-keyword">void</span></span>)<br>&#123;<br>    <span class="hljs-keyword">while</span> ((<span class="hljs-title function_">w25q256_read_status_reg</span>(<span class="hljs-number">1</span>) &amp; <span class="hljs-number">0x01</span>) == <span class="hljs-number">0x01</span>);               <span class="hljs-comment">/* 等待BUSY位清空 */</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <h4 id="进入退出4字节地址模式-b7he9h"><a class="markdownIt-Anchor" href="#进入退出4字节地址模式-b7he9h"></a> 进入/退出4字节地址模式 - B7H/E9H</h4>
 <p>4字节地址启用时，存入/读取数据时寻址地址为32位而非24位，可以访问128Mb以外的Flash。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* @brief 进入4字节地址模式 Enter 4-Byte Address Mode</span><br><span class="line">* @note 允许使用32位地址以访问128Mb以外区域</span><br><span class="line">* @param NULL</span><br><span class="line">* @retval NULL</span><br><span class="line">*/</span><br><span class="line">void w25q256_enter_4byte_mode(void)</span><br><span class="line">&#123;</span><br><span class="line">    uint8_t code = 0xB7;</span><br><span class="line"></span><br><span class="line">    NORFLASH_CS(0);</span><br><span class="line">    HAL_SPI_Transmit(&amp;hspi5, &amp;code, 1, 1000);</span><br><span class="line">    NORFLASH_CS(1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line">* @brief 退出4字节地址模式 Exit 4-Byte Address Mode</span><br><span class="line">* @note 非4字节地址模式下要访问128Mb以外区域需要使用拓展地址寄存器（Extended Addr Reg）</span><br><span class="line">* @param NULL</span><br><span class="line">* @retval NULL</span><br><span class="line">*/</span><br><span class="line">void w25q256_exit_4byte_mode(void)</span><br><span class="line">&#123;</span><br><span class="line">    uint8_t code = 0xE9;</span><br><span class="line"></span><br><span class="line">    NORFLASH_CS(0);</span><br><span class="line">    HAL_SPI_Transmit(&amp;hspi5, &amp;code, 1, 1000);</span><br><span class="line">    NORFLASH_CS(1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* <span class="hljs-doctag">@brief</span> 进入4字节地址模式 Enter 4-Byte Address Mode</span><br><span class="hljs-comment">* <span class="hljs-doctag">@note</span> 允许使用32位地址以访问128Mb以外区域</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> NULL</span><br><span class="hljs-comment">* <span class="hljs-doctag">@retval</span> NULL</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">w25q256_enter_4byte_mode</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span><br>&#123;<br>    <span class="hljs-type">uint8_t</span> <span class="hljs-variable">code</span> <span class="hljs-operator">=</span> <span class="hljs-number">0xB7</span>;<br><br>    NORFLASH_CS(<span class="hljs-number">0</span>);<br>    HAL_SPI_Transmit(&amp;hspi5, &amp;code, <span class="hljs-number">1</span>, <span class="hljs-number">1000</span>);<br>    NORFLASH_CS(<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"> <span class="hljs-comment">/**</span><br><span class="hljs-comment">* <span class="hljs-doctag">@brief</span> 退出4字节地址模式 Exit 4-Byte Address Mode</span><br><span class="hljs-comment">* <span class="hljs-doctag">@note</span> 非4字节地址模式下要访问128Mb以外区域需要使用拓展地址寄存器（Extended Addr Reg）</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> NULL</span><br><span class="hljs-comment">* <span class="hljs-doctag">@retval</span> NULL</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">w25q256_exit_4byte_mode</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span><br>&#123;<br>    <span class="hljs-type">uint8_t</span> <span class="hljs-variable">code</span> <span class="hljs-operator">=</span> <span class="hljs-number">0xE9</span>;<br><br>    NORFLASH_CS(<span class="hljs-number">0</span>);<br>    HAL_SPI_Transmit(&amp;hspi5, &amp;code, <span class="hljs-number">1</span>, <span class="hljs-number">1000</span>);<br>    NORFLASH_CS(<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 <h4 id="读操作32位地址模式-13h"><a class="markdownIt-Anchor" href="#读操作32位地址模式-13h"></a> 读操作（32位地址模式） - 13H</h4>
-<p><img src="/images/arm/spi2.png" alt="W25Q256 读操作（32位地址模式）时序"><br>
+<p><img src="/images/arm/spi2.png" srcset="/img/loading.gif" lazyload alt="W25Q256 读操作（32位地址模式）时序"><br>
 读操作时序包含以下步骤：</p>
 <ol>
 <li>拉低CS电平，激活片选</li>
@@ -319,15 +423,15 @@
 <li>从机在CLK下降沿从MISO发送对应地址的数据</li>
 <li>拉高CS电平，传输停止</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line">* @brief 读取数据(32位地址模式) Read Data(4Byte Addr Mode)</span><br><span class="line">* @note 参见datasheet 8.2.10</span><br><span class="line">* @param pbuf:接收缓存区地址 </span><br><span class="line">* @param addr：目标地址</span><br><span class="line">* @param datalen：接收长度（字节）</span><br><span class="line">* @retval NULL</span><br><span class="line">*/</span><br><span class="line">void w25q256_read_data_4byte_mode(uint8_t *pbuf, uint32_t addr, uint16_t datalen)</span><br><span class="line">&#123;</span><br><span class="line">    uint8_t read_data_code = 0x13;</span><br><span class="line"></span><br><span class="line">    NORFLASH_CS(0);</span><br><span class="line">    HAL_SPI_Transmit(&amp;hspi5, &amp;read_data_code, 1, 1000);     /* 发送32位模式读指令 */</span><br><span class="line">    HAL_SPI_Transmit(&amp;hspi5, (uint8_t *) &amp;addr, 4, 1000);   /* 发送32位目标内存地址 */</span><br><span class="line">    HAL_SPI_Receive(&amp;hspi5, pbuf, datalen, 1000);   /* 接收读取值 */</span><br><span class="line">    NORFLASH_CS(1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight wren"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs wren"> <span class="hljs-comment">/**</span><br><span class="hljs-comment">* <span class="hljs-doctag">@brief</span> 读取数据(32位地址模式) Read Data(4Byte Addr Mode)</span><br><span class="hljs-comment">* <span class="hljs-doctag">@note</span> 参见datasheet 8.2.10</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> pbuf:接收缓存区地址 </span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> addr：目标地址</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> datalen：接收长度（字节）</span><br><span class="hljs-comment">* <span class="hljs-doctag">@retval</span> NULL</span><br><span class="hljs-comment">*/</span><br><span class="hljs-variable">void</span> <span class="hljs-title function_">w25q256_read_data_4byte_mode</span>(<span class="hljs-params">uint8_t</span> *<span class="hljs-params">pbuf</span>, <span class="hljs-params">uint32_t</span> <span class="hljs-params">addr</span>, <span class="hljs-params">uint16_t</span> <span class="hljs-params">datalen</span>)<br>&#123;<br>    <span class="hljs-variable">uint8_t</span> <span class="hljs-variable">read_data_code</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x13</span>;<br><br>    <span class="hljs-title function_">NORFLASH_CS</span>(<span class="hljs-number">0</span>);<br>    <span class="hljs-title function_">HAL_SPI_Transmit</span>(<span class="hljs-operator">&amp;</span><span class="hljs-variable">hspi5</span>, <span class="hljs-operator">&amp;</span><span class="hljs-variable">read_data_code</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1000</span>);     <span class="hljs-comment">/* 发送32位模式读指令 */</span><br>    <span class="hljs-title function_">HAL_SPI_Transmit</span>(<span class="hljs-operator">&amp;</span><span class="hljs-variable">hspi5</span>, (<span class="hljs-variable">uint8_t</span> <span class="hljs-operator">*</span>) <span class="hljs-operator">&amp;</span><span class="hljs-variable">addr</span>, <span class="hljs-number">4</span>, <span class="hljs-number">1000</span>);   <span class="hljs-comment">/* 发送32位目标内存地址 */</span><br>    <span class="hljs-title function_">HAL_SPI_Receive</span>(<span class="hljs-operator">&amp;</span><span class="hljs-variable">hspi5</span>, <span class="hljs-variable">pbuf</span>, <span class="hljs-variable">datalen</span>, <span class="hljs-number">1000</span>);   <span class="hljs-comment">/* 接收读取值 */</span><br>    <span class="hljs-title function_">NORFLASH_CS</span>(<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 <h4 id="页编程page-program-02h"><a class="markdownIt-Anchor" href="#页编程page-program-02h"></a> 页编程（Page Program） - 02H</h4>
 <p><em>参见</em>：datasheet 8.2.25<br>
-<img src="/images/arm/spi3.png" alt="W25Q256 页写操作时序"></p>
+<img src="/images/arm/spi3.png" srcset="/img/loading.gif" lazyload alt="W25Q256 页写操作时序"></p>
 <p>页面编程指令允许在先前擦除的 (FFh) 内存位置对 1 字节到 256 字节（一页）的数据进行编程。必须先执行写使能指令，设备才会接受页面编程指令（WEL= 1）。</p>
 <p>如果要编程整个 256 字节页面，则最后一个地址字节（8 个最低有效地址位）应设置为 0。如果最后一个地址字节不为零，并且时钟数超过剩余页面长度，则寻址将绕回到页面的开头。在某些情况下，可以编程少于 256 个字节（部分页面），而不会对同一页面内的其他字节产生任何影响。</p>
 <p><em>注意</em>：执行部分页面编程的一个条件是时钟数不能超过剩余的页长度。如果向设备发送了超过 256 个字节，寻址将绕回到页面的开头并覆盖先前发送的数据。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-<p><img src="/images/arm/spi4.png" alt="W25Q256 扇区擦除时序"><br>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+<p><img src="/images/arm/spi4.png" srcset="/img/loading.gif" lazyload alt="W25Q256 扇区擦除时序"><br>
 W25Q256扇区大小为4K字节，擦除扇区后所有扇区位全部置1，即扇区字节为<code>FFH</code>。</p>
 <ol>
 <li>主机发送“写使能”指令</li>
@@ -338,147 +442,362 @@ W25Q256扇区大小为4K字节，擦除扇区后所有扇区位全部置1，即�
 </ol>
 <p>W25Q256还有整个IC擦除的操作，只需发送<code>C7H</code>到IC即可实现整片擦除。</p>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>STM32中的SPI</div>
+      <div>http://akichen891.github.io/2024/12/17/STM32中的SPI/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月17日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年12月19日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
   </div>
-</article>
 
 
 
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/28/CAN%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/" title="CAN及其应用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CAN及其应用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/13/STM32%E4%B8%AD%E7%9A%84I2C%E9%80%9A%E4%BF%A1%E3%80%90AP3216C%E5%85%89%E4%BC%A0%E6%84%9F%E5%99%A8%E3%80%91/" title="STM32中的I2C通信【AP3216C光传感器】">
+                        <span class="hidden-mobile">STM32中的I2C通信【AP3216C光传感器】</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">首页</a></li>
-        
-          <li><a href="/_posts/">文章</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li>
-        
-          <li><a href="/about/">关于</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#spi%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text"> SPI简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%B8%8E%E4%BC%A0%E8%BE%93%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text"> 接口、工作原理与传输方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#spi%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">1.2.</span> <span class="toc-text"> SPI寄存器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nor-flash-w25q256"><span class="toc-number">2.</span> <span class="toc-text"> NOR Flash （W25Q256）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text"> 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8status-register"><span class="toc-number">2.2.</span> <span class="toc-text"> 状态寄存器（Status Register）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E4%B8%8E%E5%B7%A5%E4%BD%9C%E6%97%B6%E5%BA%8F"><span class="toc-number">2.3.</span> <span class="toc-text"> 指令与工作时序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E4%BD%BF%E8%83%BDwrite-enable-06h"><span class="toc-number">2.3.1.</span> <span class="toc-text"> 写使能（Write Enable）- 06H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E7%A6%81%E7%94%A8write-disable-04h"><span class="toc-number">2.3.2.</span> <span class="toc-text"> 写禁用（Write Disable） - 04H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8-05h35h15h"><span class="toc-number">2.3.3.</span> <span class="toc-text"> 读取状态寄存器 - 05H&#x2F;35H&#x2F;15H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E9%80%80%E5%87%BA4%E5%AD%97%E8%8A%82%E5%9C%B0%E5%9D%80%E6%A8%A1%E5%BC%8F-b7he9h"><span class="toc-number">2.3.4.</span> <span class="toc-text"> 进入&#x2F;退出4字节地址模式 - B7H&#x2F;E9H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E6%93%8D%E4%BD%9C32%E4%BD%8D%E5%9C%B0%E5%9D%80%E6%A8%A1%E5%BC%8F-13h"><span class="toc-number">2.3.5.</span> <span class="toc-text"> 读操作（32位地址模式） - 13H</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E7%BC%96%E7%A8%8Bpage-program-02h"><span class="toc-number">2.3.6.</span> <span class="toc-text"> 页编程（Page Program） - 02H</span></a></li></ol></li></ol></li></ol>
+            
+          </article>
+        </div>
       </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&text=STM32中的SPI"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&is_video=false&description=STM32中的SPI"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=STM32中的SPI&body=Check out this article: http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&title=STM32中的SPI"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&name=STM32中的SPI&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/12/17/STM32%E4%B8%AD%E7%9A%84SPI/&t=STM32中的SPI"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
     </div>
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2020-2025
-    Aki
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
 
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
-    <!-- styles -->
+  </div>
+</div>
 
+    
 
+    
+  </main>
 
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
+  <footer>
+    <div class="footer-inner">
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
   
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功！");
-      e.clearSelection();
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
     })
-  })
   </script>
 
 
-<script src="/js/main.js"></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-<!-- search -->
 
-<!-- Baidu Analytics -->
 
-<!-- Cloudflare Analytics -->
 
-<!-- Disqus Comments -->
 
-<!-- utterances Comments -->
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
 
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

@@ -1,11 +1,24 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="传统RNN 循环神经网络（RNN）最早可以追溯到1980年代末，当时的研究者希望设计一种能够处理时间序列数据或具有时序依赖关系的数据的神经网络模型。RNN的设计灵感来自生物神经网络的工作原理，它模拟了大脑神经元的反馈机制，通过递归连接来捕捉数据中前后时刻的依赖关系。  历史 RNN的初期发展可追溯到1986年，David Rumelhart 和 Geoffrey Hinton 等人提出了反向传播">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RNN：原理、组成与简单实现">
@@ -25,175 +38,266 @@
 <meta property="article:published_time" content="2024-12-12T06:30:54.000Z">
 <meta property="article:modified_time" content="2024-12-12T11:09:28.000Z">
 <meta property="article:author" content="Aki">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/DL/rnn1.gif">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon_mos.png">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>RNN：原理、组成与简单实现</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>RNN：原理、组成与简单实现 - Aki&#39;s Blog</title>
 
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-		<script type="text/x-mathjax-config">
-		  MathJax.Hub.Config({
-			tex2jax: {
-			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-			  inlineMath: [['$','$']]
-			}
-		  });
-		</script>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-	
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="上一篇" href="/2024/12/13/STM32%E4%B8%AD%E7%9A%84I2C%E9%80%9A%E4%BF%A1%E3%80%90AP3216C%E5%85%89%E4%BC%A0%E6%84%9F%E5%99%A8%E3%80%91/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="下一篇" href="/2024/12/07/STM32%E4%B8%AD%E7%9A%84I2C%E9%80%9A%E4%BF%A1%E3%80%9024CXX%20EEPROM%E3%80%91/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&text=RNN：原理、组成与简单实现"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&is_video=false&description=RNN：原理、组成与简单实现"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=RNN：原理、组成与简单实现&body=Check out this article: http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&name=RNN：原理、组成与简单实现&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&t=RNN：原理、组成与简单实现"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9Frnn"><span class="toc-number">1.</span> <span class="toc-text"> 传统RNN</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.1.</span> <span class="toc-text"> 历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text"> 工作原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.</span> <span class="toc-text"> 组成和基本结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E8%BE%93%E5%85%A5%E5%B1%82input-layer"><span class="toc-number">1.3.1.</span> <span class="toc-text"> 1. 输入层（Input Layer）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E9%9A%90%E5%B1%82hidden-layer"><span class="toc-number">1.3.2.</span> <span class="toc-text"> 2. 隐层（Hidden Layer）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E8%BE%93%E5%87%BA%E5%B1%82output-layer"><span class="toc-number">1.3.3.</span> <span class="toc-text"> 3. 输出层（Output Layer）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text"> 应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%A8%E6%8E%A7%E5%BE%AA%E7%8E%AF%E5%8D%95%E5%85%83gru"><span class="toc-number">2.</span> <span class="toc-text"> 门控循环单元（GRU）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%A5%E6%BA%90"><span class="toc-number">2.1.</span> <span class="toc-text"> 来源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-2"><span class="toc-number">2.2.</span> <span class="toc-text"> 工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E7%BD%AE%E9%97%A8reset-gate"><span class="toc-number">2.2.1.</span> <span class="toc-text"> 重置门（Reset Gate）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E9%97%A8update-gate"><span class="toc-number">2.2.2.</span> <span class="toc-text"> 更新门（Update Gate）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%80%99%E9%80%89%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81candidate-hidden-state"><span class="toc-number">2.2.3.</span> <span class="toc-text"> 候选隐藏状态（Candidate Hidden State）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81final-hidden-state"><span class="toc-number">2.2.4.</span> <span class="toc-text"> 最终隐藏状态（Final Hidden State）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text"> 简单应用</span></a></li></ol></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        RNN：原理、组成与简单实现
-    </h1>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">Aki</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2024-12-12T06:30:54.000Z" class="dt-published" itemprop="datePublished">2024-12-12</time>
-        
-      
-    </div>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
-      
-    <div class="article-category">
-        <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
-    </div>
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
-      
 
-    </div>
-  </header>
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
-  <div class="content e-content" itemprop="articleBody">
-    <h2 id="传统rnn"><a class="markdownIt-Anchor" href="#传统rnn"></a> 传统RNN</h2>
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">RNN：原理、组成与简单实现</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-12 14:30" pubdate>
+          2024年12月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">RNN：原理、组成与简单实现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="传统rnn"><a class="markdownIt-Anchor" href="#传统rnn"></a> 传统RNN</h2>
 <p>循环神经网络（RNN）最早可以追溯到1980年代末，当时的研究者希望设计一种能够处理时间序列数据或具有时序依赖关系的数据的神经网络模型。RNN的设计灵感来自生物神经网络的工作原理，它模拟了大脑神经元的反馈机制，通过递归连接来捕捉数据中前后时刻的依赖关系。</p>
 <h3 id="历史"><a class="markdownIt-Anchor" href="#历史"></a> 历史</h3>
 <p>RNN的初期发展可追溯到1986年，David Rumelhart 和 Geoffrey Hinton 等人提出了反向传播算法，并在此基础上构建了简单的RNN模型。最初的RNN能够通过训练学习输入数据的时序模式。RNN 跟传统神经网络最大的区别在于每次都会将前一次的输出结果，带到下一次的隐藏层中，一起训练。</p>
 <h3 id="工作原理"><a class="markdownIt-Anchor" href="#工作原理"></a> 工作原理</h3>
 <p>以一个最简单的语序为例：用户输入了一句“what time is it”，首先需要对这句话进行分词：</p>
-<p><img src="/images/DL/rnn1.gif" alt="第一步：分词"></p>
+<p><img src="/images/DL/rnn1.gif" srcset="/img/loading.gif" lazyload alt="第一步：分词"></p>
 <p>将分词结果按顺序输入RNN。首先输入“what”：</p>
-<p><img src="/images/DL/rnn2.gif" alt="第二步：输入&quot;what&quot;"></p>
+<p><img src="/images/DL/rnn2.gif" srcset="/img/loading.gif" lazyload alt="第二步：输入&quot;what&quot;"></p>
 <p>按顺序输入剩下的分词，第三步输入“time”。按照RNN的结构，输入&quot;time&quot;时，之前输入的&quot;what&quot;会对RNN的输出产生影响（隐藏层中有一半是黑色的）</p>
-<p><img src="/images/DL/rnn3.gif" alt="第三步：输入&quot;time&quot;"></p>
+<p><img src="/images/DL/rnn3.gif" srcset="/img/loading.gif" lazyload alt="第三步：输入&quot;time&quot;"></p>
 <p>以此类推，每一个历史输入都会对未来输出产生影响，直观显示为每一个圆形隐藏层中都包含了之前所有历史输入所指代的颜色。</p>
-<p><img src="/images/DL/rnn4.gif" alt="第四步：历史输入会影响未来输出"></p>
+<p><img src="/images/DL/rnn4.gif" srcset="/img/loading.gif" lazyload alt="第四步：历史输入会影响未来输出"></p>
 <p>最后需要输出结果（此处是判断这句话的意图）时，只需要输出最后一层的结果。</p>
 <h3 id="组成和基本结构"><a class="markdownIt-Anchor" href="#组成和基本结构"></a> 组成和基本结构</h3>
 <p>RNN的核心组成部分是<strong>循环结构</strong>，它使得网络能够记住之前时刻的信息，并通过这种“记忆”来影响当前时刻的计算。RNN的基本结构可以通过以下几个部分来理解：</p>
@@ -236,173 +340,388 @@
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><mi>σ</mi><mo stretchy="false">(</mo><msub><mi>W</mi><mi>z</mi></msub><msub><mi>x</mi><mi>t</mi></msub><mo>+</mo><msub><mi>U</mi><mi>z</mi></msub><msub><mi>h</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>b</mi><mi>z</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">z_t = \sigma(W_z x_t + U_z h_{t-1} + b_z)
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.902771em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
 <p>其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">z_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是更新门的输出，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>z</mi></msub></mrow><annotation encoding="application/x-tex">W_z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>U</mi><mi>z</mi></msub></mrow><annotation encoding="application/x-tex">U_z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是权重矩阵，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">x_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是当前时刻的输入，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">h_{t-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.902771em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span> 是前一时刻的隐藏状态，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mi>z</mi></msub></mrow><annotation encoding="application/x-tex">b_z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是偏置项。</p>
-<p><img src="/images/DL/gru-1.svg" alt="GRU中计算重置门和更新门"></p>
+<p><img src="/images/DL/gru-1.svg" srcset="/img/loading.gif" lazyload alt="GRU中计算重置门和更新门"></p>
 <h4 id="候选隐藏状态candidate-hidden-state"><a class="markdownIt-Anchor" href="#候选隐藏状态candidate-hidden-state"></a> 候选隐藏状态（Candidate Hidden State）</h4>
 <p>候选隐藏状态是GRU网络根据当前输入和重置门的作用计算出来的，表示网络在当前时刻希望更新的“记忆”。它是基于当前输入和前一时刻的记忆状态计算的。</p>
 <p>公式表示为：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mover accent="true"><mi>h</mi><mo>~</mo></mover><mi>t</mi></msub><mo>=</mo><mi>tanh</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>W</mi><mi>h</mi></msub><msub><mi>x</mi><mi>t</mi></msub><mo>+</mo><msub><mi>U</mi><mi>h</mi></msub><mo stretchy="false">(</mo><msub><mi>r</mi><mi>t</mi></msub><mo>⋅</mo><msub><mi>h</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="false">)</mo><mo>+</mo><msub><mi>b</mi><mi>h</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\tilde{h}_t = \tanh(W_h x_t + U_h (r_t \cdot h_{t-1}) + b_h)
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0812999999999997em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9312999999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">h</span></span></span><span style="top:-3.61344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">~</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">tanh</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></p>
 <p>其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>h</mi><mo>~</mo></mover><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\tilde{h}_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0812999999999997em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9312999999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">h</span></span></span><span style="top:-3.61344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">~</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是候选隐藏状态，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow><annotation encoding="application/x-tex">W_h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>U</mi><mi>h</mi></msub></mrow><annotation encoding="application/x-tex">U_h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.10903em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是权重矩阵，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">r_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是重置门的输出，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⋅</mo></mrow><annotation encoding="application/x-tex">\cdot</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.44445em;vertical-align:0em;"></span><span class="mord">⋅</span></span></span></span> 表示按元素相乘（Hadamard积），<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>tanh</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\tanh</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mop">tanh</span></span></span></span> 是tanh激活函数。</p>
-<p><img src="/images/DL/gru-2.svg" alt="GRU中计算候选隐藏状态"></p>
+<p><img src="/images/DL/gru-2.svg" srcset="/img/loading.gif" lazyload alt="GRU中计算候选隐藏状态"></p>
 <h4 id="最终隐藏状态final-hidden-state"><a class="markdownIt-Anchor" href="#最终隐藏状态final-hidden-state"></a> 最终隐藏状态（Final Hidden State）</h4>
 <p>最终的隐藏状态是当前时刻候选隐藏状态和上一时刻的隐藏状态的加权平均。加权系数由更新门 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">z_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 控制，表示信息应该更新多少，保留多少。</p>
 <p>公式表示为：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>h</mi><mi>t</mi></msub><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mi>z</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mo>⋅</mo><msub><mover accent="true"><mi>h</mi><mo>~</mo></mover><mi>t</mi></msub><mo>+</mo><msub><mi>z</mi><mi>t</mi></msub><mo>⋅</mo><msub><mi>h</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">h_t = (1 - z_t) \cdot \tilde{h}_t + z_t \cdot h_{t-1}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.0812999999999997em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9312999999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">h</span></span></span><span style="top:-3.61344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">~</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.59445em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.902771em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span></span></p>
 <p>其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">h_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是当前时刻的最终隐藏状态，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>h</mi><mo>~</mo></mover><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\tilde{h}_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0812999999999997em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9312999999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">h</span></span></span><span style="top:-3.61344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">~</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是候选隐藏状态，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">z_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.04398em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是更新门，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">h_{t-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.902771em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span> 是前一时刻的隐藏状态。</p>
-<p><img src="/images/DL/gru-3.svg" alt="GRU中计算最终隐藏状态"></p>
+<p><img src="/images/DL/gru-3.svg" srcset="/img/loading.gif" lazyload alt="GRU中计算最终隐藏状态"></p>
 <h3 id="简单应用"><a class="markdownIt-Anchor" href="#简单应用"></a> 简单应用</h3>
 <p>GRU十分适合用于时间序列数据的特征识别、提取和预测，尤其是较长时间内的时间序列。<br>
 下面是一个用于预测未来一段时间内天气状况的模型，其使用五个GRU层，用于对四个不同变量（最高温、最低温、降水量与风速）进行回归任务。数据集来自于<a target="_blank" rel="noopener" href="https://www.kaggle.com/datasets/ananthr1/weather-prediction">Kaggle</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br></pre></td><td class="code"><pre><span class="line">import pandas as pd</span><br><span class="line">import numpy as np</span><br><span class="line">from sklearn.preprocessing import MinMaxScaler</span><br><span class="line">from sklearn.model_selection import train_test_split</span><br><span class="line">from tensorflow.keras.models import Model</span><br><span class="line">from tensorflow.keras.layers import Input, GRU, Dense, Dropout</span><br><span class="line">import tensorflow.keras.backend as K</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line"># 1. 加载CSV文件，读取日期数据，并转换为日期格式</span><br><span class="line">df = pd.read_csv(&#x27;seattle-weather.csv&#x27;, parse_dates=[&#x27;date&#x27;])</span><br><span class="line"></span><br><span class="line"># 2. 处理缺失值，使用前向填充（前一个有效值填充）</span><br><span class="line">df.fillna(method=&#x27;ffill&#x27;, inplace=True)</span><br><span class="line"></span><br><span class="line"># 3. 规范化数值特征</span><br><span class="line"># 使用 MinMaxScaler 将数据缩放到 0 和 1 之间</span><br><span class="line">scaler = MinMaxScaler()</span><br><span class="line">scaled_features = [&#x27;precipitation&#x27;, &#x27;temp_max&#x27;, &#x27;temp_min&#x27;, &#x27;wind&#x27;]  # 需要规范化的特征</span><br><span class="line">df[scaled_features] = scaler.fit_transform(df[scaled_features])</span><br><span class="line"></span><br><span class="line"># 4. 创建时间序列数据：输入X是过去window_size天的特征，y是目标列（temp_max, temp_min, precipitation, wind）</span><br><span class="line">def create_sequences(df, window_size, target_columns):</span><br><span class="line">    X, y = [], []</span><br><span class="line">    for i in range(len(df) - window_size):</span><br><span class="line">        # 过去 window_size 天的数据作为输入</span><br><span class="line">        X.append(df.iloc[i:i + window_size][scaled_features].values)</span><br><span class="line">        # 当前天的目标特征作为输出</span><br><span class="line">        y.append(df.iloc[i + window_size][target_columns].values)  # 多目标回归</span><br><span class="line">    return np.array(X), np.array(y)</span><br><span class="line"></span><br><span class="line"># 设置时间窗口为15天，目标列为气温、降水量和风速</span><br><span class="line">window_size = 15</span><br><span class="line">target_columns = [&#x27;temp_max&#x27;, &#x27;temp_min&#x27;, &#x27;precipitation&#x27;, &#x27;wind&#x27;]  # 目标列：温度、降水量和风速</span><br><span class="line">X, y = create_sequences(df, window_size, target_columns)</span><br><span class="line"></span><br><span class="line"># 5. 划分训练集和测试集，采用80%的数据用于训练，20%用于测试</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)</span><br><span class="line"></span><br><span class="line"># 6. 转换数据格式</span><br><span class="line">X_train, y_train = np.array(X_train), np.array(y_train)</span><br><span class="line">X_test, y_test = np.array(X_test), np.array(y_test)</span><br><span class="line"></span><br><span class="line"># 将目标值数据类型转换为 float32，以便模型训练</span><br><span class="line">y_train = y_train.astype(np.float32)</span><br><span class="line">y_test = y_test.astype(np.float32)</span><br><span class="line"></span><br><span class="line"># 输出训练集和测试集的形状，确保数据格式正确</span><br><span class="line">print(&quot;X_train shape:&quot;, X_train.shape)</span><br><span class="line">print(&quot;X_test shape:&quot;, X_test.shape)</span><br><span class="line">print(&quot;y_train shape:&quot;, y_train.shape)</span><br><span class="line">print(&quot;y_test shape:&quot;, y_test.shape)</span><br><span class="line"></span><br><span class="line"># 7. 构建共享底层GRU网络 + 多目标回归模型</span><br><span class="line"></span><br><span class="line"># 输入层，形状为 (window_size, 4)，即过去15天的4个特征</span><br><span class="line">input_layer = Input(shape=(window_size, len(scaled_features)))</span><br><span class="line"></span><br><span class="line"># 构建多层GRU网络，每层后面都添加Dropout层，以防止过拟合</span><br><span class="line">x = GRU(256, return_sequences=True)(input_layer)  # 第1层GRU，返回所有时间步的输出</span><br><span class="line">x = Dropout(0.2)(x)  # Dropout，丢弃20%的神经元</span><br><span class="line"></span><br><span class="line">x = GRU(256, return_sequences=True)(x)  # 第2层</span><br><span class="line">x = Dropout(0.2)(x)  # Dropout</span><br><span class="line"></span><br><span class="line">x = GRU(128, return_sequences=True)(x)  # 第3层</span><br><span class="line">x = Dropout(0.2)(x)  # Dropout</span><br><span class="line"></span><br><span class="line">x = GRU(128, return_sequences=True)(x)  # 第4层</span><br><span class="line">x = Dropout(0.2)(x)  # Dropout</span><br><span class="line"></span><br><span class="line">x = GRU(64)(x)  # 第5层，只返回最后一个时间步的输出</span><br><span class="line">x = Dropout(0.2)(x)  # Dropout</span><br><span class="line"></span><br><span class="line"># 4个目标列的独立输出层，每个输出层预测一个目标</span><br><span class="line">temp_max_output = Dense(1, name=&#x27;temp_max&#x27;)(x)  # 输出温度最大值</span><br><span class="line">temp_min_output = Dense(1, name=&#x27;temp_min&#x27;)(x)  # 输出温度最小值</span><br><span class="line">precipitation_output = Dense(1, name=&#x27;precipitation&#x27;)(x)  # 输出降水量</span><br><span class="line">wind_output = Dense(1, name=&#x27;wind&#x27;)(x)  # 输出风速</span><br><span class="line"></span><br><span class="line"># 定义模型，输入为输入层，输出为4个目标特征</span><br><span class="line">model = Model(inputs=input_layer, outputs=[temp_max_output, temp_min_output, precipitation_output, wind_output])</span><br><span class="line"></span><br><span class="line"># 8. 编译模型</span><br><span class="line"></span><br><span class="line"># 定义加权损失函数</span><br><span class="line">def weighted_loss(y_true, y_pred):</span><br><span class="line">    # 为每个目标特征设置权重</span><br><span class="line">    temp_max_weight = 1.0</span><br><span class="line">    temp_min_weight = 1.0</span><br><span class="line">    precipitation_weight = 10.0  # 为降水增加权重</span><br><span class="line">    wind_weight = 50.0  # 为风速增加权重</span><br><span class="line"></span><br><span class="line">    # 计算加权的损失</span><br><span class="line">    loss = K.mean(K.square(y_true - y_pred), axis=-1)  # 计算均方误差</span><br><span class="line">    weights = K.constant([temp_max_weight, temp_min_weight, precipitation_weight, wind_weight])</span><br><span class="line"></span><br><span class="line">    return K.mean(loss * weights, axis=-1)  # 计算加权后的损失</span><br><span class="line"></span><br><span class="line"># 编译模型，使用Adam优化器和均方误差作为损失函数</span><br><span class="line">model.compile(optimizer=&#x27;adam&#x27;,</span><br><span class="line">              loss=&#x27;mean_squared_error&#x27;,  # 对每个输出使用均方误差</span><br><span class="line">              metrics=&#123;  # 为每个目标列定义MAE和MSE指标</span><br><span class="line">                  &#x27;temp_max&#x27;: [&#x27;mae&#x27;, &#x27;mse&#x27;],         # 针对 temp_max 输出定义 MAE 和 MSE</span><br><span class="line">                  &#x27;temp_min&#x27;: [&#x27;mae&#x27;, &#x27;mse&#x27;],         # 针对 temp_min 输出定义 MAE 和 MSE</span><br><span class="line">                  &#x27;precipitation&#x27;: [&#x27;mae&#x27;, &#x27;mse&#x27;],    # 针对 precipitation 输出定义 MAE 和 MSE</span><br><span class="line">                  &#x27;wind&#x27;: [&#x27;mae&#x27;, &#x27;mse&#x27;]              # 针对 wind 输出定义 MAE 和 MSE</span><br><span class="line">              &#125;)</span><br><span class="line"></span><br><span class="line"># 9. 训练模型</span><br><span class="line">history = model.fit(X_train, [y_train[:, 0], y_train[:, 1], y_train[:, 2], y_train[:, 3]],</span><br><span class="line">                    epochs=150, batch_size=32,  # 设置训练的轮次和每批次的样本数</span><br><span class="line">                    validation_data=(X_test, [y_test[:, 0], y_test[:, 1], y_test[:, 2], y_test[:, 3]]))  # 验证集数据</span><br><span class="line"></span><br><span class="line"># 10. 模型评估，返回损失值和每个目标特征的评估指标</span><br><span class="line">results = model.evaluate(X_test, [y_test[:, 0], y_test[:, 1], y_test[:, 2], y_test[:, 3]])</span><br><span class="line"></span><br><span class="line"># results 返回的是一个列表，包含了损失值和各个目标特征的MAE和MSE</span><br><span class="line">test_loss = results[0]</span><br><span class="line">test_mae_temp_max = results[2]  # temp_max 对应的 MAE</span><br><span class="line">test_mae_temp_min = results[4]  # temp_min 对应的 MAE</span><br><span class="line">test_mae_precipitation = results[6]  # precipitation 对应的 MAE</span><br><span class="line">test_mae_wind = results[8]  # wind 对应的 MAE</span><br><span class="line"></span><br><span class="line"># 输出评估结果</span><br><span class="line">print(f&#x27;Test Loss (MSE): &#123;test_loss:.4f&#125;&#x27;)</span><br><span class="line">print(f&#x27;Test MAE for temp_max: &#123;test_mae_temp_max:.4f&#125;&#x27;)</span><br><span class="line">print(f&#x27;Test MAE for temp_min: &#123;test_mae_temp_min:.4f&#125;&#x27;)</span><br><span class="line">print(f&#x27;Test MAE for precipitation: &#123;test_mae_precipitation:.4f&#125;&#x27;)</span><br><span class="line">print(f&#x27;Test MAE for wind: &#123;test_mae_wind:.4f&#125;&#x27;)</span><br><span class="line"></span><br><span class="line"># 11. 可视化训练过程</span><br><span class="line">plt.figure(figsize=(12, 6))</span><br><span class="line"></span><br><span class="line"># 绘制总体 Loss（MSE）</span><br><span class="line">plt.subplot(1, 2, 1)</span><br><span class="line">plt.plot(history.history[&#x27;loss&#x27;], label=&#x27;Train Loss&#x27;)</span><br><span class="line">plt.plot(history.history[&#x27;val_loss&#x27;], label=&#x27;Val Loss&#x27;)</span><br><span class="line">plt.title(&#x27;Model Loss (MSE)&#x27;)</span><br><span class="line">plt.xlabel(&#x27;Epochs&#x27;)</span><br><span class="line">plt.ylabel(&#x27;Loss&#x27;)</span><br><span class="line">plt.legend()</span><br><span class="line"></span><br><span class="line"># 绘制每个输出的 MAE</span><br><span class="line">plt.subplot(1, 2, 2)</span><br><span class="line">plt.plot(history.history[&#x27;temp_max_mae&#x27;], label=&#x27;Train temp_max MAE&#x27;)</span><br><span class="line">plt.plot(history.history[&#x27;val_temp_max_mae&#x27;], label=&#x27;Val temp_max MAE&#x27;)</span><br><span class="line">plt.plot(history.history[&#x27;temp_min_mae&#x27;], label=&#x27;Train temp_min MAE&#x27;)</span><br><span class="line">plt.plot(history.history[&#x27;val_temp_min_mae&#x27;], label=&#x27;Val temp_min MAE&#x27;)</span><br><span class="line">plt.plot(history.history[&#x27;precipitation_mae&#x27;], label=&#x27;Train precipitation MAE&#x27;)</span><br><span class="line">plt.plot(history.history[&#x27;val_precipitation_mae&#x27;], label=&#x27;Val precipitation MAE&#x27;)</span><br><span class="line">plt.plot(history.history[&#x27;wind_mae&#x27;], label=&#x27;Train wind MAE&#x27;)</span><br><span class="line">plt.plot(history.history[&#x27;val_wind_mae&#x27;], label=&#x27;Val wind MAE&#x27;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br></pre></td><td class="code"><pre><code class="hljs routeros">import pandas as pd<br>import numpy as np<br><span class="hljs-keyword">from</span> sklearn.preprocessing import MinMaxScaler<br><span class="hljs-keyword">from</span> sklearn.model_selection import train_test_split<br><span class="hljs-keyword">from</span> tensorflow.keras.models import Model<br><span class="hljs-keyword">from</span> tensorflow.keras.layers import Input, GRU, Dense, Dropout<br>import tensorflow.keras.backend as K<br>import matplotlib.pyplot as plt<br><br><span class="hljs-comment"># 1. 加载CSV文件，读取日期数据，并转换为日期格式</span><br>df = pd.read_csv(<span class="hljs-string">&#x27;seattle-weather.csv&#x27;</span>, parse_dates=[<span class="hljs-string">&#x27;date&#x27;</span>])<br><br><span class="hljs-comment"># 2. 处理缺失值，使用前向填充（前一个有效值填充）</span><br>df.fillna(<span class="hljs-attribute">method</span>=<span class="hljs-string">&#x27;ffill&#x27;</span>, <span class="hljs-attribute">inplace</span>=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># 3. 规范化数值特征</span><br><span class="hljs-comment"># 使用 MinMaxScaler 将数据缩放到 0 和 1 之间</span><br>scaler = MinMaxScaler()<br>scaled_features = [<span class="hljs-string">&#x27;precipitation&#x27;</span>, <span class="hljs-string">&#x27;temp_max&#x27;</span>, <span class="hljs-string">&#x27;temp_min&#x27;</span>, <span class="hljs-string">&#x27;wind&#x27;</span>]  # 需要规范化的特征<br>df[scaled_features] = scaler.fit_transform(df[scaled_features])<br><br><span class="hljs-comment"># 4. 创建时间序列数据：输入X是过去window_size天的特征，y是目标列（temp_max, temp_min, precipitation, wind）</span><br>def create_sequences(df, window_size, target_columns):<br>    X, y = [], []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(df) - window_size):<br>        # 过去 window_size 天的数据作为输入<br>        X.append(df.iloc[i:i + window_size][scaled_features].values)<br>        # 当前天的目标特征作为输出<br>        y.append(df.iloc[i + window_size][target_columns].values)  # 多目标回归<br>    return np.array(X), np.array(y)<br><br><span class="hljs-comment"># 设置时间窗口为15天，目标列为气温、降水量和风速</span><br>window_size = 15<br>target_columns = [<span class="hljs-string">&#x27;temp_max&#x27;</span>, <span class="hljs-string">&#x27;temp_min&#x27;</span>, <span class="hljs-string">&#x27;precipitation&#x27;</span>, <span class="hljs-string">&#x27;wind&#x27;</span>]  # 目标列：温度、降水量和风速<br>X, y = create_sequences(df, window_size, target_columns)<br><br><span class="hljs-comment"># 5. 划分训练集和测试集，采用80%的数据用于训练，20%用于测试</span><br>X_train, X_test, y_train, y_test = train_test_split(X, y, <span class="hljs-attribute">test_size</span>=0.2, <span class="hljs-attribute">shuffle</span>=<span class="hljs-literal">False</span>)<br><br><span class="hljs-comment"># 6. 转换数据格式</span><br>X_train, y_train = np.array(X_train), np.array(y_train)<br>X_test, y_test = np.array(X_test), np.array(y_test)<br><br><span class="hljs-comment"># 将目标值数据类型转换为 float32，以便模型训练</span><br>y_train = y_train.astype(np.float32)<br>y_test = y_test.astype(np.float32)<br><br><span class="hljs-comment"># 输出训练集和测试集的形状，确保数据格式正确</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;X_train shape:&quot;</span>, X_train.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;X_test shape:&quot;</span>, X_test.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y_train shape:&quot;</span>, y_train.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y_test shape:&quot;</span>, y_test.shape)<br><br><span class="hljs-comment"># 7. 构建共享底层GRU网络 + 多目标回归模型</span><br><br><span class="hljs-comment"># 输入层，形状为 (window_size, 4)，即过去15天的4个特征</span><br>input_layer = Input(shape=(window_size, len(scaled_features)))<br><br><span class="hljs-comment"># 构建多层GRU网络，每层后面都添加Dropout层，以防止过拟合</span><br>x = GRU(256, <span class="hljs-attribute">return_sequences</span>=<span class="hljs-literal">True</span>)(input_layer)  # 第1层GRU，返回所有时间步的输出<br>x = Dropout(0.2)(x)  # Dropout，丢弃20%的神经元<br><br>x = GRU(256, <span class="hljs-attribute">return_sequences</span>=<span class="hljs-literal">True</span>)(x)  # 第2层<br>x = Dropout(0.2)(x)  # Dropout<br><br>x = GRU(128, <span class="hljs-attribute">return_sequences</span>=<span class="hljs-literal">True</span>)(x)  # 第3层<br>x = Dropout(0.2)(x)  # Dropout<br><br>x = GRU(128, <span class="hljs-attribute">return_sequences</span>=<span class="hljs-literal">True</span>)(x)  # 第4层<br>x = Dropout(0.2)(x)  # Dropout<br><br>x = GRU(64)(x)  # 第5层，只返回最后一个时间步的输出<br>x = Dropout(0.2)(x)  # Dropout<br><br><span class="hljs-comment"># 4个目标列的独立输出层，每个输出层预测一个目标</span><br>temp_max_output = Dense(1, <span class="hljs-attribute">name</span>=<span class="hljs-string">&#x27;temp_max&#x27;</span>)(x)  # 输出温度最大值<br>temp_min_output = Dense(1, <span class="hljs-attribute">name</span>=<span class="hljs-string">&#x27;temp_min&#x27;</span>)(x)  # 输出温度最小值<br>precipitation_output = Dense(1, <span class="hljs-attribute">name</span>=<span class="hljs-string">&#x27;precipitation&#x27;</span>)(x)  # 输出降水量<br>wind_output = Dense(1, <span class="hljs-attribute">name</span>=<span class="hljs-string">&#x27;wind&#x27;</span>)(x)  # 输出风速<br><br><span class="hljs-comment"># 定义模型，输入为输入层，输出为4个目标特征</span><br>model = Model(<span class="hljs-attribute">inputs</span>=input_layer, outputs=[temp_max_output, temp_min_output, precipitation_output, wind_output])<br><br><span class="hljs-comment"># 8. 编译模型</span><br><br><span class="hljs-comment"># 定义加权损失函数</span><br>def weighted_loss(y_true, y_pred):<br>    # 为每个目标特征设置权重<br>    temp_max_weight = 1.0<br>    temp_min_weight = 1.0<br>    precipitation_weight = 10.0  # 为降水增加权重<br>    wind_weight = 50.0  # 为风速增加权重<br><br>    # 计算加权的损失<br>    loss = K.mean(K.square(y_true - y_pred), <span class="hljs-attribute">axis</span>=-1)  # 计算均方误差<br>    weights = K.constant([temp_max_weight, temp_min_weight, precipitation_weight, wind_weight])<br><br>    return K.mean(loss * weights, <span class="hljs-attribute">axis</span>=-1)  # 计算加权后的损失<br><br><span class="hljs-comment"># 编译模型，使用Adam优化器和均方误差作为损失函数</span><br>model.compile(<span class="hljs-attribute">optimizer</span>=<span class="hljs-string">&#x27;adam&#x27;</span>,<br>              <span class="hljs-attribute">loss</span>=<span class="hljs-string">&#x27;mean_squared_error&#x27;</span>,  # 对每个输出使用均方误差<br>              metrics=&#123;  # 为每个目标列定义MAE和MSE指标<br>                  <span class="hljs-string">&#x27;temp_max&#x27;</span>: [<span class="hljs-string">&#x27;mae&#x27;</span>, <span class="hljs-string">&#x27;mse&#x27;</span>],         # 针对 temp_max 输出定义 MAE 和 MSE<br>                  <span class="hljs-string">&#x27;temp_min&#x27;</span>: [<span class="hljs-string">&#x27;mae&#x27;</span>, <span class="hljs-string">&#x27;mse&#x27;</span>],         # 针对 temp_min 输出定义 MAE 和 MSE<br>                  <span class="hljs-string">&#x27;precipitation&#x27;</span>: [<span class="hljs-string">&#x27;mae&#x27;</span>, <span class="hljs-string">&#x27;mse&#x27;</span>],    # 针对 precipitation 输出定义 MAE 和 MSE<br>                  <span class="hljs-string">&#x27;wind&#x27;</span>: [<span class="hljs-string">&#x27;mae&#x27;</span>, <span class="hljs-string">&#x27;mse&#x27;</span>]              # 针对 wind 输出定义 MAE 和 MSE<br>              &#125;)<br><br><span class="hljs-comment"># 9. 训练模型</span><br>history = model.fit(X_train, [y_train[:, 0], y_train[:, 1], y_train[:, 2], y_train[:, 3]],<br>                    <span class="hljs-attribute">epochs</span>=150, <span class="hljs-attribute">batch_size</span>=32,  # 设置训练的轮次和每批次的样本数<br>                    validation_data=(X_test, [y_test[:, 0], y_test[:, 1], y_test[:, 2], y_test[:, 3]]))  # 验证集数据<br><br><span class="hljs-comment"># 10. 模型评估，返回损失值和每个目标特征的评估指标</span><br>results = model.evaluate(X_test, [y_test[:, 0], y_test[:, 1], y_test[:, 2], y_test[:, 3]])<br><br><span class="hljs-comment"># results 返回的是一个列表，包含了损失值和各个目标特征的MAE和MSE</span><br>test_loss = results[0]<br>test_mae_temp_max = results[2]  # temp_max 对应的 MAE<br>test_mae_temp_min = results[4]  # temp_min 对应的 MAE<br>test_mae_precipitation = results[6]  # precipitation 对应的 MAE<br>test_mae_wind = results[8]  # wind 对应的 MAE<br><br><span class="hljs-comment"># 输出评估结果</span><br><span class="hljs-built_in">print</span>(f<span class="hljs-string">&#x27;Test Loss (MSE): &#123;test_loss:.4f&#125;&#x27;</span>)<br><span class="hljs-built_in">print</span>(f<span class="hljs-string">&#x27;Test MAE for temp_max: &#123;test_mae_temp_max:.4f&#125;&#x27;</span>)<br><span class="hljs-built_in">print</span>(f<span class="hljs-string">&#x27;Test MAE for temp_min: &#123;test_mae_temp_min:.4f&#125;&#x27;</span>)<br><span class="hljs-built_in">print</span>(f<span class="hljs-string">&#x27;Test MAE for precipitation: &#123;test_mae_precipitation:.4f&#125;&#x27;</span>)<br><span class="hljs-built_in">print</span>(f<span class="hljs-string">&#x27;Test MAE for wind: &#123;test_mae_wind:.4f&#125;&#x27;</span>)<br><br><span class="hljs-comment"># 11. 可视化训练过程</span><br>plt.figure(figsize=(12, 6))<br><br><span class="hljs-comment"># 绘制总体 Loss（MSE）</span><br>plt.subplot(1, 2, 1)<br>plt.plot(history.history[<span class="hljs-string">&#x27;loss&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Train Loss&#x27;</span>)<br>plt.plot(history.history[<span class="hljs-string">&#x27;val_loss&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Val Loss&#x27;</span>)<br>plt.title(<span class="hljs-string">&#x27;Model Loss (MSE)&#x27;</span>)<br>plt.xlabel(<span class="hljs-string">&#x27;Epochs&#x27;</span>)<br>plt.ylabel(<span class="hljs-string">&#x27;Loss&#x27;</span>)<br>plt.legend()<br><br><span class="hljs-comment"># 绘制每个输出的 MAE</span><br>plt.subplot(1, 2, 2)<br>plt.plot(history.history[<span class="hljs-string">&#x27;temp_max_mae&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Train temp_max MAE&#x27;</span>)<br>plt.plot(history.history[<span class="hljs-string">&#x27;val_temp_max_mae&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Val temp_max MAE&#x27;</span>)<br>plt.plot(history.history[<span class="hljs-string">&#x27;temp_min_mae&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Train temp_min MAE&#x27;</span>)<br>plt.plot(history.history[<span class="hljs-string">&#x27;val_temp_min_mae&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Val temp_min MAE&#x27;</span>)<br>plt.plot(history.history[<span class="hljs-string">&#x27;precipitation_mae&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Train precipitation MAE&#x27;</span>)<br>plt.plot(history.history[<span class="hljs-string">&#x27;val_precipitation_mae&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Val precipitation MAE&#x27;</span>)<br>plt.plot(history.history[<span class="hljs-string">&#x27;wind_mae&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Train wind MAE&#x27;</span>)<br>plt.plot(history.history[<span class="hljs-string">&#x27;val_wind_mae&#x27;</span>], <span class="hljs-attribute">label</span>=<span class="hljs-string">&#x27;Val wind MAE&#x27;</span>)<br></code></pre></td></tr></table></figure>
 <p>这个模型本质上执行了一个多变量回归任务，其中引入了weighted_loss函数，其通过为每个目标特征设置不同的权重，调整它们在总损失中的影响力，使得模型在训练时能够更加关注某些特征的预测准确性。这对于多目标回归任务尤为重要，特别是在特征的重要性或尺度差异较大的情况下，有助于提高模型的预测性能。</p>
 <p>模型在经过粗略调试之后输出了以下结果：</p>
-<p><img src="/images/DL/weather1.png" alt="MSE和MAE指标随迭代次数变化"></p>
-<p><img src="/images/DL/weather2.png" alt="预测结果与实际结果对比"></p>
+<p><img src="/images/DL/weather1.png" srcset="/img/loading.gif" lazyload alt="MSE和MAE指标随迭代次数变化"></p>
+<p><img src="/images/DL/weather2.png" srcset="/img/loading.gif" lazyload alt="预测结果与实际结果对比"></p>
 <p>可以看出对于最高气温和最低气温，模型给出了非常好的结果。这也跟GRU的特性有关，因为其能尽可能多地捕捉到变量与时间的关系。而对于那些变化和时间不呈非常明显关系的变量————比如降水量和风速————模型给出的结果并不是非常尽人意，即使这两个变量已经被添加了相当高的权重。尤其是降水量，其突变次数和趋势明显高于其他几个变量，模型也无法做出比较好的计算结果。</p>
 <p>这只是一个非常简单的应用，如果结合其他方法，预测准确度应当能达到一个比较高的值。</p>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="category-chain-item">深度学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>RNN：原理、组成与简单实现</div>
+      <div>http://akichen891.github.io/2024/12/12/RNN：原理、组成与简单实现/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年12月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
   </div>
-</article>
 
 
 
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/13/STM32%E4%B8%AD%E7%9A%84I2C%E9%80%9A%E4%BF%A1%E3%80%90AP3216C%E5%85%89%E4%BC%A0%E6%84%9F%E5%99%A8%E3%80%91/" title="STM32中的I2C通信【AP3216C光传感器】">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">STM32中的I2C通信【AP3216C光传感器】</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/07/STM32%E4%B8%AD%E7%9A%84I2C%E9%80%9A%E4%BF%A1%E3%80%9024CXX%20EEPROM%E3%80%91/" title="STM32中的I2C通信【24CXX EEPROM】">
+                        <span class="hidden-mobile">STM32中的I2C通信【24CXX EEPROM】</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">首页</a></li>
-        
-          <li><a href="/_posts/">文章</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li>
-        
-          <li><a href="/about/">关于</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9Frnn"><span class="toc-number">1.</span> <span class="toc-text"> 传统RNN</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">1.1.</span> <span class="toc-text"> 历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text"> 工作原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-number">1.3.</span> <span class="toc-text"> 组成和基本结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E8%BE%93%E5%85%A5%E5%B1%82input-layer"><span class="toc-number">1.3.1.</span> <span class="toc-text"> 1. 输入层（Input Layer）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E9%9A%90%E5%B1%82hidden-layer"><span class="toc-number">1.3.2.</span> <span class="toc-text"> 2. 隐层（Hidden Layer）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E8%BE%93%E5%87%BA%E5%B1%82output-layer"><span class="toc-number">1.3.3.</span> <span class="toc-text"> 3. 输出层（Output Layer）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text"> 应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%A8%E6%8E%A7%E5%BE%AA%E7%8E%AF%E5%8D%95%E5%85%83gru"><span class="toc-number">2.</span> <span class="toc-text"> 门控循环单元（GRU）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%A5%E6%BA%90"><span class="toc-number">2.1.</span> <span class="toc-text"> 来源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86-2"><span class="toc-number">2.2.</span> <span class="toc-text"> 工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E7%BD%AE%E9%97%A8reset-gate"><span class="toc-number">2.2.1.</span> <span class="toc-text"> 重置门（Reset Gate）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E9%97%A8update-gate"><span class="toc-number">2.2.2.</span> <span class="toc-text"> 更新门（Update Gate）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%80%99%E9%80%89%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81candidate-hidden-state"><span class="toc-number">2.2.3.</span> <span class="toc-text"> 候选隐藏状态（Candidate Hidden State）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E9%9A%90%E8%97%8F%E7%8A%B6%E6%80%81final-hidden-state"><span class="toc-number">2.2.4.</span> <span class="toc-text"> 最终隐藏状态（Final Hidden State）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text"> 简单应用</span></a></li></ol></li></ol>
+            
+          </article>
+        </div>
       </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&text=RNN：原理、组成与简单实现"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&is_video=false&description=RNN：原理、组成与简单实现"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=RNN：原理、组成与简单实现&body=Check out this article: http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&title=RNN：原理、组成与简单实现"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&name=RNN：原理、组成与简单实现&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/12/12/RNN%EF%BC%9A%E5%8E%9F%E7%90%86%E3%80%81%E7%BB%84%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/&t=RNN：原理、组成与简单实现"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
     </div>
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2020-2025
-    Aki
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
 
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
-    <!-- styles -->
+  </div>
+</div>
 
+    
 
+    
+  </main>
 
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
+  <footer>
+    <div class="footer-inner">
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
   
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功！");
-      e.clearSelection();
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
     })
-  })
   </script>
 
 
-<script src="/js/main.js"></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-<!-- search -->
 
-<!-- Baidu Analytics -->
 
-<!-- Cloudflare Analytics -->
 
-<!-- Disqus Comments -->
 
-<!-- utterances Comments -->
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
 
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

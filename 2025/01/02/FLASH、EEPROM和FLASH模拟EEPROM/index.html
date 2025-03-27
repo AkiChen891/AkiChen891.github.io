@@ -1,11 +1,24 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="FLASH和EEPROM FLASH存储器和EEPROM（电可擦可编程只读存储器）都属于非易失性存储器，但它们在工作原理、使用方式、应用场景等方面有一些区别。  FLASH存储器 FLASH（闪存）是一种非易失性存储器，能够在没有电源的情况下保存数据。它的工作原理类似于EEPROM，但在数据擦除和写入的方式上有所不同。  特点：  大容量：FLASH存储器一般提供比EEPROM更大的存储容量，通">
 <meta property="og:type" content="article">
 <meta property="og:title" content="FLASH、EEPROM和FLASH模拟EEPROM">
@@ -23,163 +36,254 @@
 <meta property="article:published_time" content="2025-01-02T07:43:53.000Z">
 <meta property="article:modified_time" content="2025-01-06T08:36:38.000Z">
 <meta property="article:author" content="Aki">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/arm/flash1.png">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon_mos.png">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>FLASH、EEPROM和FLASH模拟EEPROM</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>FLASH、EEPROM和FLASH模拟EEPROM - Aki&#39;s Blog</title>
 
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-		<script type="text/x-mathjax-config">
-		  MathJax.Hub.Config({
-			tex2jax: {
-			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-			  inlineMath: [['$','$']]
-			}
-		  });
-		</script>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-	
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="上一篇" href="/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="下一篇" href="/2024/12/28/CAN%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&text=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&is_video=false&description=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=FLASH、EEPROM和FLASH模拟EEPROM&body=Check out this article: http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&name=FLASH、EEPROM和FLASH模拟EEPROM&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&t=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#flash%E5%92%8Ceeprom"><span class="toc-number">1.</span> <span class="toc-text"> FLASH和EEPROM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#flash%E5%AD%98%E5%82%A8%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text"> FLASH存储器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.1.</span> <span class="toc-text"> 特点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text"> 类型：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eeprom-vs-flash"><span class="toc-number">1.2.</span> <span class="toc-text"> EEPROM vs FLASH</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#stm32f429%E4%B8%AD%E7%9A%84flash"><span class="toc-number">2.</span> <span class="toc-text"> STM32F429中的FLASH</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E7%BB%87%E6%9E%B6%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text"> 组织架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96"><span class="toc-number">2.2.</span> <span class="toc-text"> 读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E5%92%8C%E6%93%A6%E9%99%A4"><span class="toc-number">2.3.</span> <span class="toc-text"> 编程和擦除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.</span> <span class="toc-text"> 寄存器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#flash_acr-flash%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.1.</span> <span class="toc-text"> FLASH_ACR - Flash访问控制寄存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flash_keyr-flash%E5%AF%86%E9%92%A5%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.2.</span> <span class="toc-text"> FLASH_KEYR - Flash密钥寄存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flash_cr-flash%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.3.</span> <span class="toc-text"> FLASH_CR - Flash控制寄存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flash_sr-flash%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.4.</span> <span class="toc-text"> FLASH_SR - Flash状态寄存器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text"> 代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-2"><span class="toc-number">3.1.</span> <span class="toc-text"> 读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5"><span class="toc-number">3.2.</span> <span class="toc-text"> 写入</span></a></li></ol></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        FLASH、EEPROM和FLASH模拟EEPROM
-    </h1>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">Aki</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2025-01-02T07:43:53.000Z" class="dt-published" itemprop="datePublished">2025-01-02</time>
-        
-      
-    </div>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
-      
-    <div class="article-category">
-        <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/">嵌入式（裸机开发）</a>
-    </div>
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
-      
 
-    </div>
-  </header>
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
-  <div class="content e-content" itemprop="articleBody">
-    <h2 id="flash和eeprom"><a class="markdownIt-Anchor" href="#flash和eeprom"></a> FLASH和EEPROM</h2>
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">FLASH、EEPROM和FLASH模拟EEPROM</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-02 15:43" pubdate>
+          2025年1月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">FLASH、EEPROM和FLASH模拟EEPROM</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="flash和eeprom"><a class="markdownIt-Anchor" href="#flash和eeprom"></a> FLASH和EEPROM</h2>
 <p><strong>FLASH存储器</strong>和<strong>EEPROM</strong>（电可擦可编程只读存储器）都属于<strong>非易失性存储器</strong>，但它们在工作原理、使用方式、应用场景等方面有一些区别。</p>
 <h3 id="flash存储器"><a class="markdownIt-Anchor" href="#flash存储器"></a> <strong>FLASH存储器</strong></h3>
 <p><strong>FLASH</strong>（闪存）是一种非易失性存储器，能够在没有电源的情况下保存数据。它的工作原理类似于EEPROM，但在数据擦除和写入的方式上有所不同。</p>
@@ -245,7 +349,7 @@
 <p>对于嵌入式系统来说，<strong>EEPROM</strong>适用于需要频繁更新的小量数据，而<strong>FLASH</strong>则适合存储较大的程序或数据集。</p>
 <h2 id="stm32f429中的flash"><a class="markdownIt-Anchor" href="#stm32f429中的flash"></a> STM32F429中的FLASH</h2>
 <h3 id="组织架构"><a class="markdownIt-Anchor" href="#组织架构"></a> 组织架构</h3>
-<p><img src="/images/arm/flash1.png" alt="MCU自带FLASH组织"><br>
+<p><img src="/images/arm/flash1.png" srcset="/img/loading.gif" lazyload alt="MCU自带FLASH组织"><br>
 STM32F429 本身没有自带 EEPROM，但是 STM32F429 具有 IAP（在应用编程）功能，所以我们可以把它的 FLASH 当成 EEPROM 来使用。对于F429IGT6来说，其FLASH容量为1024KB。FLASH模块分为：</p>
 <ul>
 <li>主存储器：该部分用来存放代码和数据常数（如 const 类型的数据）。分为两个 Bank，每个 Bank 分为 12 个扇区，前 4 个扇区为 16KB 大小，第五个扇区是 64KB 大小，剩下的 7 个扇区都是 128K大小，总共 1M 字节。两个 Bank 就是 2M 字节。不同容量的 STM32F429，拥有的扇区数不一样。以STM32F429IGT6为例，只有 Bank1，拥有 12 个扇区，1M 字节容量。主存储器的起始地址一般为 0X08000000，B0、B1 都接 GND 的时候，就是从0X08000000 开始运行代码的。</li>
@@ -257,10 +361,10 @@ STM32F429 本身没有自带 EEPROM，但是 STM32F429 具有 IAP（在应用编
 确地进行；即在进行写或擦除操作时，不能进行代码或数据的读取操作。</p>
 <h3 id="读取"><a class="markdownIt-Anchor" href="#读取"></a> 读取</h3>
 <p>为了准确读取 Flash 数据，必须根据 CPU 时钟 (HCLK) 频率和器件电源电压在 Flash 存取控制寄存器 (FLASH_ACR) 中正确地设置等待周期数 (LATENCY)。当电源电压低于 2.1V 时，必须关闭预取缓冲器。</p>
-<p><img src="/images/arm/flash2.png" alt="ACLK时钟频率和对应的FLASH等待周期"></p>
+<p><img src="/images/arm/flash2.png" srcset="/img/loading.gif" lazyload alt="ACLK时钟频率和对应的FLASH等待周期"></p>
 <p>等待周期通过FLASH_ACR寄存器的LATENCY[2:0]三个位设置。</p>
 <p>STM32读取FLASH很简单，例如要从地址addr读取一个字（32位），只需要一句话：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Data = *(volatile uint32_t *)faddr;</span><br></pre></td></tr></table></figure>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">Data</span> <span class="hljs-operator">=</span> *(volatile uint32_t *)faddr<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
 <p>将 faddr 强制转换为 <code>volatile uint32_t</code> 指针，然后取该指针所指向的地址的值，即得到了 faddr 地址的值。类似的，将上面的 <code>volatile uint32_t</code> 改为 <code>volatile uint8_t</code>，即可读取指定地址的一个字节。此处的 <code>volatile</code> 关键字告诉编译器该地址的内容可能随时改变，因此禁止编译器对该地址做任何优化。通常用于表示硬件寄存器或外设的内存地址，因为这些内容的值可能由外部事件（如外部硬件）改变。</p>
 <h3 id="编程和擦除"><a class="markdownIt-Anchor" href="#编程和擦除"></a> 编程和擦除</h3>
 <p>执行任何 Flash编程操作（擦除或编程）时，CPU时钟频率（HCLK）不能低于 1MHz。在对 STM32F429 的 Flash 执行写入或擦除操作期间，任何读取 Flash 的尝试都会导致总线阻塞。只有在完成编程操作后，才能正确处理读操作。这意味着，写/擦除操作进行期间不能从 Flash 中执行代码或数据获取操作。</p>
@@ -282,7 +386,7 @@ STM32F429 本身没有自带 EEPROM，但是 STM32F429 具有 IAP（在应用编
 <p>通过这两个步骤，即可解锁 FLASH_CR，如果写入错误，那么 FLASH_CR 将被锁定，直到下次复位后才可以再次解锁。</p>
 <p>STM32F429 闪存的编程位数可以通过 FLASH_CR 的 PSIZE 字段配置，PSIZE 的设置必须<br>
 和电源电压匹配：<br>
-<img src="/images/arm/flash3.png" alt="编程/擦除并行位数与电压关系"></p>
+<img src="/images/arm/flash3.png" srcset="/img/loading.gif" lazyload alt="编程/擦除并行位数与电压关系"></p>
 <p>当开发板电压为3.3V时，<code>PSIZE</code>为<code>10</code>，并行位数32位。也就是擦除或编程都需要以32位为基础进行。</p>
 <p>FLASH在编程时必须要求目标写入地址的FLASH已经被擦除（值为<code>0xFFFFFFFF</code>），否则将无法写入。</p>
 <p>F429的FLASH标准编程步骤如下：</p>
@@ -309,13 +413,13 @@ STM32F429 本身没有自带 EEPROM，但是 STM32F429 具有 IAP（在应用编
 </ol>
 <h3 id="寄存器"><a class="markdownIt-Anchor" href="#寄存器"></a> 寄存器</h3>
 <h4 id="flash_acr-flash访问控制寄存器"><a class="markdownIt-Anchor" href="#flash_acr-flash访问控制寄存器"></a> FLASH_ACR - Flash访问控制寄存器</h4>
-<p><img src="/images/arm/flash4.png" alt="FLASH_ACR"><br>
+<p><img src="/images/arm/flash4.png" srcset="/img/loading.gif" lazyload alt="FLASH_ACR"><br>
 重点为LATENCY[2:0]位，应根据MCU电压和频率设置，否则死机。</p>
 <h4 id="flash_keyr-flash密钥寄存器"><a class="markdownIt-Anchor" href="#flash_keyr-flash密钥寄存器"></a> FLASH_KEYR - Flash密钥寄存器</h4>
-<p><img src="/images/arm/flash5.png" alt="FLASH_KEYR"><br>
+<p><img src="/images/arm/flash5.png" srcset="/img/loading.gif" lazyload alt="FLASH_KEYR"><br>
 用于解锁FLASH_CR，必须按顺序写入KEY1和KEY2</p>
 <h4 id="flash_cr-flash控制寄存器"><a class="markdownIt-Anchor" href="#flash_cr-flash控制寄存器"></a> FLASH_CR - Flash控制寄存器</h4>
-<p><img src="/images/arm/flash6.png" alt="FLASH_CR"></p>
+<p><img src="/images/arm/flash6.png" srcset="/img/loading.gif" lazyload alt="FLASH_CR"></p>
 <ul>
 <li>LOCK位：用于指示 FLASH_CR 寄存器是否被锁住，该位在检测到正确的解锁序列后，硬件将其清零。在一次不成功的解锁操作后，在下次系统复位之前，该位将不再改变。</li>
 <li>PG位：用于选择编程操作，在往 FLASH 写数据的时候，该位需要置 1。</li>
@@ -325,173 +429,388 @@ STM32F429 本身没有自带 EEPROM，但是 STM32F429 具有 IAP（在应用编
 <li>SNB[3:0]位：用于选择要擦除的扇区编号，取值范围为 0~15。</li>
 </ul>
 <h4 id="flash_sr-flash状态寄存器"><a class="markdownIt-Anchor" href="#flash_sr-flash状态寄存器"></a> FLASH_SR - Flash状态寄存器</h4>
-<p><img src="/images/arm/flash7.png" alt="FLASH_SR"></p>
+<p><img src="/images/arm/flash7.png" srcset="/img/loading.gif" lazyload alt="FLASH_SR"></p>
 <ul>
 <li>BSY位：确认BANK是否正在执行编程操作</li>
 </ul>
 <h2 id="代码"><a class="markdownIt-Anchor" href="#代码"></a> 代码</h2>
 <h3 id="读取-2"><a class="markdownIt-Anchor" href="#读取-2"></a> 读取</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line"> * @brief       从指定地址读取一个字（32位）</span><br><span class="line"> * @param       faddr   : 读取地址</span><br><span class="line"> * @retval      读取到的数据（32位）</span><br><span class="line"> */</span><br><span class="line">uint32_t stmflash_read_word(uint32_t faddr)</span><br><span class="line">&#123;</span><br><span class="line">    return *(volatile uint32_t *)faddr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* @brief 从指定地址开始读出指定长度的数据</span><br><span class="line">* @param raddr : 起始地址</span><br><span class="line">* @param pbuf : 数据指针</span><br><span class="line">* @param length: 要读取的字(32)数,即 4 个字节的整数倍</span><br><span class="line">* @retval 无</span><br><span class="line">*/</span><br><span class="line">void stmflash_read(uint32_t raddr, uint32_t *pbuf, uint32_t length)</span><br><span class="line">&#123;</span><br><span class="line">    uint32_t i;</span><br><span class="line"></span><br><span class="line">    for (i = 0; i &lt; length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        pbuf[i] = stmflash_read_word(raddr);</span><br><span class="line">        raddr += 4;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight wren"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs wren"> <span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@brief</span>       从指定地址读取一个字（32位）</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span>       faddr   : 读取地址</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@retval</span>      读取到的数据（32位）</span><br><span class="hljs-comment"> */</span><br><span class="hljs-variable">uint32_t</span> <span class="hljs-title function_">stmflash_read_word</span>(<span class="hljs-params">uint32_t</span> <span class="hljs-params">faddr</span>)<br>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-operator">*</span>(<span class="hljs-variable">volatile</span> <span class="hljs-variable">uint32_t</span> <span class="hljs-operator">*</span>)<span class="hljs-variable">faddr</span>;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment">* <span class="hljs-doctag">@brief</span> 从指定地址开始读出指定长度的数据</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> raddr : 起始地址</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> pbuf : 数据指针</span><br><span class="hljs-comment">* <span class="hljs-doctag">@param</span> length: 要读取的字(32)数,即 4 个字节的整数倍</span><br><span class="hljs-comment">* <span class="hljs-doctag">@retval</span> 无</span><br><span class="hljs-comment">*/</span><br><span class="hljs-variable">void</span> <span class="hljs-title function_">stmflash_read</span>(<span class="hljs-params">uint32_t</span> <span class="hljs-params">raddr</span>, <span class="hljs-params">uint32_t</span> *<span class="hljs-params">pbuf</span>, <span class="hljs-params">uint32_t</span> <span class="hljs-params">length</span>)<br>&#123;<br>    <span class="hljs-variable">uint32_t</span> <span class="hljs-variable">i</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; <span class="hljs-variable">i</span> <span class="hljs-operator">&lt;</span> <span class="hljs-variable">length</span>; <span class="hljs-variable">i</span><span class="hljs-operator">+</span><span class="hljs-operator">+</span>)<br>    &#123;<br>        <span class="hljs-variable">pbuf</span>[<span class="hljs-variable">i</span>] <span class="hljs-operator">=</span> <span class="hljs-title function_">stmflash_read_word</span>(<span class="hljs-variable">raddr</span>);<br>        <span class="hljs-variable">raddr</span> <span class="hljs-operator">+</span><span class="hljs-operator">=</span> <span class="hljs-number">4</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="写入"><a class="markdownIt-Anchor" href="#写入"></a> 写入</h3>
 <p>写入相对来说复杂一点，首先要判断写入地址是否正确（不能超出FLASH地址范围，不能不是4的倍数），判断通过后，解锁FLASH，禁用数据缓存，然后判断待写入地址范围是否为<code>0xFFFFFFFF</code>。如果是，表明该地址已经被擦除；如果不是，表明该地址需要先擦除，再写入。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">void stmflash_write(uint32_t waddr, uint32_t *pbuf, uint32_t length)</span><br><span class="line">&#123;</span><br><span class="line">    FLASH_EraseInitTypeDef flash_erase_init;</span><br><span class="line">    HAL_StatusTypeDef flashstatus = HAL_OK;</span><br><span class="line">    uint32_t sector_error = 0;</span><br><span class="line">    uint32_t addrx = 0;</span><br><span class="line">    uint32_t endaddr = 0;</span><br><span class="line"></span><br><span class="line">    if (waddr &lt; STM32_FLASH_BASE || waddr % 4 || waddr &gt; (STM32_FLASH_BASE + STM32_FLASH_SIZE)) return;     /* 地址非法 */</span><br><span class="line"></span><br><span class="line">    HAL_FLASH_Unlock();</span><br><span class="line"></span><br><span class="line">    FLASH-&gt;ACR &amp;= ~(1 &lt;&lt; 10);       /* 禁用数据缓存 */</span><br><span class="line">    addrx = waddr;                  /* 写入起始地址*/</span><br><span class="line">    endaddr = waddr + length * 4;   /* 写入结束地址 */</span><br><span class="line"></span><br><span class="line">    if (addrx &lt; 0x1FFF0000)  /* 主存储区*/</span><br><span class="line">        while (addrx &lt; endaddr)</span><br><span class="line">        &#123;</span><br><span class="line">            if (stmflash_read_word(addrx) != 0xFFFFFFFF)        /* 当前地址不为0xFFFFFFFF则表示需要擦除此地址 */</span><br><span class="line">            &#123;</span><br><span class="line">                flash_erase_init.TypeErase = FLASH_TYPEERASE_SECTORS;</span><br><span class="line">                flash_erase_init.Sector = stmflash_get_flash_sector(addrx);</span><br><span class="line">                flash_erase_init.NbSectors = 1;</span><br><span class="line">                flash_erase_init.VoltageRange = FLASH_VOLTAGE_RANGE_3;</span><br><span class="line"></span><br><span class="line">                if (HAL_FLASHEx_Erase(&amp;flash_erase_init, &amp;sector_error) != HAL_OK) break;</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">            &#123;</span><br><span class="line">                addrx += 4;</span><br><span class="line">            &#125;</span><br><span class="line">            FLASH_WaitForLastOperation(FLASH_WAITETIME);</span><br><span class="line">        &#125;</span><br><span class="line">    flashstatus = FLASH_WaitForLastOperation(FLASH_WAITETIME);</span><br><span class="line">    if (flashstatus == HAL_OK)</span><br><span class="line">    &#123;</span><br><span class="line">        while (waddr &lt; endaddr)</span><br><span class="line">        &#123;</span><br><span class="line">            if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, waddr, *pbuf) != HAL_OK) break;</span><br><span class="line">            waddr += 4;</span><br><span class="line">            pbuf++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    FLASH-&gt;ACR |= 1 &lt;&lt; 10;     /* 启用数据缓存 */</span><br><span class="line"></span><br><span class="line">    HAL_FLASH_Lock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">stmflash_write</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> waddr, <span class="hljs-type">uint32_t</span> *pbuf, <span class="hljs-type">uint32_t</span> length)</span></span><br><span class="hljs-function"></span>&#123;<br>    FLASH_EraseInitTypeDef flash_erase_init;<br>    HAL_StatusTypeDef flashstatus = HAL_OK;<br>    <span class="hljs-type">uint32_t</span> sector_error = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">uint32_t</span> addrx = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">uint32_t</span> endaddr = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">if</span> (waddr &lt; STM32_FLASH_BASE || waddr % <span class="hljs-number">4</span> || waddr &gt; (STM32_FLASH_BASE + STM32_FLASH_SIZE)) <span class="hljs-keyword">return</span>;     <span class="hljs-comment">/* 地址非法 */</span><br><br>    <span class="hljs-built_in">HAL_FLASH_Unlock</span>();<br><br>    FLASH-&gt;ACR &amp;= ~(<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">10</span>);       <span class="hljs-comment">/* 禁用数据缓存 */</span><br>    addrx = waddr;                  <span class="hljs-comment">/* 写入起始地址*/</span><br>    endaddr = waddr + length * <span class="hljs-number">4</span>;   <span class="hljs-comment">/* 写入结束地址 */</span><br><br>    <span class="hljs-keyword">if</span> (addrx &lt; <span class="hljs-number">0x1FFF0000</span>)  <span class="hljs-comment">/* 主存储区*/</span><br>        <span class="hljs-keyword">while</span> (addrx &lt; endaddr)<br>        &#123;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">stmflash_read_word</span>(addrx) != <span class="hljs-number">0xFFFFFFFF</span>)        <span class="hljs-comment">/* 当前地址不为0xFFFFFFFF则表示需要擦除此地址 */</span><br>            &#123;<br>                flash_erase_init.TypeErase = FLASH_TYPEERASE_SECTORS;<br>                flash_erase_init.Sector = <span class="hljs-built_in">stmflash_get_flash_sector</span>(addrx);<br>                flash_erase_init.NbSectors = <span class="hljs-number">1</span>;<br>                flash_erase_init.VoltageRange = FLASH_VOLTAGE_RANGE_3;<br><br>                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">HAL_FLASHEx_Erase</span>(&amp;flash_erase_init, &amp;sector_error) != HAL_OK) <span class="hljs-keyword">break</span>;<br>            &#125;<br>            <span class="hljs-keyword">else</span><br>            &#123;<br>                addrx += <span class="hljs-number">4</span>;<br>            &#125;<br>            <span class="hljs-built_in">FLASH_WaitForLastOperation</span>(FLASH_WAITETIME);<br>        &#125;<br>    flashstatus = <span class="hljs-built_in">FLASH_WaitForLastOperation</span>(FLASH_WAITETIME);<br>    <span class="hljs-keyword">if</span> (flashstatus == HAL_OK)<br>    &#123;<br>        <span class="hljs-keyword">while</span> (waddr &lt; endaddr)<br>        &#123;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">HAL_FLASH_Program</span>(FLASH_TYPEPROGRAM_WORD, waddr, *pbuf) != HAL_OK) <span class="hljs-keyword">break</span>;<br>            waddr += <span class="hljs-number">4</span>;<br>            pbuf++;<br>        &#125;<br>    &#125;<br>    FLASH-&gt;ACR |= <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">10</span>;     <span class="hljs-comment">/* 启用数据缓存 */</span><br><br>    <span class="hljs-built_in">HAL_FLASH_Lock</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>这里有几个需要注意的点：</p>
 <ol>
 <li>擦除和写入期间必须禁用数据缓存，否则缓存器中的缓存内容和新的内容可以不一致导致bug。禁用数据缓存通过位操作<code>FLASH-&gt;ACR &amp;= ~(1 &lt;&lt; 10)</code>实现，<code>1 &lt;&lt; 10</code>表示<code>1</code>左移10位，<code>~</code>表示取反。</li>
 <li>擦除操作通过<code>HAL_FLASHEx_Erase()</code>实现，HAL库对于该函数的定义为：</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * @brief  Perform a mass erase or erase the specified FLASH memory sectors</span><br><span class="line">  * @param[in]  pEraseInit pointer to an FLASH_EraseInitTypeDef structure that</span><br><span class="line">  *         contains the configuration information for the erasing.</span><br><span class="line">  *</span><br><span class="line">  * @param[out]  SectorError pointer to variable  that</span><br><span class="line">  *         contains the configuration information on faulty sector in case of error</span><br><span class="line">  *         (0xFFFFFFFFU means that all the sectors have been correctly erased)</span><br><span class="line">  *</span><br><span class="line">  * @retval HAL Status</span><br><span class="line">  */</span><br><span class="line">HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t *SectorError)</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@brief</span>  Perform a mass erase or erase the specified FLASH memory sectors</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@param</span>[in]  pEraseInit pointer to an FLASH_EraseInitTypeDef structure that</span><br><span class="hljs-comment">  *         contains the configuration information for the erasing.</span><br><span class="hljs-comment">  *</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@param</span>[out]  SectorError pointer to variable  that</span><br><span class="hljs-comment">  *         contains the configuration information on faulty sector in case of error</span><br><span class="hljs-comment">  *         (0xFFFFFFFFU means that all the sectors have been correctly erased)</span><br><span class="hljs-comment">  *</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@retval</span> HAL Status</span><br><span class="hljs-comment">  */</span><br>HAL_StatusTypeDef <span class="hljs-title function_">HAL_FLASHEx_Erase</span><span class="hljs-params">(FLASH_EraseInitTypeDef *pEraseInit, uint32_t *SectorError)</span><br></code></pre></td></tr></table></figure>
 <p>形参1为存储擦除配置的结构体，形参2为存储报错信息的变量。<br>
 结构体格式为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * @brief  FLASH Erase structure definition</span><br><span class="line">  */</span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">  uint32_t TypeErase;   /*!&lt; Mass erase or sector Erase.</span><br><span class="line">                             This parameter can be a value of @ref FLASHEx_Type_Erase */</span><br><span class="line"></span><br><span class="line">  uint32_t Banks;       /*!&lt; Select banks to erase when Mass erase is enabled.</span><br><span class="line">                             This parameter must be a value of @ref FLASHEx_Banks */</span><br><span class="line"></span><br><span class="line">  uint32_t Sector;      /*!&lt; Initial FLASH sector to erase when Mass erase is disabled</span><br><span class="line">                             This parameter must be a value of @ref FLASHEx_Sectors */</span><br><span class="line"></span><br><span class="line">  uint32_t NbSectors;   /*!&lt; Number of sectors to be erased.</span><br><span class="line">                             This parameter must be a value between 1 and (max number of sectors - value of Initial sector)*/</span><br><span class="line"></span><br><span class="line">  uint32_t VoltageRange;/*!&lt; The device voltage range which defines the erase parallelism</span><br><span class="line">                             This parameter must be a value of @ref FLASHEx_Voltage_Range */</span><br><span class="line"></span><br><span class="line">&#125; FLASH_EraseInitTypeDef;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * @brief  FLASH Erase structure definition</span><br><span class="hljs-comment">  */</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span><br>&#123;<br>  <span class="hljs-type">uint32_t</span> TypeErase;   <span class="hljs-comment">/*!&lt; Mass erase or sector Erase.</span><br><span class="hljs-comment">                             This parameter can be a value of @ref FLASHEx_Type_Erase */</span><br><br>  <span class="hljs-type">uint32_t</span> Banks;       <span class="hljs-comment">/*!&lt; Select banks to erase when Mass erase is enabled.</span><br><span class="hljs-comment">                             This parameter must be a value of @ref FLASHEx_Banks */</span><br><br>  <span class="hljs-type">uint32_t</span> Sector;      <span class="hljs-comment">/*!&lt; Initial FLASH sector to erase when Mass erase is disabled</span><br><span class="hljs-comment">                             This parameter must be a value of @ref FLASHEx_Sectors */</span><br><br>  <span class="hljs-type">uint32_t</span> NbSectors;   <span class="hljs-comment">/*!&lt; Number of sectors to be erased.</span><br><span class="hljs-comment">                             This parameter must be a value between 1 and (max number of sectors - value of Initial sector)*/</span><br><br>  <span class="hljs-type">uint32_t</span> VoltageRange;<span class="hljs-comment">/*!&lt; The device voltage range which defines the erase parallelism</span><br><span class="hljs-comment">                             This parameter must be a value of @ref FLASHEx_Voltage_Range */</span><br><br>&#125; FLASH_EraseInitTypeDef;<br></code></pre></td></tr></table></figure>
 <ol start="3">
 <li>全部擦除完成并等待<code>FLASH_WaitForLastOperation(FLASH_WAITETIME)</code>传回<code>HAL_OK</code>后，才可以开始进行。写入函数为<code>HAL_FLASH_Program</code>：</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * @brief  Program byte, halfword, word or double word at a specified address</span><br><span class="line">  * @param  TypeProgram  Indicate the way to program at a specified address.</span><br><span class="line">  *                           This parameter can be a value of @ref FLASH_Type_Program</span><br><span class="line">  * @param  Address  specifies the address to be programmed.</span><br><span class="line">  * @param  Data specifies the data to be programmed</span><br><span class="line">  *</span><br><span class="line">  * @retval HAL_StatusTypeDef HAL Status</span><br><span class="line">  */</span><br><span class="line">HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@brief</span>  Program byte, halfword, word or double word at a specified address</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@param</span>  TypeProgram  Indicate the way to program at a specified address.</span><br><span class="hljs-comment">  *                           This parameter can be a value of <span class="hljs-doctag">@ref</span> FLASH_Type_Program</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@param</span>  Address  specifies the address to be programmed.</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@param</span>  Data specifies the data to be programmed</span><br><span class="hljs-comment">  *</span><br><span class="hljs-comment">  * <span class="hljs-doctag">@retval</span> HAL_StatusTypeDef HAL Status</span><br><span class="hljs-comment">  */</span><br>HAL_StatusTypeDef <span class="hljs-title function_">HAL_FLASH_Program</span><span class="hljs-params">(uint32_t TypeProgram, uint32_t Address, uint64_t Data)</span><br></code></pre></td></tr></table></figure>
 <p>形参1用于指定写入的是字节（8位）、半个字（16位）、字（32位）或双字（64位）；形参2为写入地址，形参3为待写入数据。连续写入时，形参3一般设置为指针，每次循环对相应地址+1处理。<br>
 4. 写入完成后，启用数据缓存，FLASH上锁。</p>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/" class="category-chain-item">嵌入式（裸机开发）</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>FLASH、EEPROM和FLASH模拟EEPROM</div>
+      <div>http://akichen891.github.io/2025/01/02/FLASH、EEPROM和FLASH模拟EEPROM/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年1月6日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
   </div>
-</article>
 
 
 
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/02/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E8%A7%A3%E9%A2%98%E6%8A%80%E5%B7%A7/" title="数组中的解题技巧">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数组中的解题技巧</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/28/CAN%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/" title="CAN及其应用">
+                        <span class="hidden-mobile">CAN及其应用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">首页</a></li>
-        
-          <li><a href="/_posts/">文章</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li>
-        
-          <li><a href="/about/">关于</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#flash%E5%92%8Ceeprom"><span class="toc-number">1.</span> <span class="toc-text"> FLASH和EEPROM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#flash%E5%AD%98%E5%82%A8%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text"> FLASH存储器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.1.</span> <span class="toc-text"> 特点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text"> 类型：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eeprom-vs-flash"><span class="toc-number">1.2.</span> <span class="toc-text"> EEPROM vs FLASH</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#stm32f429%E4%B8%AD%E7%9A%84flash"><span class="toc-number">2.</span> <span class="toc-text"> STM32F429中的FLASH</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E7%BB%87%E6%9E%B6%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text"> 组织架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96"><span class="toc-number">2.2.</span> <span class="toc-text"> 读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E5%92%8C%E6%93%A6%E9%99%A4"><span class="toc-number">2.3.</span> <span class="toc-text"> 编程和擦除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.</span> <span class="toc-text"> 寄存器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#flash_acr-flash%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.1.</span> <span class="toc-text"> FLASH_ACR - Flash访问控制寄存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flash_keyr-flash%E5%AF%86%E9%92%A5%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.2.</span> <span class="toc-text"> FLASH_KEYR - Flash密钥寄存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flash_cr-flash%E6%8E%A7%E5%88%B6%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.3.</span> <span class="toc-text"> FLASH_CR - Flash控制寄存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flash_sr-flash%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.4.4.</span> <span class="toc-text"> FLASH_SR - Flash状态寄存器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text"> 代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-2"><span class="toc-number">3.1.</span> <span class="toc-text"> 读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5"><span class="toc-number">3.2.</span> <span class="toc-text"> 写入</span></a></li></ol></li></ol>
+            
+          </article>
+        </div>
       </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&text=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&is_video=false&description=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=FLASH、EEPROM和FLASH模拟EEPROM&body=Check out this article: http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&title=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&name=FLASH、EEPROM和FLASH模拟EEPROM&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2025/01/02/FLASH%E3%80%81EEPROM%E5%92%8CFLASH%E6%A8%A1%E6%8B%9FEEPROM/&t=FLASH、EEPROM和FLASH模拟EEPROM"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
     </div>
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2020-2025
-    Aki
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
 
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
-    <!-- styles -->
+  </div>
+</div>
 
+    
 
+    
+  </main>
 
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
+  <footer>
+    <div class="footer-inner">
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
   
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功！");
-      e.clearSelection();
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
     })
-  })
   </script>
 
 
-<script src="/js/main.js"></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-<!-- search -->
 
-<!-- Baidu Analytics -->
 
-<!-- Cloudflare Analytics -->
 
-<!-- Disqus Comments -->
 
-<!-- utterances Comments -->
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
 
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

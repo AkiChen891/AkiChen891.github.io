@@ -1,11 +1,24 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="设备树中断信息节点 IMX6ULL和IMX6UL的中断控制器呈兼容关系，即IMX6ULL继承IMX6UL的GIC节点信息。在imx6ul.dtsi中有： 12345678910111213141516171819intc: interrupt-controller@a01000 &#123;	compatible &#x3D; &quot;arm,gic-400&quot;, &quot;arm,cort">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux中断机制">
@@ -16,164 +29,255 @@
 <meta property="article:published_time" content="2025-03-26T06:56:52.000Z">
 <meta property="article:modified_time" content="2025-03-26T12:37:58.824Z">
 <meta property="article:author" content="Aki">
-<meta name="twitter:card" content="summary">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon_mos.png">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>Linux中断机制</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Linux中断机制 - Aki&#39;s Blog</title>
 
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-		<script type="text/x-mathjax-config">
-		  MathJax.Hub.Config({
-			tex2jax: {
-			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-			  inlineMath: [['$','$']]
-			}
-		  });
-		</script>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-	
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="上一篇" href="/2025/03/26/Linux%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9EIO/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="下一篇" href="/2025/03/26/Linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&text=Linux中断机制"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&is_video=false&description=Linux中断机制"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Linux中断机制&body=Check out this article: http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&name=Linux中断机制&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&t=Linux中断机制"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%AD%E6%96%AD%E4%BF%A1%E6%81%AF%E8%8A%82%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text"> 设备树中断信息节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text"> 用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text"> 例程</span></a></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        Linux中断机制
-    </h1>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">Aki</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2025-03-26T06:56:52.000Z" class="dt-published" itemprop="datePublished">2025-03-26</time>
-        
-      
-    </div>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
-      
-    <div class="article-category">
-        <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/">嵌入式(Linux开发)</a>
-    </div>
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
-      
 
-    </div>
-  </header>
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
-  <div class="content e-content" itemprop="articleBody">
-    <h2 id="设备树中断信息节点"><a class="markdownIt-Anchor" href="#设备树中断信息节点"></a> 设备树中断信息节点</h2>
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Linux中断机制</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-26 14:56" pubdate>
+          2025年3月26日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Linux中断机制</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="设备树中断信息节点"><a class="markdownIt-Anchor" href="#设备树中断信息节点"></a> 设备树中断信息节点</h2>
 <p>IMX6ULL和IMX6UL的中断控制器呈兼容关系，即IMX6ULL继承IMX6UL的GIC节点信息。在<code>imx6ul.dtsi</code>中有：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">intc: interrupt-controller@a01000 &#123;</span><br><span class="line">	compatible = &quot;arm,gic-400&quot;, &quot;arm,cortex-a7-gic&quot;;</span><br><span class="line">       /* GIC_PPI：私有外设中断，非共享</span><br><span class="line">          9:中断号为9</span><br><span class="line">          GIC_CPU_MASK_SIMPLE(1):PPI只发送给CPU0处理</span><br><span class="line">          IRQ_TYPE_LEVEL_HIGH：电平触发，高电平有效 */</span><br><span class="line">	interrupts = &lt;GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)&gt;;</span><br><span class="line">       /* 中断描述需3个单元 */</span><br><span class="line">	#interrupt-cells = &lt;3&gt;;</span><br><span class="line">       /* 声明节点为中断控制器 */</span><br><span class="line">	interrupt-controller;</span><br><span class="line">       /* 父类为自身，说明是顶级GIC */</span><br><span class="line">	interrupt-parent = &lt;&amp;intc&gt;;</span><br><span class="line">       /* GIC寄存器基地址和大小 */</span><br><span class="line">	reg = &lt;0x00a01000 0x1000&gt;,  /* GIC分发器基地址 */</span><br><span class="line">		  &lt;0x00a02000 0x2000&gt;,  /* GIC CPU接口基地址 */</span><br><span class="line">		  &lt;0x00a04000 0x2000&gt;,  /* GIC虚拟CPU接口 */</span><br><span class="line">		  &lt;0x00a06000 0x2000&gt;;  /* GIC虚拟分发器 */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-built_in">int</span>c: <span class="hljs-built_in">int</span>errupt-<span class="hljs-symbol">controller@</span>a01000 &#123;<br>	compatible = <span class="hljs-string">&quot;arm,gic-400&quot;</span>, <span class="hljs-string">&quot;arm,cortex-a7-gic&quot;</span>;<br>       <span class="hljs-comment">/* GIC_PPI：私有外设中断，非共享</span><br><span class="hljs-comment">          9:中断号为9</span><br><span class="hljs-comment">          GIC_CPU_MASK_SIMPLE(1):PPI只发送给CPU0处理</span><br><span class="hljs-comment">          IRQ_TYPE_LEVEL_HIGH：电平触发，高电平有效 */</span><br>	<span class="hljs-built_in">int</span>errupts = &lt;GIC_PPI <span class="hljs-number">9</span> (GIC_CPU_MASK_SIMPLE(<span class="hljs-number">1</span>) | IRQ_TYPE_LEVEL_HIGH)&gt;;<br>       <span class="hljs-comment">/* 中断描述需3个单元 */</span><br>	#<span class="hljs-built_in">int</span>errupt-cells = &lt;<span class="hljs-number">3</span>&gt;;<br>       <span class="hljs-comment">/* 声明节点为中断控制器 */</span><br>	<span class="hljs-built_in">int</span>errupt-controller;<br>       <span class="hljs-comment">/* 父类为自身，说明是顶级GIC */</span><br>	<span class="hljs-built_in">int</span>errupt-parent = &lt;&amp;<span class="hljs-built_in">int</span>c&gt;;<br>       <span class="hljs-comment">/* GIC寄存器基地址和大小 */</span><br>	reg = &lt;<span class="hljs-number">0x00a01000</span> <span class="hljs-number">0x1000</span>&gt;,  <span class="hljs-comment">/* GIC分发器基地址 */</span><br>		  &lt;<span class="hljs-number">0x00a02000</span> <span class="hljs-number">0x2000</span>&gt;,  <span class="hljs-comment">/* GIC CPU接口基地址 */</span><br>		  &lt;<span class="hljs-number">0x00a04000</span> <span class="hljs-number">0x2000</span>&gt;,  <span class="hljs-comment">/* GIC虚拟CPU接口 */</span><br>		  &lt;<span class="hljs-number">0x00a06000</span> <span class="hljs-number">0x2000</span>&gt;;  <span class="hljs-comment">/* GIC虚拟分发器 */</span><br>&#125;;<br></code></pre></td></tr></table></figure>
 <p>这里的<code>interrupt-cells</code>通常格式为<code>&lt;中断类型 中断号 标志位&gt;</code>或<code>&lt;中断号 标志位&gt;</code>，其中</p>
 <ul>
 <li>中断类型：
@@ -195,9 +299,9 @@
 </li>
 </ul>
 <p>GPIO也可以作为GIC：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">gpio5: gpio@20ac000 &#123;</span><br><span class="line">		compatible = &quot;fsl,imx6ul-gpio&quot;, &quot;fsl,imx35-gpio&quot;;</span><br><span class="line">		reg = &lt;0x020ac000 0x4000&gt;;</span><br><span class="line">        /* 共享中断，中断号74，高电平触发</span><br><span class="line">           共享中断，中断号75，高电平触发 */</span><br><span class="line">		interrupts = &lt;GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH&gt;,</span><br><span class="line">					 &lt;GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH&gt;;</span><br><span class="line">		clocks = &lt;&amp;clks IMX6UL_CLK_GPIO5&gt;;</span><br><span class="line">		gpio-controller;</span><br><span class="line">		#gpio-cells = &lt;2&gt;;</span><br><span class="line">		interrupt-controller;   /* 声明为中断控制器 */</span><br><span class="line">		gpio-ranges = &lt;&amp;iomuxc 0 7 10&gt;, &lt;&amp;iomuxc 10 5 2&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">gpio5: gpio<span class="hljs-meta">@20ac000</span> &#123;<br>		compatible = <span class="hljs-string">&quot;fsl,imx6ul-gpio&quot;</span>, <span class="hljs-string">&quot;fsl,imx35-gpio&quot;</span>;<br>		reg = <span class="hljs-variable">&lt;0x020ac000 0x4000&gt;</span>;<br>        /<span class="hljs-symbol">*</span> 共享中断，中断号74，高电平触发<br>           共享中断，中断号75，高电平触发 <span class="hljs-symbol">*</span>/<br>		interrupts = <span class="hljs-variable">&lt;GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH&gt;</span>,<br>					 <span class="hljs-variable">&lt;GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH&gt;</span>;<br>		clocks = <span class="hljs-variable">&lt;&amp;clks IMX6UL_CLK_GPIO5&gt;</span>;<br>		gpio-controller;<br>		<span class="hljs-comment">#gpio-cells = &lt;2&gt;;</span><br>		interrupt-controller;   /<span class="hljs-symbol">*</span> 声明为中断控制器 <span class="hljs-symbol">*</span>/<br>		gpio-ranges = <span class="hljs-variable">&lt;&amp;iomuxc 0 7 10&gt;</span>, <span class="hljs-variable">&lt;&amp;iomuxc 10 5 2&gt;</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>中断需要在节点中配置，如<code>imx6ul-14x14-evk.dtsi</code>中<code>i2c1</code>节点下的：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fxls8471@1e &#123;</span><br><span class="line">	compatible = &quot;fsl,fxls8471&quot;;</span><br><span class="line">	reg = &lt;0x1e&gt;;</span><br><span class="line">	position = &lt;0&gt;;</span><br><span class="line">	interrupt-parent = &lt;&amp;gpio5&gt;;    /* GIC为GPIO5 */</span><br><span class="line">	interrupts = &lt;0 8&gt;; /* 中断号为0，低电平触发 */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">fxls8471<span class="hljs-meta">@1e</span> &#123;<br>	compatible = <span class="hljs-string">&quot;fsl,fxls8471&quot;</span>;<br>	reg = <span class="hljs-variable">&lt;0x1e&gt;</span>;<br>	position = <span class="hljs-variable">&lt;0&gt;</span>;<br>	interrupt-parent = <span class="hljs-variable">&lt;&amp;gpio5&gt;</span>;    /<span class="hljs-symbol">*</span> GIC为GPIO5 <span class="hljs-symbol">*</span>/<br>	interrupts = <span class="hljs-variable">&lt;0 8&gt;</span>; /<span class="hljs-symbol">*</span> 中断号为0，低电平触发 <span class="hljs-symbol">*</span>/<br>&#125;;<br></code></pre></td></tr></table></figure>
 <p>简单来说，设备树节点中描述中断的信息有：</p>
 <ul>
 <li><code>#interrupt-cells</code>：中断源cell个数</li>
@@ -211,16 +315,16 @@
 <li>设备结构体中声明<code>irqreturn_t (*handler)(int, void *)</code>(也可以不声明)和<code>int irqnum</code>(存放中断号)</li>
 <li>通过<code>irq_of_parse_and_map</code>向设备树申请中断信息</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unsigned int irq_of_parse_and_map(struct device_node *node, int index);</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> <span class="hljs-title">irq_of_parse_and_map</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> device_node *node, <span class="hljs-type">int</span> index)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>该函数返回申请到的中断号。<br>
 4. 初始化时向kernel申请中断：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags,</span><br><span class="line">	    const char *name, void *dev)</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-built_in">request_irq</span>(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> irq, <span class="hljs-type">irq_handler_t</span> handler, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> flags,<br>	    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name, <span class="hljs-type">void</span> *dev)<br></code></pre></td></tr></table></figure>
 <ul>
 <li><code>irq</code>：中断号</li>
 <li><code>handler</code>：中断服务函数</li>
 <li><code>flags</code>：标志位，可选：</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#define IRQF_TRIGGER_NONE	0x00000000</span><br><span class="line">#define IRQF_TRIGGER_RISING	0x00000001</span><br><span class="line">#define IRQF_TRIGGER_FALLING	0x00000002</span><br><span class="line">#define IRQF_TRIGGER_HIGH	0x00000004</span><br><span class="line">#define IRQF_TRIGGER_LOW	0x00000008</span><br><span class="line">#define IRQF_TRIGGER_MASK	(IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW | \</span><br><span class="line">				 IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING)</span><br><span class="line">#define IRQF_TRIGGER_PROBE	0x00000010</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">define</span> IRQF_TRIGGER_NONE	0x00000000</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> IRQF_TRIGGER_RISING	0x00000001</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> IRQF_TRIGGER_FALLING	0x00000002</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> IRQF_TRIGGER_HIGH	0x00000004</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> IRQF_TRIGGER_LOW	0x00000008</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> IRQF_TRIGGER_MASK	(IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW | \</span><br><span class="hljs-meta">				 IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> IRQF_TRIGGER_PROBE	0x00000010</span><br></code></pre></td></tr></table></figure>
 <ul>
 <li><code>*name</code>：生成中断的设备名</li>
 <li><code>*dev</code>：Cookie，传递设备结构体地址</li>
@@ -228,155 +332,370 @@
 <ol start="5">
 <li>设备注销时释放中断：</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void *free_irq(unsigned int irq, void *dev);</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> *<span class="hljs-title">free_irq</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> irq, <span class="hljs-type">void</span> *dev)</span></span>;<br></code></pre></td></tr></table></figure>
 <ul>
 <li><code>irq</code>：中断号</li>
 <li><code>*dev</code>：Cookie，传递设备结构体地址</li>
 </ul>
 <h2 id="例程"><a class="markdownIt-Anchor" href="#例程"></a> 例程</h2>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;linux/types.h&gt;</span><br><span class="line">#include &lt;linux/kernel.h&gt;</span><br><span class="line">#include &lt;linux/delay.h&gt;</span><br><span class="line">#include &lt;linux/libata.h&gt;   /* 新版kernel不再支持ide.h */</span><br><span class="line">#include &lt;linux/init.h&gt;</span><br><span class="line">#include &lt;linux/module.h&gt;</span><br><span class="line">#include &lt;linux/errno.h&gt;</span><br><span class="line">#include &lt;linux/gpio.h&gt;</span><br><span class="line">#include &lt;linux/cdev.h&gt;</span><br><span class="line">#include &lt;linux/device.h&gt;</span><br><span class="line">#include &lt;linux/of.h&gt;</span><br><span class="line">#include &lt;linux/of_address.h&gt;</span><br><span class="line">#include &lt;linux/of_gpio.h&gt;</span><br><span class="line">#include &lt;asm/mach/map.h&gt;</span><br><span class="line">#include &lt;asm/uaccess.h&gt;</span><br><span class="line">#include &lt;asm/io.h&gt;</span><br><span class="line">#include &lt;linux/semaphore.h&gt;</span><br><span class="line">#include &lt;linux/timer.h&gt;</span><br><span class="line">#include &lt;linux/of_irq.h&gt;</span><br><span class="line">#include &lt;linux/irq.h&gt;</span><br><span class="line"></span><br><span class="line">#define IMX6UIRQ_CNT         1</span><br><span class="line">#define IMX6UIRQ_NAME   &quot;imx6uirq&quot;</span><br><span class="line">#define KEY0VALUE       0x01</span><br><span class="line">#define INVAKEY         0xFF</span><br><span class="line">#define KEY_NUM         1</span><br><span class="line"></span><br><span class="line">struct irq_keydesc &#123;</span><br><span class="line">    int gpio;</span><br><span class="line">    int irqnum;             /* 中断号 */</span><br><span class="line">    unsigned char value;    /* 按键对应的键值 */</span><br><span class="line">    char name[10];          </span><br><span class="line">    irqreturn_t (*handler)(int, void *);    /* 中断服务函数 */</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct irq_led &#123;</span><br><span class="line">    int gpio;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct imx6uirq_dev &#123;</span><br><span class="line">    dev_t devid;</span><br><span class="line">    struct cdev cdev;</span><br><span class="line">    struct class *class;</span><br><span class="line">    struct device *device;</span><br><span class="line">    int major;</span><br><span class="line">    int minor;</span><br><span class="line">    struct device_node *nd;</span><br><span class="line">    atomic_t keyvalue;      /* 有效按键键值 */</span><br><span class="line">    atomic_t releasekey;    /* 标记是否完成一次按键 */</span><br><span class="line">    struct timer_list timer;</span><br><span class="line">    struct irq_keydesc irqkeydesc; /* 按键描述结构体 */</span><br><span class="line">    struct irq_led irqled;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct imx6uirq_dev imx6uirq;</span><br><span class="line"></span><br><span class="line">/* IRQ服务函数，延时10ms，消抖 */</span><br><span class="line">static irqreturn_t key0_handler(int irq, void *dev_id)</span><br><span class="line">&#123;</span><br><span class="line">    struct imx6uirq_dev *dev = (struct imx6uirq_dev *)dev_id;</span><br><span class="line"></span><br><span class="line">    mod_timer(&amp;dev-&gt;timer, jiffies + msecs_to_jiffies(10)); /* 延时10ms，消抖 */</span><br><span class="line">    return IRQ_RETVAL(IRQ_HANDLED);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 定时器服务函数，到期后再次读取按键值，如果还是按下表示按键有效 */</span><br><span class="line">void timer_function(struct timer_list *t)</span><br><span class="line">&#123;</span><br><span class="line">    unsigned char value;</span><br><span class="line">    struct irq_keydesc *keydesc;</span><br><span class="line">    struct imx6uirq_dev *dev = from_timer(dev, t, timer);</span><br><span class="line"></span><br><span class="line">    keydesc = &amp;dev-&gt;irqkeydesc;</span><br><span class="line"></span><br><span class="line">    value = gpio_get_value(keydesc-&gt;gpio);  /* 读取IO电平 */</span><br><span class="line">    if (value == 0)&#123;    /* 如果按下 */</span><br><span class="line">        int sta = gpio_get_value(dev-&gt;irqled.gpio);</span><br><span class="line">        gpio_set_value(dev-&gt;irqled.gpio, !sta);</span><br><span class="line">        atomic_set(&amp;dev-&gt;keyvalue, keydesc-&gt;value);</span><br><span class="line">    &#125;else&#123;      /* 如果松开 */</span><br><span class="line">        atomic_set(&amp;dev-&gt;keyvalue, 0x80 | keydesc-&gt;value);</span><br><span class="line">        atomic_set(&amp;dev-&gt;releasekey, 1);    /* 标记松开按键 */</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static int keyio_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    int ret = 0;</span><br><span class="line"></span><br><span class="line">    imx6uirq.nd = of_find_node_by_path(&quot;/key&quot;);</span><br><span class="line">    if (imx6uirq.nd == NULL)&#123;</span><br><span class="line">        printk(&quot;find node failed\r\n&quot;);</span><br><span class="line">        return -EINVAL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    imx6uirq.irqkeydesc.gpio = of_get_named_gpio(imx6uirq.nd, &quot;key-gpio&quot;, 0);</span><br><span class="line">    if (imx6uirq.irqkeydesc.gpio &lt; 0)&#123;</span><br><span class="line">        printk(&quot;unable get key gpio\r\n&quot;);</span><br><span class="line">        return -EINVAL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    imx6uirq.irqled.gpio = of_get_named_gpio(imx6uirq.nd, &quot;led-gpio&quot;, 0);</span><br><span class="line">    if (imx6uirq.irqled.gpio &lt; 0)&#123;</span><br><span class="line">        printk(&quot;unable get led gpio\r\n&quot;);</span><br><span class="line">        return -EINVAL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sprintf(imx6uirq.irqkeydesc.name, &quot;KEY0&quot;);</span><br><span class="line">    gpio_request(imx6uirq.irqkeydesc.gpio, imx6uirq.irqkeydesc.name);</span><br><span class="line">    ret = gpio_direction_input(imx6uirq.irqkeydesc.gpio);</span><br><span class="line">    if (ret &lt; 0)&#123;</span><br><span class="line">        printk(&quot;unable set key pin level\r\n&quot;);</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">    imx6uirq.irqkeydesc.irqnum = irq_of_parse_and_map(imx6uirq.nd, 0);</span><br><span class="line">    printk(&quot;key0: gpio = %d, irqnum = %d\r\n&quot;, imx6uirq.irqkeydesc.gpio, imx6uirq.irqkeydesc.irqnum);</span><br><span class="line"></span><br><span class="line">    gpio_request(imx6uirq.irqled.gpio, &quot;LED&quot;);</span><br><span class="line">    ret = gpio_direction_output(imx6uirq.irqled.gpio, 1);</span><br><span class="line">    if (ret &lt; 0)&#123;</span><br><span class="line">        printk(&quot;unable set led pin level\r\n&quot;);</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    imx6uirq.irqkeydesc.handler = key0_handler;</span><br><span class="line">    imx6uirq.irqkeydesc.value = KEY0VALUE;</span><br><span class="line"></span><br><span class="line">    ret = request_irq(imx6uirq.irqkeydesc.irqnum, imx6uirq.irqkeydesc.handler, IRQF_TRIGGER_FALLING|IRQF_TRIGGER_RISING, imx6uirq.irqkeydesc.name, &amp;imx6uirq);</span><br><span class="line"></span><br><span class="line">    if (ret &lt; 0)&#123;</span><br><span class="line">        printk(&quot;IRQ request failed, error code: %d\r\n&quot;, ret);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    timer_setup(&amp;imx6uirq.timer, timer_function, 0);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static int imx6uirq_open(struct inode *inode, struct file *filp)</span><br><span class="line">&#123;</span><br><span class="line">    filp-&gt;private_data = &amp;imx6uirq;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static ssize_t imx6uirq_read(struct file *filp, char __user *buf, size_t cnt, loff_t *offt)</span><br><span class="line">&#123;</span><br><span class="line">    int ret = 0;</span><br><span class="line">    unsigned char keyvalue = 0;</span><br><span class="line">    unsigned char releasekey = 0;</span><br><span class="line">    struct imx6uirq_dev *dev = (struct imx6uirq_dev *)filp-&gt;private_data;</span><br><span class="line"></span><br><span class="line">    keyvalue = atomic_read(&amp;dev-&gt;keyvalue);</span><br><span class="line">    releasekey = atomic_read(&amp;dev-&gt;releasekey);</span><br><span class="line"></span><br><span class="line">    if (releasekey)&#123;</span><br><span class="line">        if (keyvalue &amp; 0x80)&#123;</span><br><span class="line">            keyvalue &amp;= ~(0x80);</span><br><span class="line">            ret = copy_to_user(buf, &amp;keyvalue, sizeof(keyvalue));</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            goto data_error;</span><br><span class="line">        &#125;</span><br><span class="line">        atomic_set(&amp;dev-&gt;releasekey, 0);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        goto data_error;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line"></span><br><span class="line">data_error:</span><br><span class="line">    return -EINVAL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static struct file_operations imx6uirq_fops = &#123;</span><br><span class="line">    .owner = THIS_MODULE,</span><br><span class="line">    .open = imx6uirq_open,</span><br><span class="line">    .read = imx6uirq_read,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">static int __init imx6uirq_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    if (imx6uirq.major)&#123;</span><br><span class="line">        imx6uirq.devid = MKDEV(imx6uirq.major, 0);</span><br><span class="line">        register_chrdev_region(imx6uirq.devid, IMX6UIRQ_CNT, IMX6UIRQ_NAME);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        alloc_chrdev_region(&amp;imx6uirq.devid, 0, IMX6UIRQ_CNT, IMX6UIRQ_NAME);</span><br><span class="line">        imx6uirq.major = MAJOR(imx6uirq.devid);</span><br><span class="line">        imx6uirq.minor = MINOR(imx6uirq.devid);</span><br><span class="line">    &#125;</span><br><span class="line">    printk(&quot;KEY reg ok, major = %d, minor = %d\r\n&quot;, imx6uirq.major, imx6uirq.minor);</span><br><span class="line"></span><br><span class="line">    cdev_init(&amp;imx6uirq.cdev, &amp;imx6uirq_fops);</span><br><span class="line">    cdev_add(&amp;imx6uirq.cdev, imx6uirq.devid, IMX6UIRQ_CNT);</span><br><span class="line"></span><br><span class="line">    imx6uirq.class = class_create(IMX6UIRQ_NAME);</span><br><span class="line">    if (IS_ERR(imx6uirq.class))&#123;</span><br><span class="line">        return PTR_ERR(imx6uirq.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    imx6uirq.device = device_create(imx6uirq.class, NULL, imx6uirq.devid, NULL, IMX6UIRQ_NAME);</span><br><span class="line">    if (IS_ERR(imx6uirq.device))&#123;</span><br><span class="line">        return PTR_ERR(imx6uirq.device);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    atomic_set(&amp;imx6uirq.keyvalue, INVAKEY);</span><br><span class="line">    atomic_set(&amp;imx6uirq.releasekey, 0);</span><br><span class="line">    keyio_init();</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static void __exit imx6uirq_exit(void)</span><br><span class="line">&#123;</span><br><span class="line">    del_timer_sync(&amp;imx6uirq.timer);</span><br><span class="line"></span><br><span class="line">    free_irq(imx6uirq.irqkeydesc.irqnum, &amp;imx6uirq);</span><br><span class="line">    gpio_free(imx6uirq.irqkeydesc.gpio);</span><br><span class="line"></span><br><span class="line">    cdev_del(&amp;imx6uirq.cdev);</span><br><span class="line">    unregister_chrdev_region(imx6uirq.devid, IMX6UIRQ_CNT);</span><br><span class="line">    device_destroy(imx6uirq.class, imx6uirq.devid);</span><br><span class="line">    class_destroy(imx6uirq.class);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module_init(imx6uirq_init);</span><br><span class="line">module_exit(imx6uirq_exit);</span><br><span class="line">MODULE_LICENSE(&quot;GPL&quot;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/kernel.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/delay.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/libata.h&gt;</span>   <span class="hljs-comment">/* 新版kernel不再支持ide.h */</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/init.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/module.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/errno.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/gpio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/cdev.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/device.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/of.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/of_address.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/of_gpio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;asm/mach/map.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;asm/uaccess.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;asm/io.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/semaphore.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/timer.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/of_irq.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/irq.h&gt;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> IMX6UIRQ_CNT         1</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> IMX6UIRQ_NAME   <span class="hljs-string">&quot;imx6uirq&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> KEY0VALUE       0x01</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> INVAKEY         0xFF</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> KEY_NUM         1</span><br><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">irq_keydesc</span> &#123;<br>    <span class="hljs-type">int</span> gpio;<br>    <span class="hljs-type">int</span> irqnum;             <span class="hljs-comment">/* 中断号 */</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> value;    <span class="hljs-comment">/* 按键对应的键值 */</span><br>    <span class="hljs-type">char</span> name[<span class="hljs-number">10</span>];          <br>    <span class="hljs-built_in">irqreturn_t</span> (*handler)(<span class="hljs-type">int</span>, <span class="hljs-type">void</span> *);    <span class="hljs-comment">/* 中断服务函数 */</span><br>&#125;;<br><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">irq_led</span> &#123;<br>    <span class="hljs-type">int</span> gpio;<br>&#125;;<br><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">imx6uirq_dev</span> &#123;<br>    <span class="hljs-type">dev_t</span> devid;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">cdev</span> cdev;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">class</span> *<span class="hljs-keyword">class</span>;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">device</span> *device;<br>    <span class="hljs-type">int</span> major;<br>    <span class="hljs-type">int</span> minor;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">device_node</span> *nd;<br>    <span class="hljs-type">atomic_t</span> keyvalue;      <span class="hljs-comment">/* 有效按键键值 */</span><br>    <span class="hljs-type">atomic_t</span> releasekey;    <span class="hljs-comment">/* 标记是否完成一次按键 */</span><br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">timer_list</span> timer;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">irq_keydesc</span> irqkeydesc; <span class="hljs-comment">/* 按键描述结构体 */</span><br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">irq_led</span> irqled;<br>&#125;;<br><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">imx6uirq_dev</span> imx6uirq;<br><br><span class="hljs-comment">/* IRQ服务函数，延时10ms，消抖 */</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">irqreturn_t</span> <span class="hljs-title">key0_handler</span><span class="hljs-params">(<span class="hljs-type">int</span> irq, <span class="hljs-type">void</span> *dev_id)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">imx6uirq_dev</span> *dev = (<span class="hljs-keyword">struct</span> imx6uirq_dev *)dev_id;<br><br>    <span class="hljs-built_in">mod_timer</span>(&amp;dev-&gt;timer, jiffies + <span class="hljs-built_in">msecs_to_jiffies</span>(<span class="hljs-number">10</span>)); <span class="hljs-comment">/* 延时10ms，消抖 */</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">IRQ_RETVAL</span>(IRQ_HANDLED);<br>&#125;<br><br><span class="hljs-comment">/* 定时器服务函数，到期后再次读取按键值，如果还是按下表示按键有效 */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">timer_function</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> timer_list *t)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> value;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">irq_keydesc</span> *keydesc;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">imx6uirq_dev</span> *dev = <span class="hljs-built_in">from_timer</span>(dev, t, timer);<br><br>    keydesc = &amp;dev-&gt;irqkeydesc;<br><br>    value = <span class="hljs-built_in">gpio_get_value</span>(keydesc-&gt;gpio);  <span class="hljs-comment">/* 读取IO电平 */</span><br>    <span class="hljs-keyword">if</span> (value == <span class="hljs-number">0</span>)&#123;    <span class="hljs-comment">/* 如果按下 */</span><br>        <span class="hljs-type">int</span> sta = <span class="hljs-built_in">gpio_get_value</span>(dev-&gt;irqled.gpio);<br>        <span class="hljs-built_in">gpio_set_value</span>(dev-&gt;irqled.gpio, !sta);<br>        <span class="hljs-built_in">atomic_set</span>(&amp;dev-&gt;keyvalue, keydesc-&gt;value);<br>    &#125;<span class="hljs-keyword">else</span>&#123;      <span class="hljs-comment">/* 如果松开 */</span><br>        <span class="hljs-built_in">atomic_set</span>(&amp;dev-&gt;keyvalue, <span class="hljs-number">0x80</span> | keydesc-&gt;value);<br>        <span class="hljs-built_in">atomic_set</span>(&amp;dev-&gt;releasekey, <span class="hljs-number">1</span>);    <span class="hljs-comment">/* 标记松开按键 */</span><br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title">keyio_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> ret = <span class="hljs-number">0</span>;<br><br>    imx6uirq.nd = <span class="hljs-built_in">of_find_node_by_path</span>(<span class="hljs-string">&quot;/key&quot;</span>);<br>    <span class="hljs-keyword">if</span> (imx6uirq.nd == <span class="hljs-literal">NULL</span>)&#123;<br>        <span class="hljs-built_in">printk</span>(<span class="hljs-string">&quot;find node failed\r\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> -EINVAL;<br>    &#125;<br><br>    imx6uirq.irqkeydesc.gpio = <span class="hljs-built_in">of_get_named_gpio</span>(imx6uirq.nd, <span class="hljs-string">&quot;key-gpio&quot;</span>, <span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">if</span> (imx6uirq.irqkeydesc.gpio &lt; <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-built_in">printk</span>(<span class="hljs-string">&quot;unable get key gpio\r\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> -EINVAL;<br>    &#125;<br><br>    imx6uirq.irqled.gpio = <span class="hljs-built_in">of_get_named_gpio</span>(imx6uirq.nd, <span class="hljs-string">&quot;led-gpio&quot;</span>, <span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">if</span> (imx6uirq.irqled.gpio &lt; <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-built_in">printk</span>(<span class="hljs-string">&quot;unable get led gpio\r\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> -EINVAL;<br>    &#125;<br><br>    <span class="hljs-built_in">sprintf</span>(imx6uirq.irqkeydesc.name, <span class="hljs-string">&quot;KEY0&quot;</span>);<br>    <span class="hljs-built_in">gpio_request</span>(imx6uirq.irqkeydesc.gpio, imx6uirq.irqkeydesc.name);<br>    ret = <span class="hljs-built_in">gpio_direction_input</span>(imx6uirq.irqkeydesc.gpio);<br>    <span class="hljs-keyword">if</span> (ret &lt; <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-built_in">printk</span>(<span class="hljs-string">&quot;unable set key pin level\r\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> ret;<br>    &#125;<br>    imx6uirq.irqkeydesc.irqnum = <span class="hljs-built_in">irq_of_parse_and_map</span>(imx6uirq.nd, <span class="hljs-number">0</span>);<br>    <span class="hljs-built_in">printk</span>(<span class="hljs-string">&quot;key0: gpio = %d, irqnum = %d\r\n&quot;</span>, imx6uirq.irqkeydesc.gpio, imx6uirq.irqkeydesc.irqnum);<br><br>    <span class="hljs-built_in">gpio_request</span>(imx6uirq.irqled.gpio, <span class="hljs-string">&quot;LED&quot;</span>);<br>    ret = <span class="hljs-built_in">gpio_direction_output</span>(imx6uirq.irqled.gpio, <span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">if</span> (ret &lt; <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-built_in">printk</span>(<span class="hljs-string">&quot;unable set led pin level\r\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> ret;<br>    &#125;<br><br>    imx6uirq.irqkeydesc.handler = key0_handler;<br>    imx6uirq.irqkeydesc.value = KEY0VALUE;<br><br>    ret = <span class="hljs-built_in">request_irq</span>(imx6uirq.irqkeydesc.irqnum, imx6uirq.irqkeydesc.handler, IRQF_TRIGGER_FALLING|IRQF_TRIGGER_RISING, imx6uirq.irqkeydesc.name, &amp;imx6uirq);<br><br>    <span class="hljs-keyword">if</span> (ret &lt; <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-built_in">printk</span>(<span class="hljs-string">&quot;IRQ request failed, error code: %d\r\n&quot;</span>, ret);<br>    &#125;<br><br>    <span class="hljs-built_in">timer_setup</span>(&amp;imx6uirq.timer, timer_function, <span class="hljs-number">0</span>);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title">imx6uirq_open</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> inode *inode, <span class="hljs-keyword">struct</span> file *filp)</span></span><br><span class="hljs-function"></span>&#123;<br>    filp-&gt;private_data = &amp;imx6uirq;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">ssize_t</span> <span class="hljs-title">imx6uirq_read</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> file *filp, <span class="hljs-type">char</span> __user *buf, <span class="hljs-type">size_t</span> cnt, <span class="hljs-type">loff_t</span> *offt)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> ret = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> keyvalue = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> releasekey = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">imx6uirq_dev</span> *dev = (<span class="hljs-keyword">struct</span> imx6uirq_dev *)filp-&gt;private_data;<br><br>    keyvalue = <span class="hljs-built_in">atomic_read</span>(&amp;dev-&gt;keyvalue);<br>    releasekey = <span class="hljs-built_in">atomic_read</span>(&amp;dev-&gt;releasekey);<br><br>    <span class="hljs-keyword">if</span> (releasekey)&#123;<br>        <span class="hljs-keyword">if</span> (keyvalue &amp; <span class="hljs-number">0x80</span>)&#123;<br>            keyvalue &amp;= ~(<span class="hljs-number">0x80</span>);<br>            ret = <span class="hljs-built_in">copy_to_user</span>(buf, &amp;keyvalue, <span class="hljs-built_in">sizeof</span>(keyvalue));<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">goto</span> data_error;<br>        &#125;<br>        <span class="hljs-built_in">atomic_set</span>(&amp;dev-&gt;releasekey, <span class="hljs-number">0</span>);<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-keyword">goto</span> data_error;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>data_error:<br>    <span class="hljs-keyword">return</span> -EINVAL;<br>&#125;<br><br><span class="hljs-type">static</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">file_operations</span> imx6uirq_fops = &#123;<br>    .owner = THIS_MODULE,<br>    .open = imx6uirq_open,<br>    .read = imx6uirq_read,<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">int</span> __init <span class="hljs-title">imx6uirq_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">if</span> (imx6uirq.major)&#123;<br>        imx6uirq.devid = <span class="hljs-built_in">MKDEV</span>(imx6uirq.major, <span class="hljs-number">0</span>);<br>        <span class="hljs-built_in">register_chrdev_region</span>(imx6uirq.devid, IMX6UIRQ_CNT, IMX6UIRQ_NAME);<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-built_in">alloc_chrdev_region</span>(&amp;imx6uirq.devid, <span class="hljs-number">0</span>, IMX6UIRQ_CNT, IMX6UIRQ_NAME);<br>        imx6uirq.major = <span class="hljs-built_in">MAJOR</span>(imx6uirq.devid);<br>        imx6uirq.minor = <span class="hljs-built_in">MINOR</span>(imx6uirq.devid);<br>    &#125;<br>    <span class="hljs-built_in">printk</span>(<span class="hljs-string">&quot;KEY reg ok, major = %d, minor = %d\r\n&quot;</span>, imx6uirq.major, imx6uirq.minor);<br><br>    <span class="hljs-built_in">cdev_init</span>(&amp;imx6uirq.cdev, &amp;imx6uirq_fops);<br>    <span class="hljs-built_in">cdev_add</span>(&amp;imx6uirq.cdev, imx6uirq.devid, IMX6UIRQ_CNT);<br><br>    imx6uirq.<span class="hljs-keyword">class</span> = <span class="hljs-built_in">class_create</span>(IMX6UIRQ_NAME);<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">IS_ERR</span>(imx6uirq.<span class="hljs-keyword">class</span>))&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">PTR_ERR</span>(imx6uirq.<span class="hljs-keyword">class</span>);<br>    &#125;<br><br>    imx6uirq.device = <span class="hljs-built_in">device_create</span>(imx6uirq.<span class="hljs-keyword">class</span>, <span class="hljs-literal">NULL</span>, imx6uirq.devid, <span class="hljs-literal">NULL</span>, IMX6UIRQ_NAME);<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">IS_ERR</span>(imx6uirq.device))&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">PTR_ERR</span>(imx6uirq.device);<br>    &#125;<br><br>    <span class="hljs-built_in">atomic_set</span>(&amp;imx6uirq.keyvalue, INVAKEY);<br>    <span class="hljs-built_in">atomic_set</span>(&amp;imx6uirq.releasekey, <span class="hljs-number">0</span>);<br>    <span class="hljs-built_in">keyio_init</span>();<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> __exit <span class="hljs-title">imx6uirq_exit</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">del_timer_sync</span>(&amp;imx6uirq.timer);<br><br>    <span class="hljs-built_in">free_irq</span>(imx6uirq.irqkeydesc.irqnum, &amp;imx6uirq);<br>    <span class="hljs-built_in">gpio_free</span>(imx6uirq.irqkeydesc.gpio);<br><br>    <span class="hljs-built_in">cdev_del</span>(&amp;imx6uirq.cdev);<br>    <span class="hljs-built_in">unregister_chrdev_region</span>(imx6uirq.devid, IMX6UIRQ_CNT);<br>    <span class="hljs-built_in">device_destroy</span>(imx6uirq.<span class="hljs-keyword">class</span>, imx6uirq.devid);<br>    <span class="hljs-built_in">class_destroy</span>(imx6uirq.<span class="hljs-keyword">class</span>);<br>&#125;<br><br><span class="hljs-built_in">module_init</span>(imx6uirq_init);<br><span class="hljs-built_in">module_exit</span>(imx6uirq_exit);<br><span class="hljs-built_in">MODULE_LICENSE</span>(<span class="hljs-string">&quot;GPL&quot;</span>);<br></code></pre></td></tr></table></figure>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux中断机制</div>
+      <div>http://akichen891.github.io/2025/03/26/Linux中断机制/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月26日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月26日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
   </div>
-</article>
 
 
 
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/03/26/Linux%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9EIO/" title="Linux阻塞与非阻塞IO">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux阻塞与非阻塞IO</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/26/Linux%E5%86%85%E6%A0%B8%E5%AE%9A%E6%97%B6%E5%99%A8/" title="Linux内核定时器">
+                        <span class="hidden-mobile">Linux内核定时器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">首页</a></li>
-        
-          <li><a href="/_posts/">文章</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li>
-        
-          <li><a href="/about/">关于</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%AD%E6%96%AD%E4%BF%A1%E6%81%AF%E8%8A%82%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text"> 设备树中断信息节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text"> 用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text"> 例程</span></a></li></ol>
+            
+          </article>
+        </div>
       </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&text=Linux中断机制"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&is_video=false&description=Linux中断机制"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Linux中断机制&body=Check out this article: http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&title=Linux中断机制"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&name=Linux中断机制&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2025/03/26/Linux%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6/&t=Linux中断机制"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
     </div>
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2020-2025
-    Aki
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
 
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
-    <!-- styles -->
+  </div>
+</div>
 
+    
 
+    
+  </main>
 
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
+  <footer>
+    <div class="footer-inner">
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
   
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功！");
-      e.clearSelection();
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
     })
-  })
   </script>
 
 
-<script src="/js/main.js"></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-<!-- search -->
 
-<!-- Baidu Analytics -->
 
-<!-- Cloudflare Analytics -->
 
-<!-- Disqus Comments -->
 
-<!-- utterances Comments -->
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
 
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

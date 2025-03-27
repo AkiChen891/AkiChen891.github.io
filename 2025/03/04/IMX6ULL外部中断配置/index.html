@@ -1,11 +1,24 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="Cortex-A7中断系统  中断向量表 Cortex-A7的中断向量表共有8个异常中断，其中一个未使用，有效中断为7个：    向量地址 中断类型 中断模式     0X00 复位中断(Rest) 特权模式(SVC)   0X04 未定义指令中断(Undefined Instruction) 未定义指令中止模式(Undef)   0X08 软中断(Software Interrupt,SWI)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IMX6ULL外部中断配置">
@@ -19,163 +32,254 @@
 <meta property="article:published_time" content="2025-03-04T04:51:55.000Z">
 <meta property="article:modified_time" content="2025-03-05T13:25:35.204Z">
 <meta property="article:author" content="Aki">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/linux/GIC_1.png">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon_mos.png">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>IMX6ULL外部中断配置</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>IMX6ULL外部中断配置 - Aki&#39;s Blog</title>
 
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-		<script type="text/x-mathjax-config">
-		  MathJax.Hub.Config({
-			tex2jax: {
-			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-			  inlineMath: [['$','$']]
-			}
-		  });
-		</script>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-	
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="上一篇" href="/2025/03/05/DDR3%E9%85%8D%E7%BD%AE/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="下一篇" href="/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&text=IMX6ULL外部中断配置"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&is_video=false&description=IMX6ULL外部中断配置"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=IMX6ULL外部中断配置&body=Check out this article: http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&name=IMX6ULL外部中断配置&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&t=IMX6ULL外部中断配置"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cortex-a7%E4%B8%AD%E6%96%AD%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text"> Cortex-A7中断系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F%E8%A1%A8"><span class="toc-number">1.1.</span> <span class="toc-text"> 中断向量表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6starts"><span class="toc-number">1.2.</span> <span class="toc-text"> 汇编代码(启动文件start.S)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F%E8%A1%A8-2"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 中断向量表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gic%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text"> GIC控制器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%ADid"><span class="toc-number">1.4.</span> <span class="toc-text"> 中断ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gic%E9%80%BB%E8%BE%91%E5%88%86%E5%9D%97"><span class="toc-number">1.5.</span> <span class="toc-text"> GIC逻辑分块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cp15%E5%8D%8F%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">1.6.</span> <span class="toc-text"> CP15协处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%BD%BF%E8%83%BD"><span class="toc-number">1.7.</span> <span class="toc-text"> 中断使能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#irq%E5%92%8Cfiq%E6%80%BB%E4%B8%AD%E6%96%AD%E4%BD%BF%E8%83%BD"><span class="toc-number">1.7.1.</span> <span class="toc-text"> IRQ和FIQ总中断使能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#id0-id1019-%E4%B8%AD%E6%96%AD%E4%BD%BF%E8%83%BD%E5%92%8C%E7%A6%81%E6%AD%A2"><span class="toc-number">1.7.2.</span> <span class="toc-text"> ID0 - ID1019 中断使能和禁止</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">1.8.</span> <span class="toc-text"> 中断优先级</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E6%95%B0%E9%87%8F%E9%85%8D%E7%BD%AE"><span class="toc-number">1.8.1.</span> <span class="toc-text"> 优先级数量配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%A2%E5%8D%A0%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E5%AD%90%E4%BC%98%E5%85%88%E7%BA%A7%E4%BD%8D%E6%95%B0%E9%85%8D%E7%BD%AE"><span class="toc-number">1.8.2.</span> <span class="toc-text"> 抢占优先级和子优先级位数配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.8.3.</span> <span class="toc-text"> 优先级设置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E4%BD%8D%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%E5%87%BD%E6%95%B0"><span class="toc-number">1.9.</span> <span class="toc-text"> 复位中断服务函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E4%B8%AD%E6%96%AD"><span class="toc-number">1.10.</span> <span class="toc-text"> 其他中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#irq%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%E5%87%BD%E6%95%B0"><span class="toc-number">1.11.</span> <span class="toc-text"> IRQ中断服务函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E9%A9%B1%E5%8A%A8%E6%96%87%E4%BB%B6c%E5%87%BD%E6%95%B0"><span class="toc-number">1.12.</span> <span class="toc-text"> 中断驱动文件（C函数）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%E5%85%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.13.</span> <span class="toc-text"> 中断处理全流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E5%AE%9A%E6%97%B6%E5%99%A8%E6%8C%89%E9%94%AE%E6%B6%88%E6%8A%96"><span class="toc-number">2.</span> <span class="toc-text"> 示例（定时器按键消抖）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E9%94%AE%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text"> 按键初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.2.</span> <span class="toc-text"> 定时器初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gpio-isr%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.</span> <span class="toc-text"> GPIO ISR函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8-isr%E5%87%BD%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text"> 定时器 ISR函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9%E5%87%BD%E6%95%B0"><span class="toc-number">2.5.</span> <span class="toc-text"> 辅助函数</span></a></li></ol></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        IMX6ULL外部中断配置
-    </h1>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">Aki</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2025-03-04T04:51:55.000Z" class="dt-published" itemprop="datePublished">2025-03-04</time>
-        
-      
-    </div>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
-      
-    <div class="article-category">
-        <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/">嵌入式(Linux开发)</a>
-    </div>
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
-      
 
-    </div>
-  </header>
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
-  <div class="content e-content" itemprop="articleBody">
-    <h2 id="cortex-a7中断系统"><a class="markdownIt-Anchor" href="#cortex-a7中断系统"></a> Cortex-A7中断系统</h2>
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">IMX6ULL外部中断配置</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-04 12:51" pubdate>
+          2025年3月4日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">IMX6ULL外部中断配置</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="cortex-a7中断系统"><a class="markdownIt-Anchor" href="#cortex-a7中断系统"></a> Cortex-A7中断系统</h2>
 <h3 id="中断向量表"><a class="markdownIt-Anchor" href="#中断向量表"></a> 中断向量表</h3>
 <p>Cortex-A7的中断向量表共有8个异常中断，其中一个未使用，有效中断为7个：</p>
 <table>
@@ -232,10 +336,10 @@
 <p>不同于Cortex-M在中断向量表中列出了所有的中断向量，Cortex-A将所有属于内核CPU的外部中断放在0x18的IRQ中断中，任意外部中断都会触发IRQ中断，然后在IRQ中断中通过读取寄存器的方式来判断具体的中断类型，然后做出相应处理。</p>
 <h3 id="汇编代码启动文件starts"><a class="markdownIt-Anchor" href="#汇编代码启动文件starts"></a> 汇编代码(启动文件<code>start.S</code>)</h3>
 <h4 id="中断向量表-2"><a class="markdownIt-Anchor" href="#中断向量表-2"></a> 中断向量表</h4>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.global _start  				/* 全局标号 */</span><br><span class="line"></span><br><span class="line">_start:</span><br><span class="line">	ldr pc, =Reset_Handler		/* 复位中断 					*/	</span><br><span class="line">	ldr pc, =Undefined_Handler	/* 未定义中断 					*/</span><br><span class="line">	ldr pc, =SVC_Handler		/* SVC(Supervisor)中断 		*/</span><br><span class="line">	ldr pc, =PrefAbort_Handler	/* 预取终止中断 					*/</span><br><span class="line">	ldr pc, =DataAbort_Handler	/* 数据终止中断 					*/</span><br><span class="line">	ldr	pc, =NotUsed_Handler	/* 未使用中断					*/</span><br><span class="line">	ldr pc, =IRQ_Handler		/* IRQ中断 					*/</span><br><span class="line">	ldr pc, =FIQ_Handler		/* FIQ(快速中断)未定义中断 			*/</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">.global</span> _start  				<span class="hljs-comment">/* 全局标号 */</span><br><br><span class="hljs-symbol">_start:</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=Reset_Handler</span>		<span class="hljs-comment">/* 复位中断 					*/</span>	<br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=Undefined_Handler</span>	<span class="hljs-comment">/* 未定义中断 					*/</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=SVC_Handler</span>		<span class="hljs-comment">/* SVC(Supervisor)中断 		*/</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=PrefAbort_Handler</span>	<span class="hljs-comment">/* 预取终止中断 					*/</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=DataAbort_Handler</span>	<span class="hljs-comment">/* 数据终止中断 					*/</span><br>	<span class="hljs-keyword">ldr</span>	<span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=NotUsed_Handler</span>	<span class="hljs-comment">/* 未使用中断					*/</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=IRQ_Handler</span>		<span class="hljs-comment">/* IRQ中断 					*/</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=FIQ_Handler</span>		<span class="hljs-comment">/* FIQ(快速中断)未定义中断 			*/</span><br></code></pre></td></tr></table></figure>
 <p>指定中断发生后调用对应的中断复位函数。<code>pc</code>为程序计数器，用来指出下一条指令在主存储器中的地址。中断发生后，主程序的下一条指令地址会自动更新为中断服务函数的地址。</p>
 <h3 id="gic控制器"><a class="markdownIt-Anchor" href="#gic控制器"></a> GIC控制器</h3>
-<p><img src="/images/linux/GIC_1.png" alt="GIC v2框图"></p>
+<p><img src="/images/linux/GIC_1.png" srcset="/img/loading.gif" lazyload alt="GIC v2框图"></p>
 <p>类似于STM32的NVIC，Cortex-A的中断控制器名字叫GIC，GIC负责处理输入的所有中断，然后生成一个IRQ信号上报给ARM内核。GIC将众多的中断源分为三类：</p>
 <ul>
 <li>SPI，共享中断，常见外部中断均属于SPI中断</li>
@@ -275,7 +379,7 @@
 </li>
 </ul>
 <p>GIC控制器的所有寄存器在<code>core_ca7.h</code>中声明：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * GIC寄存器描述结构体，</span><br><span class="line"> * GIC分为分发器端和CPU接口端</span><br><span class="line"> */</span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">        uint32_t RESERVED0[1024];</span><br><span class="line">  __IOM uint32_t D_CTLR;                 /*!&lt; Offset: 0x1000 (R/W) Distributor Control Register */</span><br><span class="line">  __IM  uint32_t D_TYPER;                /*!&lt; Offset: 0x1004 (R/ )  Interrupt Controller Type Register */</span><br><span class="line">  __IM  uint32_t D_IIDR;                 /*!&lt; Offset: 0x1008 (R/ )  Distributor Implementer Identification Register */</span><br><span class="line">        uint32_t RESERVED1[29];</span><br><span class="line">  __IOM uint32_t D_IGROUPR[16];          /*!&lt; Offset: 0x1080 - 0x0BC (R/W) Interrupt Group Registers */</span><br><span class="line">        uint32_t RESERVED2[16];</span><br><span class="line">  __IOM uint32_t D_ISENABLER[16];        /*!&lt; Offset: 0x1100 - 0x13C (R/W) Interrupt Set-Enable Registers */</span><br><span class="line">        uint32_t RESERVED3[16];</span><br><span class="line">  __IOM uint32_t D_ICENABLER[16];        /*!&lt; Offset: 0x1180 - 0x1BC (R/W) Interrupt Clear-Enable Registers */</span><br><span class="line">        uint32_t RESERVED4[16];</span><br><span class="line">  __IOM uint32_t D_ISPENDR[16];          /*!&lt; Offset: 0x1200 - 0x23C (R/W) Interrupt Set-Pending Registers */</span><br><span class="line">        uint32_t RESERVED5[16];</span><br><span class="line">  __IOM uint32_t D_ICPENDR[16];          /*!&lt; Offset: 0x1280 - 0x2BC (R/W) Interrupt Clear-Pending Registers */</span><br><span class="line">        uint32_t RESERVED6[16];</span><br><span class="line">  __IOM uint32_t D_ISACTIVER[16];        /*!&lt; Offset: 0x1300 - 0x33C (R/W) Interrupt Set-Active Registers */</span><br><span class="line">        uint32_t RESERVED7[16];</span><br><span class="line">  __IOM uint32_t D_ICACTIVER[16];        /*!&lt; Offset: 0x1380 - 0x3BC (R/W) Interrupt Clear-Active Registers */</span><br><span class="line">        uint32_t RESERVED8[16];</span><br><span class="line">  __IOM uint8_t  D_IPRIORITYR[512];      /*!&lt; Offset: 0x1400 - 0x5FC (R/W) Interrupt Priority Registers */</span><br><span class="line">        uint32_t RESERVED9[128];</span><br><span class="line">  __IOM uint8_t  D_ITARGETSR[512];       /*!&lt; Offset: 0x1800 - 0x9FC (R/W) Interrupt Targets Registers */</span><br><span class="line">        uint32_t RESERVED10[128];</span><br><span class="line">  __IOM uint32_t D_ICFGR[32];            /*!&lt; Offset: 0x1C00 - 0xC7C (R/W) Interrupt configuration registers */</span><br><span class="line">        uint32_t RESERVED11[32];</span><br><span class="line">  __IM  uint32_t D_PPISR;                /*!&lt; Offset: 0x1D00 (R/ ) Private Peripheral Interrupt Status Register */</span><br><span class="line">  __IM  uint32_t D_SPISR[15];            /*!&lt; Offset: 0x1D04 - 0xD3C (R/ ) Shared Peripheral Interrupt Status Registers */</span><br><span class="line">        uint32_t RESERVED12[112];</span><br><span class="line">  __OM  uint32_t D_SGIR;                 /*!&lt; Offset: 0x1F00 ( /W) Software Generated Interrupt Register */</span><br><span class="line">        uint32_t RESERVED13[3];</span><br><span class="line">  __IOM uint8_t  D_CPENDSGIR[16];        /*!&lt; Offset: 0x1F10 - 0xF1C (R/W) SGI Clear-Pending Registers */</span><br><span class="line">  __IOM uint8_t  D_SPENDSGIR[16];        /*!&lt; Offset: 0x1F20 - 0xF2C (R/W) SGI Set-Pending Registers */</span><br><span class="line">        uint32_t RESERVED14[40];</span><br><span class="line">  __IM  uint32_t D_PIDR4;                /*!&lt; Offset: 0x1FD0 (R/ ) Peripheral ID4 Register */</span><br><span class="line">  __IM  uint32_t D_PIDR5;                /*!&lt; Offset: 0x1FD4 (R/ ) Peripheral ID5 Register */</span><br><span class="line">  __IM  uint32_t D_PIDR6;                /*!&lt; Offset: 0x1FD8 (R/ ) Peripheral ID6 Register */</span><br><span class="line">  __IM  uint32_t D_PIDR7;                /*!&lt; Offset: 0x1FDC (R/ ) Peripheral ID7 Register */</span><br><span class="line">  __IM  uint32_t D_PIDR0;                /*!&lt; Offset: 0x1FE0 (R/ ) Peripheral ID0 Register */</span><br><span class="line">  __IM  uint32_t D_PIDR1;                /*!&lt; Offset: 0x1FE4 (R/ ) Peripheral ID1 Register */</span><br><span class="line">  __IM  uint32_t D_PIDR2;                /*!&lt; Offset: 0x1FE8 (R/ ) Peripheral ID2 Register */</span><br><span class="line">  __IM  uint32_t D_PIDR3;                /*!&lt; Offset: 0x1FEC (R/ ) Peripheral ID3 Register */</span><br><span class="line">  __IM  uint32_t D_CIDR0;                /*!&lt; Offset: 0x1FF0 (R/ ) Component ID0 Register */</span><br><span class="line">  __IM  uint32_t D_CIDR1;                /*!&lt; Offset: 0x1FF4 (R/ ) Component ID1 Register */</span><br><span class="line">  __IM  uint32_t D_CIDR2;                /*!&lt; Offset: 0x1FF8 (R/ ) Component ID2 Register */</span><br><span class="line">  __IM  uint32_t D_CIDR3;                /*!&lt; Offset: 0x1FFC (R/ ) Component ID3 Register */</span><br><span class="line"></span><br><span class="line">  __IOM uint32_t C_CTLR;                 /*!&lt; Offset: 0x2000 (R/W) CPU Interface Control Register */</span><br><span class="line">  __IOM uint32_t C_PMR;                  /*!&lt; Offset: 0x2004 (R/W) Interrupt Priority Mask Register */</span><br><span class="line">  __IOM uint32_t C_BPR;                  /*!&lt; Offset: 0x2008 (R/W) Binary Point Register */</span><br><span class="line">  __IM  uint32_t C_IAR;                  /*!&lt; Offset: 0x200C (R/ ) Interrupt Acknowledge Register */</span><br><span class="line">  __OM  uint32_t C_EOIR;                 /*!&lt; Offset: 0x2010 ( /W) End Of Interrupt Register */</span><br><span class="line">  __IM  uint32_t C_RPR;                  /*!&lt; Offset: 0x2014 (R/ ) Running Priority Register */</span><br><span class="line">  __IM  uint32_t C_HPPIR;                /*!&lt; Offset: 0x2018 (R/ ) Highest Priority Pending Interrupt Register */</span><br><span class="line">  __IOM uint32_t C_ABPR;                 /*!&lt; Offset: 0x201C (R/W) Aliased Binary Point Register */</span><br><span class="line">  __IM  uint32_t C_AIAR;                 /*!&lt; Offset: 0x2020 (R/ ) Aliased Interrupt Acknowledge Register */</span><br><span class="line">  __OM  uint32_t C_AEOIR;                /*!&lt; Offset: 0x2024 ( /W) Aliased End Of Interrupt Register */</span><br><span class="line">  __IM  uint32_t C_AHPPIR;               /*!&lt; Offset: 0x2028 (R/ ) Aliased Highest Priority Pending Interrupt Register */</span><br><span class="line">        uint32_t RESERVED15[41];</span><br><span class="line">  __IOM uint32_t C_APR0;                 /*!&lt; Offset: 0x20D0 (R/W) Active Priority Register */</span><br><span class="line">        uint32_t RESERVED16[3];</span><br><span class="line">  __IOM uint32_t C_NSAPR0;               /*!&lt; Offset: 0x20E0 (R/W) Non-secure Active Priority Register */</span><br><span class="line">        uint32_t RESERVED17[6];</span><br><span class="line">  __IM  uint32_t C_IIDR;                 /*!&lt; Offset: 0x20FC (R/ ) CPU Interface Identification Register */</span><br><span class="line">        uint32_t RESERVED18[960];</span><br><span class="line">  __OM  uint32_t C_DIR;                  /*!&lt; Offset: 0x3000 ( /W) Deactivate Interrupt Register */</span><br><span class="line">&#125; GIC_Type;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * GIC寄存器描述结构体，</span><br><span class="hljs-comment"> * GIC分为分发器端和CPU接口端</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span><br>&#123;<br>        <span class="hljs-type">uint32_t</span> RESERVED0[<span class="hljs-number">1024</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_CTLR;                 <span class="hljs-comment">/*!&lt; Offset: 0x1000 (R/W) Distributor Control Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_TYPER;                <span class="hljs-comment">/*!&lt; Offset: 0x1004 (R/ )  Interrupt Controller Type Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_IIDR;                 <span class="hljs-comment">/*!&lt; Offset: 0x1008 (R/ )  Distributor Implementer Identification Register */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED1[<span class="hljs-number">29</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_IGROUPR[<span class="hljs-number">16</span>];          <span class="hljs-comment">/*!&lt; Offset: 0x1080 - 0x0BC (R/W) Interrupt Group Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED2[<span class="hljs-number">16</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_ISENABLER[<span class="hljs-number">16</span>];        <span class="hljs-comment">/*!&lt; Offset: 0x1100 - 0x13C (R/W) Interrupt Set-Enable Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED3[<span class="hljs-number">16</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_ICENABLER[<span class="hljs-number">16</span>];        <span class="hljs-comment">/*!&lt; Offset: 0x1180 - 0x1BC (R/W) Interrupt Clear-Enable Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED4[<span class="hljs-number">16</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_ISPENDR[<span class="hljs-number">16</span>];          <span class="hljs-comment">/*!&lt; Offset: 0x1200 - 0x23C (R/W) Interrupt Set-Pending Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED5[<span class="hljs-number">16</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_ICPENDR[<span class="hljs-number">16</span>];          <span class="hljs-comment">/*!&lt; Offset: 0x1280 - 0x2BC (R/W) Interrupt Clear-Pending Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED6[<span class="hljs-number">16</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_ISACTIVER[<span class="hljs-number">16</span>];        <span class="hljs-comment">/*!&lt; Offset: 0x1300 - 0x33C (R/W) Interrupt Set-Active Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED7[<span class="hljs-number">16</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_ICACTIVER[<span class="hljs-number">16</span>];        <span class="hljs-comment">/*!&lt; Offset: 0x1380 - 0x3BC (R/W) Interrupt Clear-Active Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED8[<span class="hljs-number">16</span>];<br>  __IOM <span class="hljs-type">uint8_t</span>  D_IPRIORITYR[<span class="hljs-number">512</span>];      <span class="hljs-comment">/*!&lt; Offset: 0x1400 - 0x5FC (R/W) Interrupt Priority Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED9[<span class="hljs-number">128</span>];<br>  __IOM <span class="hljs-type">uint8_t</span>  D_ITARGETSR[<span class="hljs-number">512</span>];       <span class="hljs-comment">/*!&lt; Offset: 0x1800 - 0x9FC (R/W) Interrupt Targets Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED10[<span class="hljs-number">128</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> D_ICFGR[<span class="hljs-number">32</span>];            <span class="hljs-comment">/*!&lt; Offset: 0x1C00 - 0xC7C (R/W) Interrupt configuration registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED11[<span class="hljs-number">32</span>];<br>  __IM  <span class="hljs-type">uint32_t</span> D_PPISR;                <span class="hljs-comment">/*!&lt; Offset: 0x1D00 (R/ ) Private Peripheral Interrupt Status Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_SPISR[<span class="hljs-number">15</span>];            <span class="hljs-comment">/*!&lt; Offset: 0x1D04 - 0xD3C (R/ ) Shared Peripheral Interrupt Status Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED12[<span class="hljs-number">112</span>];<br>  __OM  <span class="hljs-type">uint32_t</span> D_SGIR;                 <span class="hljs-comment">/*!&lt; Offset: 0x1F00 ( /W) Software Generated Interrupt Register */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED13[<span class="hljs-number">3</span>];<br>  __IOM <span class="hljs-type">uint8_t</span>  D_CPENDSGIR[<span class="hljs-number">16</span>];        <span class="hljs-comment">/*!&lt; Offset: 0x1F10 - 0xF1C (R/W) SGI Clear-Pending Registers */</span><br>  __IOM <span class="hljs-type">uint8_t</span>  D_SPENDSGIR[<span class="hljs-number">16</span>];        <span class="hljs-comment">/*!&lt; Offset: 0x1F20 - 0xF2C (R/W) SGI Set-Pending Registers */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED14[<span class="hljs-number">40</span>];<br>  __IM  <span class="hljs-type">uint32_t</span> D_PIDR4;                <span class="hljs-comment">/*!&lt; Offset: 0x1FD0 (R/ ) Peripheral ID4 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_PIDR5;                <span class="hljs-comment">/*!&lt; Offset: 0x1FD4 (R/ ) Peripheral ID5 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_PIDR6;                <span class="hljs-comment">/*!&lt; Offset: 0x1FD8 (R/ ) Peripheral ID6 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_PIDR7;                <span class="hljs-comment">/*!&lt; Offset: 0x1FDC (R/ ) Peripheral ID7 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_PIDR0;                <span class="hljs-comment">/*!&lt; Offset: 0x1FE0 (R/ ) Peripheral ID0 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_PIDR1;                <span class="hljs-comment">/*!&lt; Offset: 0x1FE4 (R/ ) Peripheral ID1 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_PIDR2;                <span class="hljs-comment">/*!&lt; Offset: 0x1FE8 (R/ ) Peripheral ID2 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_PIDR3;                <span class="hljs-comment">/*!&lt; Offset: 0x1FEC (R/ ) Peripheral ID3 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_CIDR0;                <span class="hljs-comment">/*!&lt; Offset: 0x1FF0 (R/ ) Component ID0 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_CIDR1;                <span class="hljs-comment">/*!&lt; Offset: 0x1FF4 (R/ ) Component ID1 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_CIDR2;                <span class="hljs-comment">/*!&lt; Offset: 0x1FF8 (R/ ) Component ID2 Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> D_CIDR3;                <span class="hljs-comment">/*!&lt; Offset: 0x1FFC (R/ ) Component ID3 Register */</span><br><br>  __IOM <span class="hljs-type">uint32_t</span> C_CTLR;                 <span class="hljs-comment">/*!&lt; Offset: 0x2000 (R/W) CPU Interface Control Register */</span><br>  __IOM <span class="hljs-type">uint32_t</span> C_PMR;                  <span class="hljs-comment">/*!&lt; Offset: 0x2004 (R/W) Interrupt Priority Mask Register */</span><br>  __IOM <span class="hljs-type">uint32_t</span> C_BPR;                  <span class="hljs-comment">/*!&lt; Offset: 0x2008 (R/W) Binary Point Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> C_IAR;                  <span class="hljs-comment">/*!&lt; Offset: 0x200C (R/ ) Interrupt Acknowledge Register */</span><br>  __OM  <span class="hljs-type">uint32_t</span> C_EOIR;                 <span class="hljs-comment">/*!&lt; Offset: 0x2010 ( /W) End Of Interrupt Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> C_RPR;                  <span class="hljs-comment">/*!&lt; Offset: 0x2014 (R/ ) Running Priority Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> C_HPPIR;                <span class="hljs-comment">/*!&lt; Offset: 0x2018 (R/ ) Highest Priority Pending Interrupt Register */</span><br>  __IOM <span class="hljs-type">uint32_t</span> C_ABPR;                 <span class="hljs-comment">/*!&lt; Offset: 0x201C (R/W) Aliased Binary Point Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> C_AIAR;                 <span class="hljs-comment">/*!&lt; Offset: 0x2020 (R/ ) Aliased Interrupt Acknowledge Register */</span><br>  __OM  <span class="hljs-type">uint32_t</span> C_AEOIR;                <span class="hljs-comment">/*!&lt; Offset: 0x2024 ( /W) Aliased End Of Interrupt Register */</span><br>  __IM  <span class="hljs-type">uint32_t</span> C_AHPPIR;               <span class="hljs-comment">/*!&lt; Offset: 0x2028 (R/ ) Aliased Highest Priority Pending Interrupt Register */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED15[<span class="hljs-number">41</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> C_APR0;                 <span class="hljs-comment">/*!&lt; Offset: 0x20D0 (R/W) Active Priority Register */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED16[<span class="hljs-number">3</span>];<br>  __IOM <span class="hljs-type">uint32_t</span> C_NSAPR0;               <span class="hljs-comment">/*!&lt; Offset: 0x20E0 (R/W) Non-secure Active Priority Register */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED17[<span class="hljs-number">6</span>];<br>  __IM  <span class="hljs-type">uint32_t</span> C_IIDR;                 <span class="hljs-comment">/*!&lt; Offset: 0x20FC (R/ ) CPU Interface Identification Register */</span><br>        <span class="hljs-type">uint32_t</span> RESERVED18[<span class="hljs-number">960</span>];<br>  __OM  <span class="hljs-type">uint32_t</span> C_DIR;                  <span class="hljs-comment">/*!&lt; Offset: 0x3000 ( /W) Deactivate Interrupt Register */</span><br>&#125; GIC_Type;<br></code></pre></td></tr></table></figure>
 <p>不过，这里只给出了GIC各寄存器的偏移地址，基地址需要通过CP15协处理器获取。</p>
 <h3 id="cp15协处理器"><a class="markdownIt-Anchor" href="#cp15协处理器"></a> CP15协处理器</h3>
 <p>CP15协处理器共有16个32位寄存器。对CP15协处理器的访问可通过下列指令完成：</p>
@@ -293,12 +397,12 @@
 </li>
 </ul>
 <p>CP15的16个寄存器在被MRC和MCR指令访问时，指令中的参数搭配若不同，得到的寄存器含义也不同。以c0寄存器为例：</p>
-<p><img src="/images/linux/GIC_2.png" alt="CP15 c0寄存器参数搭配"></p>
+<p><img src="/images/linux/GIC_2.png" srcset="/img/loading.gif" lazyload alt="CP15 c0寄存器参数搭配"></p>
 <p>例如，当<code>opc1 = 0</code>, <code>CRm = c0</code>, <code>opc2 = 0</code>时，此时c0是MIDR寄存器，即主ID寄存器，包含厂商编号、主版本号、架构代码等信息。</p>
 <p>对于c15寄存器:<br>
-<img src="/images/linux/GIC_3.png" alt="CP15 c15寄存器参数搭配"></p>
+<img src="/images/linux/GIC_3.png" srcset="/img/loading.gif" lazyload alt="CP15 c15寄存器参数搭配"></p>
 <p>可见GIC基地址保存在CBAR中，因此可通过<code>MRC p15, 4, r1, c15, c0, 0</code>指令获取GIC基地址至r1中。现在就可以设置GIC的寄存器了，比如：读取当前中断ID，将ID保存在<code>GICC_IAR</code>中，SDK中已经给出<code>GICC_IAR</code>的偏移地址<code>__IM  uint32_t C_IAR;                  /*!&lt; Offset: 0x200C (R/ ) Interrupt Acknowledge Register */</code>为<code>0x200C</code>，因此获取当前中断ID的汇编代码为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MRC p15, 5, r1, c15, c0 ,0  ;获取GIC基地址</span><br><span class="line">ADD r1, r1, #0x2000         ;基地址+0x2000得到CPU接口端寄存器起始地址</span><br><span class="line">LDR r0, [r1, #0xC]          ;读取GIC_IAR的值</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">MRC</span> <span class="hljs-built_in">p15</span>, <span class="hljs-number">5</span>, <span class="hljs-built_in">r1</span>, <span class="hljs-built_in">c15</span>, <span class="hljs-built_in">c0</span> ,<span class="hljs-number">0</span>  <span class="hljs-comment">;获取GIC基地址</span><br><span class="hljs-keyword">ADD</span> <span class="hljs-built_in">r1</span>, <span class="hljs-built_in">r1</span>, <span class="hljs-number">#0x2000</span>         <span class="hljs-comment">;基地址+0x2000得到CPU接口端寄存器起始地址</span><br><span class="hljs-keyword">LDR</span> <span class="hljs-built_in">r0</span>, [<span class="hljs-built_in">r1</span>, <span class="hljs-number">#0xC</span>]          <span class="hljs-comment">;读取GIC_IAR的值</span><br></code></pre></td></tr></table></figure>
 <p>总结：</p>
 <ul>
 <li>c0寄存器可获取到处理器内核信息</li>
@@ -424,9 +528,9 @@
 <li>打开IRQ中断</li>
 <li>跳转至main函数</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">/* 复位中断 */	</span><br><span class="line">Reset_Handler:</span><br><span class="line"></span><br><span class="line">	cpsid i						/* 关闭全局中断 */</span><br><span class="line"></span><br><span class="line">	/* 关闭I,DCache和MMU </span><br><span class="line">	 * 采取读-改-写的方式。</span><br><span class="line">	 */</span><br><span class="line">	mrc     p15, 0, r0, c1, c0, 0     /* 读取CP15的C1寄存器到R0中       		        	*/</span><br><span class="line">    bic     r0,  r0, #(0x1 &lt;&lt; 12)     /* 清除C1寄存器的bit12位(I位)，关闭I Cache            	*/</span><br><span class="line">    bic     r0,  r0, #(0x1 &lt;&lt;  2)     /* 清除C1寄存器的bit2(C位)，关闭D Cache    				*/</span><br><span class="line">    bic     r0,  r0, #0x2             /* 清除C1寄存器的bit1(A位)，关闭对齐						*/</span><br><span class="line">    bic     r0,  r0, #(0x1 &lt;&lt; 11)     /* 清除C1寄存器的bit11(Z位)，关闭分支预测					*/</span><br><span class="line">    bic     r0,  r0, #0x1             /* 清除C1寄存器的bit0(M位)，关闭MMU				       	*/</span><br><span class="line">    mcr     p15, 0, r0, c1, c0, 0     /* 将r0寄存器中的值写入到CP15的C1寄存器中	 				*/</span><br><span class="line"></span><br><span class="line">#if 0</span><br><span class="line">	/* 汇编版本设置中断向量表偏移 */</span><br><span class="line">	ldr r0, =0X87800000</span><br><span class="line"></span><br><span class="line">	dsb</span><br><span class="line">	isb</span><br><span class="line">	mcr p15, 0, r0, c12, c0, 0</span><br><span class="line">	dsb</span><br><span class="line">	isb</span><br><span class="line">#endif</span><br><span class="line">    </span><br><span class="line">	/* 设置各个模式下的栈指针，</span><br><span class="line">	 * 注意：IMX6UL的堆栈是向下增长的！</span><br><span class="line">	 * 堆栈指针地址一定要是4字节地址对齐的！！！</span><br><span class="line">	 * DDR范围:0X80000000~0X9FFFFFFF</span><br><span class="line">	 */</span><br><span class="line">	/* 进入IRQ模式 */</span><br><span class="line">	mrs r0, cpsr</span><br><span class="line">	bic r0, r0, #0x1f 	/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/</span><br><span class="line">	orr r0, r0, #0x12 	/* r0或上0x13,表示使用IRQ模式					*/</span><br><span class="line">	msr cpsr, r0		/* 将r0 的数据写入到cpsr_c中 					*/</span><br><span class="line">	ldr sp, =0x80600000	/* 设置IRQ模式下的栈首地址为0X80600000,大小为2MB */</span><br><span class="line"></span><br><span class="line">	/* 进入SYS模式 */</span><br><span class="line">	mrs r0, cpsr</span><br><span class="line">	bic r0, r0, #0x1f 	/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/</span><br><span class="line">	orr r0, r0, #0x1f 	/* r0或上0x13,表示使用SYS模式					*/</span><br><span class="line">	msr cpsr, r0		/* 将r0 的数据写入到cpsr_c中 					*/</span><br><span class="line">	ldr sp, =0x80400000	/* 设置SYS模式下的栈首地址为0X80400000,大小为2MB */</span><br><span class="line"></span><br><span class="line">	/* 进入SVC模式 */</span><br><span class="line">	mrs r0, cpsr</span><br><span class="line">	bic r0, r0, #0x1f 	/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/</span><br><span class="line">	orr r0, r0, #0x13 	/* r0或上0x13,表示使用SVC模式					*/</span><br><span class="line">	msr cpsr, r0		/* 将r0 的数据写入到cpsr_c中 					*/</span><br><span class="line">	ldr sp, =0X80200000	/* 设置SVC模式下的栈首地址为0X80200000,大小为2MB */</span><br><span class="line"></span><br><span class="line">	cpsie i				/* 打开全局中断 */</span><br><span class="line">#if 0</span><br><span class="line">	/* 使能IRQ中断 */</span><br><span class="line">	mrs r0, cpsr		/* 读取cpsr寄存器值到r0中 			*/</span><br><span class="line">	bic r0, r0, #0x80	/* 将r0寄存器中bit7清零，也就是CPSR中的I位清零，表示允许IRQ中断 */</span><br><span class="line">	msr cpsr, r0		/* 将r0重新写入到cpsr中 			*/</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">	b main				/* 跳转到main函数 			 	*/</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-comment">/* 复位中断 */</span>	<br><span class="hljs-symbol">Reset_Handler:</span><br><br>	<span class="hljs-keyword">cpsid</span> i						<span class="hljs-comment">/* 关闭全局中断 */</span><br><br>	<span class="hljs-comment">/* 关闭I,DCache和MMU </span><br><span class="hljs-comment">	 * 采取读-改-写的方式。</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-keyword">mrc</span>     <span class="hljs-built_in">p15</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">c1</span>, <span class="hljs-built_in">c0</span>, <span class="hljs-number">0</span>     <span class="hljs-comment">/* 读取CP15的C1寄存器到R0中       		        	*/</span><br>    <span class="hljs-keyword">bic</span>     <span class="hljs-built_in">r0</span>,  <span class="hljs-built_in">r0</span>, #(<span class="hljs-number">0x1</span> &lt;&lt; <span class="hljs-number">12</span>)     <span class="hljs-comment">/* 清除C1寄存器的bit12位(I位)，关闭I Cache            	*/</span><br>    <span class="hljs-keyword">bic</span>     <span class="hljs-built_in">r0</span>,  <span class="hljs-built_in">r0</span>, #(<span class="hljs-number">0x1</span> &lt;&lt;  <span class="hljs-number">2</span>)     <span class="hljs-comment">/* 清除C1寄存器的bit2(C位)，关闭D Cache    				*/</span><br>    <span class="hljs-keyword">bic</span>     <span class="hljs-built_in">r0</span>,  <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x2</span>             <span class="hljs-comment">/* 清除C1寄存器的bit1(A位)，关闭对齐						*/</span><br>    <span class="hljs-keyword">bic</span>     <span class="hljs-built_in">r0</span>,  <span class="hljs-built_in">r0</span>, #(<span class="hljs-number">0x1</span> &lt;&lt; <span class="hljs-number">11</span>)     <span class="hljs-comment">/* 清除C1寄存器的bit11(Z位)，关闭分支预测					*/</span><br>    <span class="hljs-keyword">bic</span>     <span class="hljs-built_in">r0</span>,  <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x1</span>             <span class="hljs-comment">/* 清除C1寄存器的bit0(M位)，关闭MMU				       	*/</span><br>    mcr     <span class="hljs-built_in">p15</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">c1</span>, <span class="hljs-built_in">c0</span>, <span class="hljs-number">0</span>     <span class="hljs-comment">/* 将r0寄存器中的值写入到CP15的C1寄存器中	 				*/</span><br><br><span class="hljs-comment">#if 0</span><br>	<span class="hljs-comment">/* 汇编版本设置中断向量表偏移 */</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">=0X87800000</span><br><br>	<span class="hljs-keyword">dsb</span><br>	<span class="hljs-keyword">isb</span><br>	mcr <span class="hljs-built_in">p15</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">c12</span>, <span class="hljs-built_in">c0</span>, <span class="hljs-number">0</span><br>	<span class="hljs-keyword">dsb</span><br>	<span class="hljs-keyword">isb</span><br><span class="hljs-comment">#endif</span><br>    <br>	<span class="hljs-comment">/* 设置各个模式下的栈指针，</span><br><span class="hljs-comment">	 * 注意：IMX6UL的堆栈是向下增长的！</span><br><span class="hljs-comment">	 * 堆栈指针地址一定要是4字节地址对齐的！！！</span><br><span class="hljs-comment">	 * DDR范围:0X80000000~0X9FFFFFFF</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-comment">/* 进入IRQ模式 */</span><br>	<span class="hljs-keyword">mrs</span> <span class="hljs-built_in">r0</span>, <span class="hljs-keyword">cpsr</span><br>	<span class="hljs-keyword">bic</span> <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x1f</span> 	<span class="hljs-comment">/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/</span><br>	<span class="hljs-keyword">orr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x12</span> 	<span class="hljs-comment">/* r0或上0x13,表示使用IRQ模式					*/</span><br>	<span class="hljs-keyword">msr</span> cpsr, <span class="hljs-built_in">r0</span>		<span class="hljs-comment">/* 将r0 的数据写入到cpsr_c中 					*/</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">sp</span>, <span class="hljs-number">=0x80600000</span>	<span class="hljs-comment">/* 设置IRQ模式下的栈首地址为0X80600000,大小为2MB */</span><br><br>	<span class="hljs-comment">/* 进入SYS模式 */</span><br>	<span class="hljs-keyword">mrs</span> <span class="hljs-built_in">r0</span>, <span class="hljs-keyword">cpsr</span><br>	<span class="hljs-keyword">bic</span> <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x1f</span> 	<span class="hljs-comment">/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/</span><br>	<span class="hljs-keyword">orr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x1f</span> 	<span class="hljs-comment">/* r0或上0x13,表示使用SYS模式					*/</span><br>	<span class="hljs-keyword">msr</span> cpsr, <span class="hljs-built_in">r0</span>		<span class="hljs-comment">/* 将r0 的数据写入到cpsr_c中 					*/</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">sp</span>, <span class="hljs-number">=0x80400000</span>	<span class="hljs-comment">/* 设置SYS模式下的栈首地址为0X80400000,大小为2MB */</span><br><br>	<span class="hljs-comment">/* 进入SVC模式 */</span><br>	<span class="hljs-keyword">mrs</span> <span class="hljs-built_in">r0</span>, <span class="hljs-keyword">cpsr</span><br>	<span class="hljs-keyword">bic</span> <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x1f</span> 	<span class="hljs-comment">/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/</span><br>	<span class="hljs-keyword">orr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x13</span> 	<span class="hljs-comment">/* r0或上0x13,表示使用SVC模式					*/</span><br>	<span class="hljs-keyword">msr</span> cpsr, <span class="hljs-built_in">r0</span>		<span class="hljs-comment">/* 将r0 的数据写入到cpsr_c中 					*/</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">sp</span>, <span class="hljs-number">=0X80200000</span>	<span class="hljs-comment">/* 设置SVC模式下的栈首地址为0X80200000,大小为2MB */</span><br><br>	<span class="hljs-keyword">cpsie</span> i				<span class="hljs-comment">/* 打开全局中断 */</span><br><span class="hljs-comment">#if 0</span><br>	<span class="hljs-comment">/* 使能IRQ中断 */</span><br>	<span class="hljs-keyword">mrs</span> <span class="hljs-built_in">r0</span>, <span class="hljs-keyword">cpsr</span>		<span class="hljs-comment">/* 读取cpsr寄存器值到r0中 			*/</span><br>	<span class="hljs-keyword">bic</span> <span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0x80</span>	<span class="hljs-comment">/* 将r0寄存器中bit7清零，也就是CPSR中的I位清零，表示允许IRQ中断 */</span><br>	<span class="hljs-keyword">msr</span> cpsr, <span class="hljs-built_in">r0</span>		<span class="hljs-comment">/* 将r0重新写入到cpsr中 			*/</span><br><span class="hljs-comment">#endif</span><br><br>	<span class="hljs-keyword">b</span> main				<span class="hljs-comment">/* 跳转到main函数 			 	*/</span><br></code></pre></td></tr></table></figure>
 <h3 id="其他中断"><a class="markdownIt-Anchor" href="#其他中断"></a> 其他中断</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">/* 未定义中断 */</span><br><span class="line">Undefined_Handler:</span><br><span class="line">	ldr r0, =Undefined_Handler</span><br><span class="line">	bx r0</span><br><span class="line"></span><br><span class="line">/* SVC中断 */</span><br><span class="line">SVC_Handler:</span><br><span class="line">	ldr r0, =SVC_Handler</span><br><span class="line">	bx r0</span><br><span class="line"></span><br><span class="line">/* 预取终止中断 */</span><br><span class="line">PrefAbort_Handler:</span><br><span class="line">	ldr r0, =PrefAbort_Handler	</span><br><span class="line">	bx r0</span><br><span class="line"></span><br><span class="line">/* 数据终止中断 */</span><br><span class="line">DataAbort_Handler:</span><br><span class="line">	ldr r0, =DataAbort_Handler</span><br><span class="line">	bx r0</span><br><span class="line"></span><br><span class="line">/* 未使用的中断 */</span><br><span class="line">NotUsed_Handler:</span><br><span class="line"></span><br><span class="line">	ldr r0, =NotUsed_Handler</span><br><span class="line">	bx r0</span><br><span class="line"></span><br><span class="line">    /* FIQ中断 */</span><br><span class="line">FIQ_Handler:</span><br><span class="line"></span><br><span class="line">	ldr r0, =FIQ_Handler	</span><br><span class="line">	bx r0	</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-comment">/* 未定义中断 */</span><br><span class="hljs-symbol">Undefined_Handler:</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-symbol">=Undefined_Handler</span><br>	<span class="hljs-keyword">bx</span> <span class="hljs-built_in">r0</span><br><br><span class="hljs-comment">/* SVC中断 */</span><br><span class="hljs-symbol">SVC_Handler:</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-symbol">=SVC_Handler</span><br>	<span class="hljs-keyword">bx</span> <span class="hljs-built_in">r0</span><br><br><span class="hljs-comment">/* 预取终止中断 */</span><br><span class="hljs-symbol">PrefAbort_Handler:</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-symbol">=PrefAbort_Handler</span>	<br>	<span class="hljs-keyword">bx</span> <span class="hljs-built_in">r0</span><br><br><span class="hljs-comment">/* 数据终止中断 */</span><br><span class="hljs-symbol">DataAbort_Handler:</span><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-symbol">=DataAbort_Handler</span><br>	<span class="hljs-keyword">bx</span> <span class="hljs-built_in">r0</span><br><br><span class="hljs-comment">/* 未使用的中断 */</span><br><span class="hljs-symbol">NotUsed_Handler:</span><br><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-symbol">=NotUsed_Handler</span><br>	<span class="hljs-keyword">bx</span> <span class="hljs-built_in">r0</span><br><br>    <span class="hljs-comment">/* FIQ中断 */</span><br><span class="hljs-symbol">FIQ_Handler:</span><br><br>	<span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, <span class="hljs-symbol">=FIQ_Handler</span>	<br>	<span class="hljs-keyword">bx</span> <span class="hljs-built_in">r0</span>	<br></code></pre></td></tr></table></figure>
 <h3 id="irq中断服务函数"><a class="markdownIt-Anchor" href="#irq中断服务函数"></a> IRQ中断服务函数</h3>
 <p>所有的外部中断都会触发IRQ中断，因此IRQ中断服务函数的工作就是获取当前发生的中断ID以确定中断来源，然后根据不同的外部中断来进行不同的处理。这里会涉及到几个ARM中常用的寄存器：</p>
 <ul>
@@ -441,28 +545,28 @@
 <li>SPSR：程序状态保存寄存器，每一种处理器模式下都有一个状态寄存器SPSR,SPSR用于保存CPSR的状态，以便异常返回后恢复异常发生时的工作状态。当特定的异常中断发生时，这个寄存器用于存放当前程序状态寄存器的内容。在异常中断退出时，可以用SPSR来恢复CPSR。由于用户模式和系统模式不是异常中断模式，所以他没有SPSR。当用户在用户模式或系统模式访问SPSR，将产生不可预知的后果。</li>
 </ul>
 <p>二者常用于MRS或MSR指令,用于spsr中的值转移到寄存器或把寄存器的内容加载到spsr中，如:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mrs r0, spsr                /* 读取spsr寄存器 */</span><br><span class="line">msr spsr_cxsf, r0            /* 恢复spsr */</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">mrs</span> <span class="hljs-built_in">r0</span>, spsr                <span class="hljs-comment">/* 读取spsr寄存器 */</span><br><span class="hljs-keyword">msr</span> <span class="hljs-built_in">spsr_cxsf</span>, <span class="hljs-built_in">r0</span>            <span class="hljs-comment">/* 恢复spsr */</span><br></code></pre></td></tr></table></figure>
 <p>IRQ中断服务函数的编写大致分为以下步骤：</p>
 <ol>
 <li>进入IRQ模式，保存上下文。ARM在进入IRQ模式会自动切换LR和SPSR，但不会自动保存其他寄存器，因此需手动保存r0-r3和r12寄存器（后续操作可能修改）。自动切换时，LR保存被中断指令的下一条指令<code>-4</code>。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/* IRQ中断 */</span><br><span class="line">IRQ_Handler:</span><br><span class="line">	push &#123;lr&#125;					/* 保存lr地址 */</span><br><span class="line">	push &#123;r0-r3, r12&#125;			/* 保存r0-r3，r12寄存器 */</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-comment">/* IRQ中断 */</span><br><span class="hljs-symbol">IRQ_Handler:</span><br>	<span class="hljs-keyword">push</span> &#123;<span class="hljs-built_in">lr</span>&#125;					<span class="hljs-comment">/* 保存lr地址 */</span><br>	<span class="hljs-keyword">push</span> &#123;<span class="hljs-built_in">r0</span>-<span class="hljs-built_in">r3</span>, <span class="hljs-built_in">r12</span>&#125;			<span class="hljs-comment">/* 保存r0-r3，r12寄存器 */</span><br></code></pre></td></tr></table></figure>
 <ol start="2">
 <li>保存现场。SPSR存储被中断前CPU的模式状态，必须保存SPSR以正确恢复中断前的执行环境。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mrs r0, spsr				/* 读取spsr寄存器 */</span><br><span class="line">push &#123;r0&#125;					/* 保存spsr寄存器 */</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">mrs</span> <span class="hljs-built_in">r0</span>, spsr				<span class="hljs-comment">/* 读取spsr寄存器 */</span><br><span class="hljs-keyword">push</span> &#123;<span class="hljs-built_in">r0</span>&#125;					<span class="hljs-comment">/* 保存spsr寄存器 */</span><br></code></pre></td></tr></table></figure>
 <ol start="3">
 <li>获取GIC中断号。通过MRC向cp15读取寄存器以获取GIC基址，从而计算GICC_IAR地址并读取，读取后自动标记该中断为active状态，获取到的中断号<code>r0</code>作为参数传递给C语言ISR。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mrc p15, 4, r1, c15, c0, 0 /* 读取CP15的C0寄存器内的值到R1寄存器中</span><br><span class="line">							* 参考文档ARM Cortex-A(armV7)编程手册V4.0.pdf P49</span><br><span class="line">							* Cortex-A7 Technical ReferenceManua.pdf P68 P138</span><br><span class="line">							*/							</span><br><span class="line">add r1, r1, #0X2000			/* GIC基地址加0X2000，也就是GIC的CPU接口端基地址 */</span><br><span class="line">ldr r0, [r1, #0XC]			/* GIC的CPU接口端基地址加0X0C就是GICC_IAR寄存器，</span><br><span class="line">							 * GICC_IAR寄存器保存这当前发生中断的中断号，我们要根据</span><br><span class="line">							 * 这个中断号来绝对调用哪个中断服务函数</span><br><span class="line">							 */</span><br><span class="line">push &#123;r0, r1&#125;				/* 保存r0,r1 */</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">mrc</span> <span class="hljs-built_in">p15</span>, <span class="hljs-number">4</span>, <span class="hljs-built_in">r1</span>, <span class="hljs-built_in">c15</span>, <span class="hljs-built_in">c0</span>, <span class="hljs-number">0</span> <span class="hljs-comment">/* 读取CP15的C0寄存器内的值到R1寄存器中</span><br><span class="hljs-comment">							* 参考文档ARM Cortex-A(armV7)编程手册V4.0.pdf P49</span><br><span class="hljs-comment">							* Cortex-A7 Technical ReferenceManua.pdf P68 P138</span><br><span class="hljs-comment">							*/</span>							<br><span class="hljs-keyword">add</span> <span class="hljs-built_in">r1</span>, <span class="hljs-built_in">r1</span>, <span class="hljs-number">#0X2000</span>			<span class="hljs-comment">/* GIC基地址加0X2000，也就是GIC的CPU接口端基地址 */</span><br><span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, [<span class="hljs-built_in">r1</span>, <span class="hljs-number">#0XC</span>]			<span class="hljs-comment">/* GIC的CPU接口端基地址加0X0C就是GICC_IAR寄存器，</span><br><span class="hljs-comment">							 * GICC_IAR寄存器保存这当前发生中断的中断号，我们要根据</span><br><span class="hljs-comment">							 * 这个中断号来绝对调用哪个中断服务函数</span><br><span class="hljs-comment">							 */</span><br><span class="hljs-keyword">push</span> &#123;<span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r1</span>&#125;				<span class="hljs-comment">/* 保存r0,r1 */</span><br></code></pre></td></tr></table></figure>
 <ol start="4">
 <li>切换至SVC模式并调用C函数。IAR模式栈空间有限，切换至SVC模式（特权模式）以获得更大的栈空间，并允许C函数处理更复杂的逻辑，如中断嵌套。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cps #0x13					/* 进入SVC模式，允许其他中断再次进去 */</span><br><span class="line"></span><br><span class="line">push &#123;lr&#125;					/* 保存SVC模式的lr寄存器 */</span><br><span class="line">ldr r2, =system_irqhandler	/* 加载C语言中断处理函数到r2寄存器中*/</span><br><span class="line">blx r2						/* 运行C语言中断处理函数，带有中断号参数，保存在R0寄存器中 */</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">cps</span> <span class="hljs-number">#0x13</span>					<span class="hljs-comment">/* 进入SVC模式，允许其他中断再次进去 */</span><br><br><span class="hljs-keyword">push</span> &#123;<span class="hljs-built_in">lr</span>&#125;					<span class="hljs-comment">/* 保存SVC模式的lr寄存器 */</span><br><span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r2</span>, <span class="hljs-symbol">=system_irqhandler</span>	<span class="hljs-comment">/* 加载C语言中断处理函数到r2寄存器中*/</span><br><span class="hljs-keyword">blx</span> <span class="hljs-built_in">r2</span>						<span class="hljs-comment">/* 运行C语言中断处理函数，带有中断号参数，保存在R0寄存器中 */</span><br></code></pre></td></tr></table></figure>
 <ol start="5">
 <li>恢复模式并发送中断结束信号。向向GIC的End of Interrupt Register (GICC_EOIR) 写入中断号，告知中断控制器该中断已处理完毕。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pop &#123;lr&#125;					/* 执行完C语言中断服务函数，lr出栈 */</span><br><span class="line">cps #0x12					/* 进入IRQ模式 */</span><br><span class="line">pop &#123;r0, r1&#125;				</span><br><span class="line">str r0, [r1, #0X10]			/* 中断执行完成，写EOIR */</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">lr</span>&#125;					<span class="hljs-comment">/* 执行完C语言中断服务函数，lr出栈 */</span><br><span class="hljs-keyword">cps</span> <span class="hljs-number">#0x12</span>					<span class="hljs-comment">/* 进入IRQ模式 */</span><br><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r1</span>&#125;				<br><span class="hljs-keyword">str</span> <span class="hljs-built_in">r0</span>, [<span class="hljs-built_in">r1</span>, <span class="hljs-number">#0X10</span>]			<span class="hljs-comment">/* 中断执行完成，写EOIR */</span><br></code></pre></td></tr></table></figure>
 <ol start="6">
 <li>恢复中断前状态并返回。</li>
 </ol>
@@ -524,24 +628,24 @@
 </tbody>
 </table>
 <p>再通俗一点：PC始终指向当前执行指令+8，发生中断时，入栈保存的LR实际上是PC的地址，如果返回时将LR直接赋给PC，中间就跳过了一个指令，因此LR出栈后要<code>-4</code>才能赋给PC。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pop &#123;r0&#125;						</span><br><span class="line">msr spsr_cxsf, r0			/* 恢复spsr */</span><br><span class="line"></span><br><span class="line">pop &#123;r0-r3, r12&#125;			/* r0-r3,r12出栈 */</span><br><span class="line">pop &#123;lr&#125;					/* lr出栈 */</span><br><span class="line">subs pc, lr, #4				/* 将计算后的地址（lr-4）赋给pc */	</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">r0</span>&#125;						<br><span class="hljs-keyword">msr</span> <span class="hljs-built_in">spsr_cxsf</span>, <span class="hljs-built_in">r0</span>			<span class="hljs-comment">/* 恢复spsr */</span><br><br><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">r0</span>-<span class="hljs-built_in">r3</span>, <span class="hljs-built_in">r12</span>&#125;			<span class="hljs-comment">/* r0-r3,r12出栈 */</span><br><span class="hljs-keyword">pop</span> &#123;<span class="hljs-built_in">lr</span>&#125;					<span class="hljs-comment">/* lr出栈 */</span><br><span class="hljs-keyword">subs</span> <span class="hljs-built_in">pc</span>, <span class="hljs-built_in">lr</span>, <span class="hljs-number">#4</span>				<span class="hljs-comment">/* 将计算后的地址（lr-4）赋给pc */</span>	<br></code></pre></td></tr></table></figure>
 <h3 id="中断驱动文件c函数"><a class="markdownIt-Anchor" href="#中断驱动文件c函数"></a> 中断驱动文件（C函数）</h3>
 <ol>
 <li>中断初始化函数。向量表基地址设置为程序存放开始地址。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void int_init(void) &#123;</span><br><span class="line">    GIC_Init();                        // 初始化通用中断控制器，该函数由SDK提供</span><br><span class="line">    system_irqtable_init();            // 初始化中断函数表</span><br><span class="line">    __set_VBAR((uint32_t)0x87800000);  // 设置向量表基地址</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs scss">void <span class="hljs-built_in">int_init</span>(void) &#123;<br>    <span class="hljs-built_in">GIC_Init</span>();                        <span class="hljs-comment">// 初始化通用中断控制器，该函数由SDK提供</span><br>    <span class="hljs-built_in">system_irqtable_init</span>();            <span class="hljs-comment">// 初始化中断函数表</span><br>    <span class="hljs-built_in">__set_VBAR</span>((uint32_t)<span class="hljs-number">0</span>x87800000);  <span class="hljs-comment">// 设置向量表基地址</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <ol start="2">
 <li>中断向量表初始化。将所有中断初始化为default_irqhandler（死循环），强制开发者显式注册有效ISR，避免未处理中断导致不可控行为。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void system_irqtable_init(void) &#123;</span><br><span class="line">    unsigned int i = 0;</span><br><span class="line">    irqNesting = 0;  // 重置嵌套计数器</span><br><span class="line">    </span><br><span class="line">    for(i = 0; i &lt; NUMBER_OF_INT_VECTORS; i++) &#123;</span><br><span class="line">        system_register_irqhandler((IRQn_Type)i, default_irqhandler, NULL);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">system_irqtable_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> </span>&#123;<br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;<br>    irqNesting = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 重置嵌套计数器</span><br>    <br>    <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; NUMBER_OF_INT_VECTORS; i++) &#123;<br>        <span class="hljs-built_in">system_register_irqhandler</span>((IRQn_Type)i, default_irqhandler, <span class="hljs-literal">NULL</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <ol start="3">
 <li>中断注册函数。用于绑定中断服务函数和中断源。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void system_register_irqhandler(IRQn_Type irq, system_irq_handler_t handler, void *userParam) &#123;</span><br><span class="line">    irqTable[irq].irqHandler = handler;   // 注册处理函数</span><br><span class="line">    irqTable[irq].userParam = userParam;  // 绑定用户参数</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs aspectj"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">system_register_irqhandler</span><span class="hljs-params">(IRQn_Type irq, system_irq_handler_t <span class="hljs-keyword">handler</span>, <span class="hljs-keyword">void</span> *userParam)</span> </span>&#123;<br>    irqTable[irq].irqHandler = <span class="hljs-keyword">handler</span>;   <span class="hljs-comment">// 注册处理函数</span><br>    irqTable[irq].userParam = userParam;  <span class="hljs-comment">// 绑定用户参数</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <ol start="4">
 <li>中断分发器。默认允许中断嵌套。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">void system_irqhandler(unsigned int giccIar) &#123;</span><br><span class="line">    uint32_t intNum = giccIar &amp; 0x3FFUL;  // 提取中断号</span><br><span class="line">    </span><br><span class="line">    /* 校验中断号有效性 */</span><br><span class="line">    if ((intNum == 1023) || (intNum &gt;= NUMBER_OF_INT_VECTORS)) &#123;</span><br><span class="line">        return;  // 非法中断号（1023伪中断或中断号不在表内）直接返回</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    irqNesting++;  // 嵌套计数增加</span><br><span class="line">    </span><br><span class="line">    /* 调用注册的ISR */</span><br><span class="line">    irqTable[intNum].irqHandler(intNum, irqTable[intNum].userParam);</span><br><span class="line"> </span><br><span class="line">    irqNesting--;  // 嵌套计数减少</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-built_in">void</span> system_irqhandler(unsigned <span class="hljs-built_in">int</span> giccIar) &#123;<br>    <span class="hljs-built_in">uint32</span>_t <span class="hljs-built_in">int</span>Num = giccIar &amp; <span class="hljs-number">0x3FF</span>UL;  <span class="hljs-comment">// 提取中断号</span><br>    <br>    <span class="hljs-comment">/* 校验中断号有效性 */</span><br>    <span class="hljs-keyword">if</span> ((<span class="hljs-built_in">int</span>Num == <span class="hljs-number">1023</span>) || (<span class="hljs-built_in">int</span>Num &gt;= NUMBER_OF_INT_VECTORS)) &#123;<br>        <span class="hljs-keyword">return</span>;  <span class="hljs-comment">// 非法中断号（1023伪中断或中断号不在表内）直接返回</span><br>    &#125;<br> <br>    irqNesting++;  <span class="hljs-comment">// 嵌套计数增加</span><br>    <br>    <span class="hljs-comment">/* 调用注册的ISR */</span><br>    irqTable[<span class="hljs-built_in">int</span>Num].irqHandler(<span class="hljs-built_in">int</span>Num, irqTable[<span class="hljs-built_in">int</span>Num].userParam);<br> <br>    irqNesting--;  <span class="hljs-comment">// 嵌套计数减少</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="中断处理全流程"><a class="markdownIt-Anchor" href="#中断处理全流程"></a> 中断处理全流程</h3>
 <ol>
 <li>硬件触发：外设触发中断，GIC将中断请求发送至CPU。</li>
@@ -568,156 +672,371 @@
 <li>使能中断，注册ISR（绑定中断源和对应的ISR）</li>
 <li>初始化定时器</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">void filterkey_init(void)</span><br><span class="line">&#123;	</span><br><span class="line">	gpio_pin_config_t key_config;</span><br><span class="line">	</span><br><span class="line">	/* 1、初始化IO复用 */</span><br><span class="line">	IOMUXC_SetPinMux(IOMUXC_UART1_CTS_B_GPIO1_IO18,0);	/* 复用为GPIO1_IO18 */</span><br><span class="line"></span><br><span class="line">	/* 2、、配置GPIO1_IO18的IO属性	</span><br><span class="line">	 *bit 16:0 HYS关闭</span><br><span class="line">	 *bit [15:14]: 11 默认22K上拉</span><br><span class="line">	 *bit [13]: 1 pull功能</span><br><span class="line">	 *bit [12]: 1 pull/keeper使能</span><br><span class="line">	 *bit [11]: 0 关闭开路输出</span><br><span class="line">	 *bit [7:6]: 10 速度100Mhz</span><br><span class="line">	 *bit [5:3]: 000 关闭输出</span><br><span class="line">	 *bit [0]: 0 低转换率</span><br><span class="line">	 */</span><br><span class="line">	IOMUXC_SetPinConfig(IOMUXC_UART1_CTS_B_GPIO1_IO18,0xF080);</span><br><span class="line">	</span><br><span class="line">	/* 3、初始化GPIO为中断 */</span><br><span class="line">	key_config.direction = kGPIO_DigitalInput;          /* 输入 */</span><br><span class="line">	key_config.interruptMode = kGPIO_IntFallingEdge;    /* 下降沿触发 */</span><br><span class="line">	key_config.outputLogic = 1;</span><br><span class="line">	gpio_init(GPIO1, 18, &amp;key_config);</span><br><span class="line"></span><br><span class="line">	GIC_EnableIRQ(GPIO1_Combined_16_31_IRQn); /* 使能GIC中对应的中断 */</span><br><span class="line">	</span><br><span class="line">	/* 注册中断服务函数 */</span><br><span class="line">	system_register_irqhandler(GPIO1_Combined_16_31_IRQn, </span><br><span class="line">							   (system_irq_handler_t)gpio1_16_31_irqhandler, </span><br><span class="line">							   NULL);</span><br><span class="line">	</span><br><span class="line">	gpio_enableint(GPIO1, 18);		/* 使能GPIO1_IO18的中断功能 */</span><br><span class="line"></span><br><span class="line">	filtertimer_init(66000000/100);	/* 初始化定时器,10ms */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">filterkey_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;	<br>	<span class="hljs-type">gpio_pin_config_t</span> key_config;<br>	<br>	<span class="hljs-comment">/* 1、初始化IO复用 */</span><br>	<span class="hljs-built_in">IOMUXC_SetPinMux</span>(IOMUXC_UART1_CTS_B_GPIO1_IO18,<span class="hljs-number">0</span>);	<span class="hljs-comment">/* 复用为GPIO1_IO18 */</span><br><br>	<span class="hljs-comment">/* 2、、配置GPIO1_IO18的IO属性	</span><br><span class="hljs-comment">	 *bit 16:0 HYS关闭</span><br><span class="hljs-comment">	 *bit [15:14]: 11 默认22K上拉</span><br><span class="hljs-comment">	 *bit [13]: 1 pull功能</span><br><span class="hljs-comment">	 *bit [12]: 1 pull/keeper使能</span><br><span class="hljs-comment">	 *bit [11]: 0 关闭开路输出</span><br><span class="hljs-comment">	 *bit [7:6]: 10 速度100Mhz</span><br><span class="hljs-comment">	 *bit [5:3]: 000 关闭输出</span><br><span class="hljs-comment">	 *bit [0]: 0 低转换率</span><br><span class="hljs-comment">	 */</span><br>	<span class="hljs-built_in">IOMUXC_SetPinConfig</span>(IOMUXC_UART1_CTS_B_GPIO1_IO18,<span class="hljs-number">0xF080</span>);<br>	<br>	<span class="hljs-comment">/* 3、初始化GPIO为中断 */</span><br>	key_config.direction = kGPIO_DigitalInput;          <span class="hljs-comment">/* 输入 */</span><br>	key_config.interruptMode = kGPIO_IntFallingEdge;    <span class="hljs-comment">/* 下降沿触发 */</span><br>	key_config.outputLogic = <span class="hljs-number">1</span>;<br>	<span class="hljs-built_in">gpio_init</span>(GPIO1, <span class="hljs-number">18</span>, &amp;key_config);<br><br>	<span class="hljs-built_in">GIC_EnableIRQ</span>(GPIO1_Combined_16_31_IRQn); <span class="hljs-comment">/* 使能GIC中对应的中断 */</span><br>	<br>	<span class="hljs-comment">/* 注册中断服务函数 */</span><br>	<span class="hljs-built_in">system_register_irqhandler</span>(GPIO1_Combined_16_31_IRQn, <br>							   (<span class="hljs-type">system_irq_handler_t</span>)gpio1_16_31_irqhandler, <br>							   <span class="hljs-literal">NULL</span>);<br>	<br>	<span class="hljs-built_in">gpio_enableint</span>(GPIO1, <span class="hljs-number">18</span>);		<span class="hljs-comment">/* 使能GPIO1_IO18的中断功能 */</span><br><br>	<span class="hljs-built_in">filtertimer_init</span>(<span class="hljs-number">66000000</span>/<span class="hljs-number">100</span>);	<span class="hljs-comment">/* 初始化定时器,10ms */</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="定时器初始化"><a class="markdownIt-Anchor" href="#定时器初始化"></a> 定时器初始化</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">void filtertimer_init(unsigned int value)</span><br><span class="line">&#123;</span><br><span class="line">	EPIT1-&gt;CR = 0;	//先清零</span><br><span class="line">	</span><br><span class="line">	/*</span><br><span class="line">     * CR寄存器:</span><br><span class="line">     * bit25:24 01 时钟源选择Peripheral clock=66MHz</span><br><span class="line">     * bit15:4  0  1分频</span><br><span class="line">     * bit3:	1  当计数器到0的话从LR重新加载数值</span><br><span class="line">     * bit2:	1  比较中断使能</span><br><span class="line">     * bit1:    1  初始计数值来源于LR寄存器值</span><br><span class="line">     * bit0:    0  先关闭EPIT1</span><br><span class="line">     */</span><br><span class="line">	EPIT1-&gt;CR = (1&lt;&lt;24 | 1&lt;&lt;3 | 1&lt;&lt;2 | 1&lt;&lt;1);</span><br><span class="line"></span><br><span class="line">	/* 计数值 */</span><br><span class="line">	EPIT1-&gt;LR = value;</span><br><span class="line">	</span><br><span class="line">	/* 比较寄存器，当计数器值和此寄存器值相等的话就会产生中断 */</span><br><span class="line">	EPIT1-&gt;CMPR	= 0;	</span><br><span class="line">	</span><br><span class="line">	GIC_EnableIRQ(EPIT1_IRQn);	/* 使能GIC中对应的中断 */</span><br><span class="line">	</span><br><span class="line">	/* 注册中断服务函数		    */</span><br><span class="line">	system_register_irqhandler(EPIT1_IRQn, (system_irq_handler_t)filtertimer_irqhandler, NULL);	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">filtertimer_init</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> value)</span></span><br><span class="hljs-function"></span>&#123;<br>	EPIT1-&gt;CR = <span class="hljs-number">0</span>;	<span class="hljs-comment">//先清零</span><br>	<br>	<span class="hljs-comment">/*</span><br><span class="hljs-comment">     * CR寄存器:</span><br><span class="hljs-comment">     * bit25:24 01 时钟源选择Peripheral clock=66MHz</span><br><span class="hljs-comment">     * bit15:4  0  1分频</span><br><span class="hljs-comment">     * bit3:	1  当计数器到0的话从LR重新加载数值</span><br><span class="hljs-comment">     * bit2:	1  比较中断使能</span><br><span class="hljs-comment">     * bit1:    1  初始计数值来源于LR寄存器值</span><br><span class="hljs-comment">     * bit0:    0  先关闭EPIT1</span><br><span class="hljs-comment">     */</span><br>	EPIT1-&gt;CR = (<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">24</span> | <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">3</span> | <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">2</span> | <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">1</span>);<br><br>	<span class="hljs-comment">/* 计数值 */</span><br>	EPIT1-&gt;LR = value;<br>	<br>	<span class="hljs-comment">/* 比较寄存器，当计数器值和此寄存器值相等的话就会产生中断 */</span><br>	EPIT1-&gt;CMPR	= <span class="hljs-number">0</span>;	<br>	<br>	<span class="hljs-built_in">GIC_EnableIRQ</span>(EPIT1_IRQn);	<span class="hljs-comment">/* 使能GIC中对应的中断 */</span><br>	<br>	<span class="hljs-comment">/* 注册中断服务函数		    */</span><br>	<span class="hljs-built_in">system_register_irqhandler</span>(EPIT1_IRQn, (<span class="hljs-type">system_irq_handler_t</span>)filtertimer_irqhandler, <span class="hljs-literal">NULL</span>);	<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="gpio-isr函数"><a class="markdownIt-Anchor" href="#gpio-isr函数"></a> GPIO ISR函数</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void gpio1_16_31_irqhandler(void)</span><br><span class="line">&#123; </span><br><span class="line">	/* 开启定时器 */</span><br><span class="line">	filtertimer_restart(66000000/100);</span><br><span class="line"></span><br><span class="line">	/* 清除中断标志位 */</span><br><span class="line">	gpio_clearintflags(GPIO1, 18);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs scss">void <span class="hljs-built_in">gpio1_16_31_irqhandler</span>(void)<br>&#123; <br>	<span class="hljs-comment">/* 开启定时器 */</span><br>	<span class="hljs-built_in">filtertimer_restart</span>(<span class="hljs-number">66000000</span>/<span class="hljs-number">100</span>);<br><br>	<span class="hljs-comment">/* 清除中断标志位 */</span><br>	<span class="hljs-built_in">gpio_clearintflags</span>(GPIO1, <span class="hljs-number">18</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="定时器-isr函数"><a class="markdownIt-Anchor" href="#定时器-isr函数"></a> 定时器 ISR函数</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">void filtertimer_irqhandler(void)</span><br><span class="line">&#123; </span><br><span class="line">	static unsigned char state = OFF;</span><br><span class="line"></span><br><span class="line">	if(EPIT1-&gt;SR &amp; (1&lt;&lt;0)) 					/* 判断比较事件是否发生			*/</span><br><span class="line">	&#123;</span><br><span class="line">		filtertimer_stop();					/* 关闭定时器 				*/</span><br><span class="line">		if(gpio_pinread(GPIO1, 18) == 0)	/* KEY0 				*/</span><br><span class="line">		&#123;</span><br><span class="line">			state = !state;</span><br><span class="line">			beep_switch(state);				/* 反转蜂鸣器 				*/</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">		</span><br><span class="line">	EPIT1-&gt;SR |= 1&lt;&lt;0; 						/* 清除中断标志位 				*/</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">filtertimer_irqhandler</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123; <br>	<span class="hljs-type">static</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> state = OFF;<br><br>	<span class="hljs-keyword">if</span>(EPIT1-&gt;SR &amp; (<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">0</span>)) 					<span class="hljs-comment">/* 判断比较事件是否发生			*/</span><br>	&#123;<br>		<span class="hljs-built_in">filtertimer_stop</span>();					<span class="hljs-comment">/* 关闭定时器 				*/</span><br>		<span class="hljs-keyword">if</span>(<span class="hljs-built_in">gpio_pinread</span>(GPIO1, <span class="hljs-number">18</span>) == <span class="hljs-number">0</span>)	<span class="hljs-comment">/* KEY0 				*/</span><br>		&#123;<br>			state = !state;<br>			<span class="hljs-built_in">beep_switch</span>(state);				<span class="hljs-comment">/* 反转蜂鸣器 				*/</span><br>		&#125;<br>	&#125;<br>		<br>	EPIT1-&gt;SR |= <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">0</span>; 						<span class="hljs-comment">/* 清除中断标志位 				*/</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="辅助函数"><a class="markdownIt-Anchor" href="#辅助函数"></a> 辅助函数</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void filtertimer_stop(void)</span><br><span class="line">&#123;</span><br><span class="line">	EPIT1-&gt;CR &amp;= ~(1&lt;&lt;0);	/* 关闭定时器 */</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void filtertimer_restart(unsigned int value)</span><br><span class="line">&#123;</span><br><span class="line">	EPIT1-&gt;CR &amp;= ~(1&lt;&lt;0);	/* 先关闭定时器 */</span><br><span class="line">	EPIT1-&gt;LR = value;		/* 计数值 			*/</span><br><span class="line">	EPIT1-&gt;CR |= (1&lt;&lt;0);	/* 打开定时器 		*/</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">filtertimer_stop</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>	EPIT1-&gt;CR &amp;= ~(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">0</span>);	<span class="hljs-comment">/* 关闭定时器 */</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">filtertimer_restart</span><span class="hljs-params">(<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> value)</span></span><br><span class="hljs-function"></span>&#123;<br>	EPIT1-&gt;CR &amp;= ~(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">0</span>);	<span class="hljs-comment">/* 先关闭定时器 */</span><br>	EPIT1-&gt;LR = value;		<span class="hljs-comment">/* 计数值 			*/</span><br>	EPIT1-&gt;CR |= (<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">0</span>);	<span class="hljs-comment">/* 打开定时器 		*/</span><br>&#125;<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>IMX6ULL外部中断配置</div>
+      <div>http://akichen891.github.io/2025/03/04/IMX6ULL外部中断配置/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月4日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月5日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
   </div>
-</article>
 
 
 
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/03/05/DDR3%E9%85%8D%E7%BD%AE/" title="IMX6UL DDR3配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">IMX6UL DDR3配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/03/%E6%97%B6%E9%92%9F%E9%85%8D%E7%BD%AE/" title="I.MX6ULL 时钟配置">
+                        <span class="hidden-mobile">I.MX6ULL 时钟配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">首页</a></li>
-        
-          <li><a href="/_posts/">文章</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li>
-        
-          <li><a href="/about/">关于</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cortex-a7%E4%B8%AD%E6%96%AD%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text"> Cortex-A7中断系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F%E8%A1%A8"><span class="toc-number">1.1.</span> <span class="toc-text"> 中断向量表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6starts"><span class="toc-number">1.2.</span> <span class="toc-text"> 汇编代码(启动文件start.S)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F%E8%A1%A8-2"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 中断向量表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gic%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text"> GIC控制器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%ADid"><span class="toc-number">1.4.</span> <span class="toc-text"> 中断ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gic%E9%80%BB%E8%BE%91%E5%88%86%E5%9D%97"><span class="toc-number">1.5.</span> <span class="toc-text"> GIC逻辑分块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cp15%E5%8D%8F%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">1.6.</span> <span class="toc-text"> CP15协处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%BD%BF%E8%83%BD"><span class="toc-number">1.7.</span> <span class="toc-text"> 中断使能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#irq%E5%92%8Cfiq%E6%80%BB%E4%B8%AD%E6%96%AD%E4%BD%BF%E8%83%BD"><span class="toc-number">1.7.1.</span> <span class="toc-text"> IRQ和FIQ总中断使能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#id0-id1019-%E4%B8%AD%E6%96%AD%E4%BD%BF%E8%83%BD%E5%92%8C%E7%A6%81%E6%AD%A2"><span class="toc-number">1.7.2.</span> <span class="toc-text"> ID0 - ID1019 中断使能和禁止</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">1.8.</span> <span class="toc-text"> 中断优先级</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E6%95%B0%E9%87%8F%E9%85%8D%E7%BD%AE"><span class="toc-number">1.8.1.</span> <span class="toc-text"> 优先级数量配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%A2%E5%8D%A0%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E5%AD%90%E4%BC%98%E5%85%88%E7%BA%A7%E4%BD%8D%E6%95%B0%E9%85%8D%E7%BD%AE"><span class="toc-number">1.8.2.</span> <span class="toc-text"> 抢占优先级和子优先级位数配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.8.3.</span> <span class="toc-text"> 优先级设置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E4%BD%8D%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%E5%87%BD%E6%95%B0"><span class="toc-number">1.9.</span> <span class="toc-text"> 复位中断服务函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E4%B8%AD%E6%96%AD"><span class="toc-number">1.10.</span> <span class="toc-text"> 其他中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#irq%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%E5%87%BD%E6%95%B0"><span class="toc-number">1.11.</span> <span class="toc-text"> IRQ中断服务函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E9%A9%B1%E5%8A%A8%E6%96%87%E4%BB%B6c%E5%87%BD%E6%95%B0"><span class="toc-number">1.12.</span> <span class="toc-text"> 中断驱动文件（C函数）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E5%A4%84%E7%90%86%E5%85%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.13.</span> <span class="toc-text"> 中断处理全流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E5%AE%9A%E6%97%B6%E5%99%A8%E6%8C%89%E9%94%AE%E6%B6%88%E6%8A%96"><span class="toc-number">2.</span> <span class="toc-text"> 示例（定时器按键消抖）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E9%94%AE%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text"> 按键初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.2.</span> <span class="toc-text"> 定时器初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gpio-isr%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.</span> <span class="toc-text"> GPIO ISR函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8-isr%E5%87%BD%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text"> 定时器 ISR函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%85%E5%8A%A9%E5%87%BD%E6%95%B0"><span class="toc-number">2.5.</span> <span class="toc-text"> 辅助函数</span></a></li></ol></li></ol>
+            
+          </article>
+        </div>
       </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&text=IMX6ULL外部中断配置"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&is_video=false&description=IMX6ULL外部中断配置"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=IMX6ULL外部中断配置&body=Check out this article: http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&title=IMX6ULL外部中断配置"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&name=IMX6ULL外部中断配置&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2025/03/04/IMX6ULL%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%E9%85%8D%E7%BD%AE/&t=IMX6ULL外部中断配置"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
     </div>
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2020-2025
-    Aki
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
 
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
-    <!-- styles -->
+  </div>
+</div>
 
+    
 
+    
+  </main>
 
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
+  <footer>
+    <div class="footer-inner">
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
   
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功！");
-      e.clearSelection();
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
     })
-  })
   </script>
 
 
-<script src="/js/main.js"></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-<!-- search -->
 
-<!-- Baidu Analytics -->
 
-<!-- Cloudflare Analytics -->
 
-<!-- Disqus Comments -->
 
-<!-- utterances Comments -->
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
 
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

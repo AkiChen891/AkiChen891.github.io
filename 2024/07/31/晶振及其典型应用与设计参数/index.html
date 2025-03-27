@@ -1,11 +1,24 @@
+
+
 <!DOCTYPE html>
-<html lang=zh>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
     <meta name="description" content="有源晶振(Oscillator)和无源晶振(Crystal) 晶振可以分为两类：  有源晶振(Oscillator) 无源晶振(Crystal)   有源晶振(Oscillator) 又被称为石英晶体振荡器（简写OSC或XO）。 有源晶振包含晶体振荡器和外围集成电路两个部分，工程上多集成于同一封装内，以4pin贴片形式出现，体积较大，引脚分别为VCC、GND、OUT和NC。 有源晶振不需要使用M">
 <meta property="og:type" content="article">
 <meta property="og:title" content="晶振及其典型应用与设计参数">
@@ -24,163 +37,254 @@
 <meta property="article:published_time" content="2024-07-30T16:58:44.000Z">
 <meta property="article:modified_time" content="2024-07-30T19:16:38.000Z">
 <meta property="article:author" content="Aki">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/crystal/1.png">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon_mos.png">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>晶振及其典型应用与设计参数</title>
-    <!-- async scripts -->
-    <!-- Google Analytics -->
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>晶振及其典型应用与设计参数 - Aki&#39;s Blog</title>
 
-
-    <!-- Umami Analytics -->
-
-
-    <!-- styles -->
-    
-<link rel="stylesheet" href="/css/style.css">
-
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
-	<!-- mathjax -->
-	
-		<script type="text/x-mathjax-config">
-		  MathJax.Hub.Config({
-			tex2jax: {
-			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-			  inlineMath: [['$','$']]
-			}
-		  });
-		</script>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-	
-<meta name="generator" content="Hexo 7.3.0"></head>
-
-<body class="max-width mx-auto px3 ltr">
-    
-      <div id="header-post">
-  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
-  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
-  <span id="menu">
-    <span id="nav">
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </span>
-    <br/>
-    <span id="actions">
-      <ul>
-        
-        <li><a class="icon" aria-label="上一篇" href="/2024/08/02/%E3%80%90%E7%94%B5%E6%9C%BA%E7%9E%AC%E6%80%81%E5%88%86%E6%9E%90%E3%80%91%E4%BA%A4%E6%B5%81%E7%94%B5%E6%9C%BA%E7%BB%BC%E5%90%88%E5%8A%A8%E6%80%81%E6%96%B9%E7%A8%8B%E5%BC%8F/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
-        
-        <li><a class="icon" aria-label="下一篇" href="/2024/07/27/%E3%80%90%E7%94%B5%E6%9C%BA%E7%9E%AC%E6%80%81%E5%88%86%E6%9E%90%E3%80%91%E4%BA%A4%E6%B5%81%E7%94%B5%E6%9C%BA%E7%9A%84%E8%BF%90%E7%AE%97%E7%94%B5%E6%8A%97%E3%80%81%E7%AD%89%E6%95%88%E7%94%B5%E8%B7%AF%E3%80%81%E7%94%B5%E7%A3%81%E8%BD%AC%E7%9F%A9/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
-        
-        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
-        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
-      </ul>
-      <span id="i-prev" class="info" style="display:none;">上一篇</span>
-      <span id="i-next" class="info" style="display:none;">下一篇</span>
-      <span id="i-top" class="info" style="display:none;">返回顶部</span>
-      <span id="i-share" class="info" style="display:none;">分享文章</span>
-    </span>
-    <br/>
-    <div id="share" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&text=晶振及其典型应用与设计参数"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&is_video=false&description=晶振及其典型应用与设计参数"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=晶振及其典型应用与设计参数&body=Check out this article: http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&name=晶振及其典型应用与设计参数&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&t=晶振及其典型应用与设计参数"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
-</ul>
-
-    </div>
-    
-    
-      <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%BA%90%E6%99%B6%E6%8C%AFoscillator%E5%92%8C%E6%97%A0%E6%BA%90%E6%99%B6%E6%8C%AFcrystal"><span class="toc-number">1.</span> <span class="toc-text"> 有源晶振(Oscillator)和无源晶振(Crystal)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%89%E6%BA%90%E6%99%B6%E6%8C%AFoscillator"><span class="toc-number">1.1.</span> <span class="toc-text"> 有源晶振(Oscillator)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A0%E6%BA%90%E6%99%B6%E6%8C%AFcrystal"><span class="toc-number">1.2.</span> <span class="toc-text"> 无源晶振(Crystal)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%BA%90%E6%99%B6%E6%8C%AF%E7%9A%84%E5%88%86%E6%9E%90%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text"> 无源晶振的分析模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%B5%E6%B0%94%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text"> 电气模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B1%E6%8C%AF%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text"> 共振模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%A9%E5%BA%A6%E6%95%88%E5%BA%94"><span class="toc-number">2.3.</span> <span class="toc-text"> 温度效应</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%BA%90%E6%99%B6%E6%8C%AF%E5%85%B8%E5%9E%8B%E7%94%B5%E8%B7%AF%E5%8F%8A%E5%85%B6%E5%8F%82%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text"> 无源晶振典型电路及其参数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9A%AE%E5%B0%94%E6%96%AF%E6%99%B6%E4%BD%93%E6%8C%AF%E8%8D%A1%E5%99%A8pierce-crystal-oscillator"><span class="toc-number">3.1.</span> <span class="toc-text"> 皮尔斯晶体振荡器（Pierce Crystal Oscillator）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mcu%E6%8C%AF%E8%8D%A1%E5%99%A8"><span class="toc-number">3.2.</span> <span class="toc-text"> MCU振荡器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E7%94%B5%E5%AE%B9c_l"><span class="toc-number">3.3.</span> <span class="toc-text"> 负载电容(CLC_LCL​)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%AF%E8%8D%A1%E9%A2%91%E7%8E%87oscillation-frequency"><span class="toc-number">3.4.</span> <span class="toc-text"> 振荡频率(Oscillation frequency)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BF%80%E5%8A%B1%E5%8A%9F%E7%8E%87-drive-level%E5%92%8Cr_ext"><span class="toc-number">3.5.</span> <span class="toc-text"> 激励功率 (Drive Level)和REXTR_{EXT}REXT​</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%B5%E6%B5%81%E6%B3%95"><span class="toc-number">3.5.1.</span> <span class="toc-text"> 电流法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%B5%E5%8E%8B%E6%B3%95"><span class="toc-number">3.5.2.</span> <span class="toc-text"> 电压法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E7%94%B5%E5%AE%B9static-capacitance"><span class="toc-number">3.6.</span> <span class="toc-text"> 静态电容（Static Capacitance）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%A9%E6%BC%82"><span class="toc-number">3.7.</span> <span class="toc-text"> 温漂</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%93%81%E8%B4%A8%E5%9B%A0%E6%95%B0quality-factorq%E5%80%BC"><span class="toc-number">3.8.</span> <span class="toc-text"> 品质因数（Quality Factor，Q值）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text"> 典型应用</span></a></li></ol>
-      </div>
-    
-  </span>
-</div>
-
-    
-    <div class="content index py4 ">
-        
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <header>
-    
-    <h1 class="posttitle p-name" itemprop="name headline">
-        晶振及其典型应用与设计参数
-    </h1>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-    <div class="meta">
-      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <span class="p-name" itemprop="name">Aki</span>
-      </span>
-      
-    <div class="postdate">
-      
-        <time datetime="2024-07-30T16:58:44.000Z" class="dt-published" itemprop="datePublished">2024-07-31</time>
-        
-      
-    </div>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
-      
-    <div class="article-category">
-        <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/%E7%94%B5%E5%AD%90%E4%B8%8E%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1/">电子与电路设计</a>
-    </div>
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
-      
 
-    </div>
-  </header>
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
-  <div class="content e-content" itemprop="articleBody">
-    <h3 id="有源晶振oscillator和无源晶振crystal"><a class="markdownIt-Anchor" href="#有源晶振oscillator和无源晶振crystal"></a> 有源晶振(Oscillator)和无源晶振(Crystal)</h3>
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">晶振及其典型应用与设计参数</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-31 00:58" pubdate>
+          2024年7月31日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">晶振及其典型应用与设计参数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="有源晶振oscillator和无源晶振crystal"><a class="markdownIt-Anchor" href="#有源晶振oscillator和无源晶振crystal"></a> 有源晶振(Oscillator)和无源晶振(Crystal)</h3>
 <p>晶振可以分为两类：</p>
 <ul>
 <li>有源晶振(Oscillator)</li>
@@ -192,17 +296,17 @@
 <p>有源晶振不需要使用MCU的内部振荡器，信号稳定，质量较好，而且连接方式比较简单（仍需设置电源滤波，通常使用一个电容和电感构成滤波网络，输出端用一个小阻值的电阻过滤信号），不需要复杂的配置电路。</p>
 <p>适用场景：有成本和功耗要求，时钟信号精度、稳定性要求不高，IC内部有晶振时钟电路。</p>
 <p>有源晶振原始输出波形一般为<strong>方波</strong>（若封装内已集成整形电路）。实际观测时因示波器带宽限制可能无法看到方波而只能看到正弦波，因方波的傅里叶分解结果为基频和奇数次谐波叠加，若带宽不够，很容易只能看到高频方波的低频谐波分量，即只显示正弦波。参见：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_29350001/article/details/50680676">有源晶振和无源晶振的输出波形</a></p>
-<p><img src="/images/crystal/1.png" alt="有源晶振原始输出波形"></p>
+<p><img src="/images/crystal/1.png" srcset="/img/loading.gif" lazyload alt="有源晶振原始输出波形"></p>
 <h4 id="无源晶振crystal"><a class="markdownIt-Anchor" href="#无源晶振crystal"></a> 无源晶振(Crystal)</h4>
 <p>又被称为石英晶体（Xtal）。</p>
 <p>无源晶振是有2个引脚的无极性元件，需要借助于时钟电路才能产生振荡信号，自身无法起振。其信号质量较差，通常需要精确匹配外围电路（用于信号匹配的RLC元件），更换不同频率的晶体时周边配置电路也需要做相应的调整。</p>
 <p>适用场景：时钟要求高，IC内部无晶振时钟电路。</p>
 <p>无源晶振原始输出波形为<strong>正弦波</strong>。</p>
-<p><img src="/images/crystal/2.png" alt="无源晶振原始输出波形"></p>
+<p><img src="/images/crystal/2.png" srcset="/img/loading.gif" lazyload alt="无源晶振原始输出波形"></p>
 <h3 id="无源晶振的分析模型"><a class="markdownIt-Anchor" href="#无源晶振的分析模型"></a> 无源晶振的分析模型</h3>
 <h4 id="电气模型"><a class="markdownIt-Anchor" href="#电气模型"></a> 电气模型</h4>
 <p>在电气网络中，石英晶体可以转换成一组RLC等效电路，以利分析。这一电路模型有两个频率接近但特性不同的共振点：<strong>低阻抗的串联共振点</strong>与<strong>高阻抗的并联共振点</strong>。</p>
-<p><img src="/images/crystal/3.png" alt="无源晶振电路符号与等效电路"></p>
+<p><img src="/images/crystal/3.png" srcset="/img/loading.gif" lazyload alt="无源晶振电路符号与等效电路"></p>
 <p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>a</mi><mi>p</mi><mi>l</mi><mi>a</mi><mi>c</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">Laplace</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">L</span><span class="mord mathnormal">a</span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">a</span><span class="mord mathnormal">c</span><span class="mord mathnormal">e</span></span></span></span>变换后，该等效电路网络的阻抗可以写成以下形式：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Z</mi><mo stretchy="false">(</mo><mi>s</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mfrac><mn>1</mn><mrow><mi>s</mi><msub><mi>C</mi><mn>1</mn></msub></mrow></mfrac><mo>+</mo><mi>s</mi><msub><mi>L</mi><mn>1</mn></msub><mo>+</mo><msub><mi>R</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mfrac><mn>1</mn><mrow><mi>s</mi><msub><mi>C</mi><mn>0</mn></msub></mrow></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Z(s)=(\frac{1}{sC_1}+sL_1+R_1)//(\frac{1}{sC_0})
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">Z</span><span class="mopen">(</span><span class="mord mathnormal">s</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.1574400000000002em;vertical-align:-0.8360000000000001em;"></span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.3139999999999996em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8360000000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathnormal">s</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.1574400000000002em;vertical-align:-0.8360000000000001em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">/</span><span class="mord">/</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.3139999999999996em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8360000000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span></span></p>
@@ -256,12 +360,12 @@ h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span
 <p>也就是说，如不考虑制作误差，以这种石英晶体控制频率的时钟，如运作在比室温低10°C的环境下，每年会比运作在室温下慢2分钟；如运作在比室温低摄氏20°C的环境下，则每年会比运作在室温下慢8分钟。</p>
 <h3 id="无源晶振典型电路及其参数"><a class="markdownIt-Anchor" href="#无源晶振典型电路及其参数"></a> 无源晶振典型电路及其参数</h3>
 <h4 id="皮尔斯晶体振荡器pierce-crystal-oscillator"><a class="markdownIt-Anchor" href="#皮尔斯晶体振荡器pierce-crystal-oscillator"></a> 皮尔斯晶体振荡器（Pierce Crystal Oscillator）</h4>
-<p><img src="/images/crystal/4.png" alt="Pierce Crystal Oscillator"></p>
+<p><img src="/images/crystal/4.png" srcset="/img/loading.gif" lazyload alt="Pierce Crystal Oscillator"></p>
 <p>此电路中晶体决定了振荡频率，并以串联谐振频率工作，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">f_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>在输出和输入之间提供低阻抗路径。谐振时存在180度相移，因而反馈为正。输出正弦波的幅度限制在MOSFET漏极端子的最大电压范围内。电阻器<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">R_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>控制反馈量和晶体驱动量，而射频扼流圈RFC上的电压在每个周期内反转。</p>
 <p>大多数数字时钟、手表和计时器都以某种形式使用皮尔斯振荡器，因为它可以使用最少的组件来实现。</p>
 <h4 id="mcu振荡器"><a class="markdownIt-Anchor" href="#mcu振荡器"></a> MCU振荡器</h4>
 <p>MCU电路中，皮尔斯振荡器常以另一种较为简单的方式出现。</p>
-<p><img src="/images/crystal/5.png" alt="Pierce Crystal Oscillator (MCU)"></p>
+<p><img src="/images/crystal/5.png" srcset="/img/loading.gif" lazyload alt="Pierce Crystal Oscillator (MCU)"></p>
 <p>其中包括</p>
 <ul>
 <li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mrow><mi>L</mi><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">C_{L1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mrow><mi>L</mi><mn>2</mn></mrow></msub></mrow><annotation encoding="application/x-tex">C_{L2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>：外部负载电容</li>
@@ -269,7 +373,7 @@ h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span
 <li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mi>F</mi></msub></mrow><annotation encoding="application/x-tex">R_F</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">F</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>：反相器反馈电阻，强制反相器工作在线性放大区，用于改善起振。多数MCU会内置该电阻。</li>
 </ul>
 <p>MCU振荡器还有另一种更简洁的形式：</p>
-<p><img src="/images/crystal/6.png" alt="External Oscillator (MCU)"></p>
+<p><img src="/images/crystal/6.png" srcset="/img/loading.gif" lazyload alt="External Oscillator (MCU)"></p>
 <p>该电路中省去了<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>E</mi><mi>X</mi><mi>T</mi></mrow></msub></mrow><annotation encoding="application/x-tex">R_{EXT}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05764em;">E</span><span class="mord mathnormal mtight" style="margin-right:0.07847em;">X</span><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。</p>
 <h4 id="负载电容c_l"><a class="markdownIt-Anchor" href="#负载电容c_l"></a> 负载电容(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">C_L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)</h4>
 <p>负载电容的标称值通常由晶振制造商提供，标示为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">C_L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。实际电路中的负载电容是并联在晶振两端的两个电容<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mrow><mi>L</mi><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">C_{L1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mrow><mi>L</mi><mn>2</mn></mrow></msub></mrow><annotation encoding="application/x-tex">C_{L2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">L</span><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，以及晶振内部电容以及布线电容（寄生电容）共同作用的结果，其计算公式为</p>
@@ -335,8 +439,8 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <p>高<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi></mrow><annotation encoding="application/x-tex">Q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">Q</span></span></span></span>值晶振起振后的频率稳定性和噪声均较低，但其需要较长的起振时间以达到稳定。</p>
 <h3 id="典型应用"><a class="markdownIt-Anchor" href="#典型应用"></a> 典型应用</h3>
 <p>STM32F429IRTx需要在OSC_IN和OSC_OUT引脚外接25MHz晶振以供系统高速时钟源HSE，同时通过内部锁相环（PLL）进行倍频。</p>
-<p><img src="/images/crystal/7.png" alt="外接的25MHz高频时钟源"></p>
-<p><img src="/images/crystal/8.png" alt="使用的YXC X322525MOB4SI型无源贴片晶振"></p>
+<p><img src="/images/crystal/7.png" srcset="/img/loading.gif" lazyload alt="外接的25MHz高频时钟源"></p>
+<p><img src="/images/crystal/8.png" srcset="/img/loading.gif" lazyload alt="使用的YXC X322525MOB4SI型无源贴片晶振"></p>
 <p>手册推荐负载电容为10<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">pF</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span>或20<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">pF</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span>，选取10<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">pF</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span>。</p>
 <p>根据工程设计经验，一般取手册值-2或-3<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">pF</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span>后，再乘以2，作为目标负载电容值。此处即为</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>C</mi><mi>L</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo>=</mo><mo stretchy="false">(</mo><msub><mi>C</mi><mi>L</mi></msub><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo>×</mo><mn>2</mn><mo>=</mo><mo stretchy="false">(</mo><mn>10</mn><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo><mo>×</mo><mn>2</mn><mo>=</mo><mn>16</mn><mi>p</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">C_L&#x27;=(C_L-2)\times2=(10-2)\times2=16pF
@@ -346,147 +450,362 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.048892em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8018919999999999em;"><span style="top:-2.4530000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">L</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.19633em;vertical-align:-0.8360000000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.36033em;"><span style="top:-2.3139999999999996em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8360000000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></p>
 <p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">C_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>经验值为5<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">pF</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span>，所以可解得<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mn>1</mn></msub><mo>=</mo><msub><mi>C</mi><mn>2</mn></msub><mo>=</mo><mn>22</mn><mi>p</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">C_1=C_2=22pF</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">2</span><span class="mord">2</span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span>。</p>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%94%B5%E5%AD%90%E4%B8%8E%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1/" class="category-chain-item">电子与电路设计</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>晶振及其典型应用与设计参数</div>
+      <div>http://akichen891.github.io/2024/07/31/晶振及其典型应用与设计参数/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年7月31日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年7月31日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
   </div>
-</article>
 
 
 
-        
-          <div id="footer-post-container">
-  <div id="footer-post">
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/08/02/%E3%80%90%E7%94%B5%E6%9C%BA%E7%9E%AC%E6%80%81%E5%88%86%E6%9E%90%E3%80%91%E4%BA%A4%E6%B5%81%E7%94%B5%E6%9C%BA%E7%BB%BC%E5%90%88%E5%8A%A8%E6%80%81%E6%96%B9%E7%A8%8B%E5%BC%8F/" title="【电机瞬态分析】交流电机综合动态方程式">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【电机瞬态分析】交流电机综合动态方程式</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/07/27/%E3%80%90%E7%94%B5%E6%9C%BA%E7%9E%AC%E6%80%81%E5%88%86%E6%9E%90%E3%80%91%E4%BA%A4%E6%B5%81%E7%94%B5%E6%9C%BA%E7%9A%84%E8%BF%90%E7%AE%97%E7%94%B5%E6%8A%97%E3%80%81%E7%AD%89%E6%95%88%E7%94%B5%E8%B7%AF%E3%80%81%E7%94%B5%E7%A3%81%E8%BD%AC%E7%9F%A9/" title="【电机瞬态分析】交流电机的运算电抗、等效电路、电磁转矩">
+                        <span class="hidden-mobile">【电机瞬态分析】交流电机的运算电抗、等效电路、电磁转矩</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
 
-    <div id="nav-footer" style="display: none">
-      <ul>
-        
-          <li><a href="/">首页</a></li>
-        
-          <li><a href="/_posts/">文章</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li>
-        
-          <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li>
-        
-          <li><a href="/about/">关于</a></li>
-        
-      </ul>
-    </div>
-
-    
-    
-      <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%BA%90%E6%99%B6%E6%8C%AFoscillator%E5%92%8C%E6%97%A0%E6%BA%90%E6%99%B6%E6%8C%AFcrystal"><span class="toc-number">1.</span> <span class="toc-text"> 有源晶振(Oscillator)和无源晶振(Crystal)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%89%E6%BA%90%E6%99%B6%E6%8C%AFoscillator"><span class="toc-number">1.1.</span> <span class="toc-text"> 有源晶振(Oscillator)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A0%E6%BA%90%E6%99%B6%E6%8C%AFcrystal"><span class="toc-number">1.2.</span> <span class="toc-text"> 无源晶振(Crystal)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%BA%90%E6%99%B6%E6%8C%AF%E7%9A%84%E5%88%86%E6%9E%90%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text"> 无源晶振的分析模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%B5%E6%B0%94%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text"> 电气模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B1%E6%8C%AF%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text"> 共振模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%A9%E5%BA%A6%E6%95%88%E5%BA%94"><span class="toc-number">2.3.</span> <span class="toc-text"> 温度效应</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%BA%90%E6%99%B6%E6%8C%AF%E5%85%B8%E5%9E%8B%E7%94%B5%E8%B7%AF%E5%8F%8A%E5%85%B6%E5%8F%82%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text"> 无源晶振典型电路及其参数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9A%AE%E5%B0%94%E6%96%AF%E6%99%B6%E4%BD%93%E6%8C%AF%E8%8D%A1%E5%99%A8pierce-crystal-oscillator"><span class="toc-number">3.1.</span> <span class="toc-text"> 皮尔斯晶体振荡器（Pierce Crystal Oscillator）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mcu%E6%8C%AF%E8%8D%A1%E5%99%A8"><span class="toc-number">3.2.</span> <span class="toc-text"> MCU振荡器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E7%94%B5%E5%AE%B9c_l"><span class="toc-number">3.3.</span> <span class="toc-text"> 负载电容(CLC_LCL​)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%AF%E8%8D%A1%E9%A2%91%E7%8E%87oscillation-frequency"><span class="toc-number">3.4.</span> <span class="toc-text"> 振荡频率(Oscillation frequency)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BF%80%E5%8A%B1%E5%8A%9F%E7%8E%87-drive-level%E5%92%8Cr_ext"><span class="toc-number">3.5.</span> <span class="toc-text"> 激励功率 (Drive Level)和REXTR_{EXT}REXT​</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%B5%E6%B5%81%E6%B3%95"><span class="toc-number">3.5.1.</span> <span class="toc-text"> 电流法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%B5%E5%8E%8B%E6%B3%95"><span class="toc-number">3.5.2.</span> <span class="toc-text"> 电压法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E7%94%B5%E5%AE%B9static-capacitance"><span class="toc-number">3.6.</span> <span class="toc-text"> 静态电容（Static Capacitance）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%A9%E6%BC%82"><span class="toc-number">3.7.</span> <span class="toc-text"> 温漂</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%93%81%E8%B4%A8%E5%9B%A0%E6%95%B0quality-factorq%E5%80%BC"><span class="toc-number">3.8.</span> <span class="toc-text"> 品质因数（Quality Factor，Q值）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text"> 典型应用</span></a></li></ol>
+            
+          </article>
+        </div>
       </div>
-    
-
-    <div id="share-footer" style="display: none">
-      <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&text=晶振及其典型应用与设计参数"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&is_video=false&description=晶振及其典型应用与设计参数"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=晶振及其典型应用与设计参数&body=Check out this article: http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&title=晶振及其典型应用与设计参数"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&name=晶振及其典型应用与设计参数&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/07/31/%E6%99%B6%E6%8C%AF%E5%8F%8A%E5%85%B6%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E4%B8%8E%E8%AE%BE%E8%AE%A1%E5%8F%82%E6%95%B0/&t=晶振及其典型应用与设计参数"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
-</ul>
-
     </div>
 
-    <div id="actions-footer">
-        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
-        
-          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
-        
-        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
-        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
-    </div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
 
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-        
-        <footer id="footer">
-  <div class="footer-left">
-    Copyright &copy;
-    
-    
-    2020-2025
-    Aki
-  </div>
-  <div class="footer-right">
-    <nav>
-      <ul>
-        <!--
-       --><li><a href="/">首页</a></li><!--
-     --><!--
-       --><li><a href="/_posts/">文章</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://github.com/AkiChen891">Github</a></li><!--
-     --><!--
-       --><li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51149752?spm=1000.2115.3001.5343">CSDN</a></li><!--
-     --><!--
-       --><li><a href="/about/">关于</a></li><!--
-     -->
-      </ul>
-    </nav>
-  </div>
-</footer>
 
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
     </div>
-    <!-- styles -->
+  </div>
+</div>
 
+    
 
+    
+  </main>
 
-  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
-
-
-    <!-- jquery -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-
-
-
-
-<!-- clipboard -->
-
+  <footer>
+    <div class="footer-inner">
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
   
-  <script type="text/javascript">
-  $(function() {
-    // copy-btn HTML
-    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
-    btn += '<i class="fa-regular fa-clone"></i>';
-    btn += '</span>';
-    // mount it!
-    $(".highlight table").before(btn);
-    var clip = new ClipboardJS('.btn-copy', {
-      text: function(trigger) {
-        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
-      }
-    });
-    clip.on('success', function(e) {
-      e.trigger.setAttribute('aria-label', "复制成功！");
-      e.clearSelection();
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
     })
-  })
   </script>
 
 
-<script src="/js/main.js"></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
-<!-- search -->
 
-<!-- Baidu Analytics -->
 
-<!-- Cloudflare Analytics -->
 
-<!-- Disqus Comments -->
 
-<!-- utterances Comments -->
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
 
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>
