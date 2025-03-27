@@ -1,29 +1,16 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=auto>
-
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
-
+<html lang=zh>
 <head>
-  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
-  <link rel="icon" href="/images/favicon_mos.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#233BA7">
-  <meta name="author" content="Aki Chen">
-  <meta name="keywords" content="">
-  
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="简介 Hexo博客生成并部署后，无论是部署至第三方平台（如Github Pages），还是部署至私有服务器然后定向至个人域名，都需要人工向搜索引擎提交收录。简单来说这一过程就是把该网站的内容和地址“告诉”搜索引擎，让搜索引擎“认识”你。这样当下次有人在搜索引擎中搜索与你博客有关联的内容时，搜索引擎就能够发现你了。 我们以Google为例，要完成这个过程，通常需要以下步骤：  确认博客是否被收录">
 <meta property="og:type" content="article">
 <meta property="og:title" content="将基于Hexo的个人网站提交至Google收录">
 <meta property="og:url" content="http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="Aki&#39;s Blog">
 <meta property="og:description" content="简介 Hexo博客生成并部署后，无论是部署至第三方平台（如Github Pages），还是部署至私有服务器然后定向至个人域名，都需要人工向搜索引擎提交收录。简单来说这一过程就是把该网站的内容和地址“告诉”搜索引擎，让搜索引擎“认识”你。这样当下次有人在搜索引擎中搜索与你博客有关联的内容时，搜索引擎就能够发现你了。 我们以Google为例，要完成这个过程，通常需要以下步骤：  确认博客是否被收录">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://akichen891.github.io/images/sitemap/sousuo.png">
@@ -35,255 +22,152 @@
 <meta property="og:image" content="http://akichen891.github.io/images/sitemap/5.png">
 <meta property="article:published_time" content="2024-07-13T08:04:58.000Z">
 <meta property="article:modified_time" content="2024-07-13T08:47:10.000Z">
-<meta property="article:author" content="Aki Chen">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="article:author" content="Aki">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://akichen891.github.io/images/sitemap/sousuo.png">
-  
-  
-    <meta name="referrer" content="no-referrer-when-downgrade">
-  
-  
-  <title>将基于Hexo的个人网站提交至Google收录 - Hexo</title>
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
-
-
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>将基于Hexo的个人网站提交至Google收录</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
 
 
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
+    <!-- Umami Analytics -->
 
 
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
-  
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
 
-
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
-
-    if (CONFIG.web_analytics.follow_dnt) {
-      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
-    }
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-  
-
-
-  
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/07/14/%E3%80%90%E7%94%B5%E6%9C%BA%E7%9E%AC%E6%80%81%E5%88%86%E6%9E%90%E3%80%91%E4%BA%A4%E6%B5%81%E7%94%B5%E6%9C%BA%E6%96%B9%E7%A8%8B%E5%BC%8F%EF%BC%88dq0%E5%9D%90%E6%A0%87%E7%B3%BB%EF%BC%89/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/07/11/%E5%9C%A8Hexo%E4%B8%AD%E5%90%AF%E7%94%A8%E6%96%B0Markdown%E8%A7%A3%E9%87%8A%E5%99%A8%E5%B9%B6%E9%85%8D%E7%BD%AEKatex/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&text=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&is_video=false&description=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=将基于Hexo的个人网站提交至Google收录&body=Check out this article: http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&name=将基于Hexo的个人网站提交至Google收录&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&t=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-  
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text"> 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80-%E7%A1%AE%E8%AE%A4%E5%8D%9A%E5%AE%A2%E6%98%AF%E5%90%A6%E8%A2%AB%E6%94%B6%E5%BD%95"><span class="toc-number">1.1.</span> <span class="toc-text"> 一、确认博客是否被收录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C-%E9%AA%8C%E8%AF%81%E7%BD%91%E7%AB%99%E6%89%80%E6%9C%89%E8%80%85"><span class="toc-number">1.2.</span> <span class="toc-text"> 二、验证网站所有者</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#html%E6%96%87%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="toc-number">1.2.1.</span> <span class="toc-text"> HTML文件验证</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#html%E6%A0%87%E8%AE%B0%E9%AA%8C%E8%AF%81"><span class="toc-number">1.2.2.</span> <span class="toc-text"> HTML标记验证</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E7%AB%99%E7%82%B9%E5%9C%B0%E5%9B%BEsitemap"><span class="toc-number">2.</span> <span class="toc-text"> 三、站点地图(Sitemap)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%AB%99%E7%82%B9%E5%9C%B0%E5%9B%BE"><span class="toc-number">2.1.</span> <span class="toc-text"> 什么是站点地图？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BAhexo%E7%94%9F%E6%88%90%E7%AB%99%E7%82%B9%E5%9C%B0%E5%9B%BE"><span class="toc-number">2.2.</span> <span class="toc-text"> 为Hexo生成站点地图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91google%E6%8F%90%E4%BA%A4%E7%AB%99%E7%82%B9%E5%9C%B0%E5%9B%BE"><span class="toc-number">2.3.</span> <span class="toc-text"> 向Google提交站点地图</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
 
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
   <header>
     
+    <h1 class="posttitle p-name" itemprop="name headline">
+        将基于Hexo的个人网站提交至Google收录
+    </h1>
 
-<div class="header-inner" style="height: 70vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <strong>Aki&#39;s blog</strong>
-    </a>
 
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
 
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Aki</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-07-13T08:04:58.000Z" class="dt-published" itemprop="datePublished">2024-07-13</time>
         
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/" target="_self">
-                <i class="iconfont icon-home-fill"></i>
-                <span>首页</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/" target="_self">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/" target="_self">
-                <i class="iconfont icon-category-fill"></i>
-                <span>分类</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/" target="_self">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
-              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
-            </a>
-          </li>
-        
-      </ul>
+      
     </div>
-  </div>
-</nav>
 
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%BB%BA%E7%AB%99%E7%9B%B8%E5%85%B3/">建站相关</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
   
 
-<div id="banner" class="banner" parallax=true
-     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          
-            <span id="subtitle">将基于Hexo的个人网站提交至Google收录</span>
-          
-        </div>
-
-        
-          
-  <div class="mt-3">
-    
-    
-      <span class="post-meta">
-        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-07-13 16:04" pubdate>
-          2024年7月13日 下午
-        </time>
-      </span>
-    
-  </div>
-
-  <div class="mt-1">
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-chart"></i>
-        
-          1.1k 字
-        
-      </span>
-    
-
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-clock-fill"></i>
-        
-        
-        
-          10 分钟
-        
-      </span>
-    
-
-    
-    
-      
-        <span id="busuanzi_container_page_pv" style="display: none">
-          <i class="iconfont icon-eye" aria-hidden="true"></i>
-          <span id="busuanzi_value_page_pv"></span> 次
-        </span>
-        
-      
-    
-  </div>
-
-
-        
-      </div>
-
-      
-    </div>
-  </div>
-</div>
-
-</div>
-
-  </header>
-
-  <main>
-    
-      
-
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-
-    </div>
-
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div id="board">
-          <article class="post-content mx-auto">
-            <h1 id="seo-header">将基于Hexo的个人网站提交至Google收录</h1>
-            
-            
-              <div class="markdown-body">
-                
-                <h2 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h2>
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h2>
 <p>Hexo博客生成并部署后，无论是部署至第三方平台（如Github Pages），还是部署至私有服务器然后定向至个人域名，都需要人工向搜索引擎提交收录。简单来说这一过程就是把该网站的内容和地址“告诉”搜索引擎，让搜索引擎“认识”你。这样当下次有人在搜索引擎中搜索与你博客有关联的内容时，搜索引擎就能够发现你了。</p>
 <p>我们以Google为例，要完成这个过程，通常需要以下步骤：</p>
 <ul>
@@ -294,13 +178,13 @@
 </ul>
 <h3 id="一-确认博客是否被收录"><a class="markdownIt-Anchor" href="#一-确认博客是否被收录"></a> 一、确认博客是否被收录</h3>
 <p>以本网站为例，打开Google，输入<code>site:akichen891.github.io</code><br>
-<img src="/images/sitemap/sousuo.png" srcset="/img/loading.gif" lazyload alt="搜索结果"></p>
+<img src="/images/sitemap/sousuo.png" alt="搜索结果"></p>
 <p>如果Google提示“找不到相符的内容”，则说明你的网站尚未被Google收录。如果网站已经被收录，Google会自动查询和网站有关的内容。</p>
 <h3 id="二-验证网站所有者"><a class="markdownIt-Anchor" href="#二-验证网站所有者"></a> 二、验证网站所有者</h3>
 <p>只有向搜索引擎添加并认证网站，证明自己是该域名的拥有者和管理者后，搜索引擎可以快速批量添加该域名下的所有子站点，而无需一一验证。认证完成后还可以使用Google Console查看并管理网站的访问统计等、</p>
 <p>要进行验证，首先前往<a target="_blank" rel="noopener" href="https://www.google.com/webmasters/tools/home?hl=zh-CN">Google Console</a>。</p>
 <p>Google Console会要求选择资源类型。<br>
-<img src="/images/sitemap/tianjia.png" srcset="/img/loading.gif" lazyload alt="选择资源类型"></p>
+<img src="/images/sitemap/tianjia.png" alt="选择资源类型"></p>
 <p>选择“网址前缀”，在输入框中输入带<code>http://</code>或<code>https://</code>前缀的完整主域名，然后点击“继续”。</p>
 <p>Google提供五种验证方法：</p>
 <ul>
@@ -313,16 +197,16 @@
 <p>这几种方法依次为从简到难。这里只介绍头两种。</p>
 <h4 id="html文件验证"><a class="markdownIt-Anchor" href="#html文件验证"></a> HTML文件验证</h4>
 <p>这是最简单的一种验证方法，具体步骤Google也写的很清楚。</p>
-<p><img src="/images/sitemap/1.png" srcset="/img/loading.gif" lazyload alt="HTML文件验证"></p>
+<p><img src="/images/sitemap/1.png" alt="HTML文件验证"></p>
 <p>点击下载这个<code>.html</code>文件，对于Hexo，将该文件放在Hexo根目录下<code>/source</code>文件中。然后<code>hexo g -d</code>，等待部署。当你能够在浏览器中输入<code>https://example.blog/googleXXXXXXX.html</code>并成功跳转时，说明该文件已经添加成功。</p>
 <p>回到Google Console，点击验证，正常情况下Google Console很快就会提示验证成功。</p>
 <p>如果使用该方法却一直提示验证失败，可以用第二种方法。</p>
 <h4 id="html标记验证"><a class="markdownIt-Anchor" href="#html标记验证"></a> HTML标记验证</h4>
 <p>这种方法和第一种方法非常类似，只不过将验证文件变成了一个html元标记。<br>
-<img src="/images/sitemap/2.png" srcset="/img/loading.gif" lazyload alt="HTML标记验证"></p>
+<img src="/images/sitemap/2.png" alt="HTML标记验证"></p>
 <p>按照要求，复制元标记。对于Hexo博客，这个所谓的“首页”文件的位置可能有所不同。对于Fluid主题，该文件即为<code>\node_modules\hexo-theme-fluid\layout\_partials</code>目录下的<code>head.ejs</code>.</p>
 <p>按照Google的要求，在<code>&lt;head&gt;</code>中粘贴该元标记。<br>
-<img src="/images/sitemap/3.png" srcset="/img/loading.gif" lazyload alt="HTML标记验证"></p>
+<img src="/images/sitemap/3.png" alt="HTML标记验证"></p>
 <p>之后，<code>hexo clean</code>，然后<code>hexo g -d</code>，等待部署。部署完成后在Google Console中点击验证。</p>
 <h2 id="三-站点地图sitemap"><a class="markdownIt-Anchor" href="#三-站点地图sitemap"></a> 三、站点地图(Sitemap)</h2>
 <h3 id="什么是站点地图"><a class="markdownIt-Anchor" href="#什么是站点地图"></a> 什么是站点地图？</h3>
@@ -331,373 +215,154 @@
 </blockquote>
 <h3 id="为hexo生成站点地图"><a class="markdownIt-Anchor" href="#为hexo生成站点地图"></a> 为Hexo生成站点地图</h3>
 <p>为启用站点地图，首先要在Hexo根目录中Git Bash来安装插件：</p>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">npm install hexo-generator-sitemap <span class="hljs-comment">--save</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br></pre></td></tr></table></figure>
 <p>在<strong>站点配置文件</strong>（不是主题配置文件！）<code>_config.yml</code>中添加：</p>
-<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-meta"># Auto Generate sitemap</span><br><span class="hljs-symbol">sitemap:</span><br><span class="hljs-symbol">path:</span> sitemap.xml<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Auto Generate sitemap</span><br><span class="line">sitemap:</span><br><span class="line">path: sitemap.xml</span><br></pre></td></tr></table></figure>
 <p>然后<code>hexo g -d</code>，若<code>/public</code>文件夹下生成了<code>sitemap.xml</code>，并且浏览器能够访问<code>https://example.blog/sitemap.xml</code>，说明创建成功。</p>
 <h3 id="向google提交站点地图"><a class="markdownIt-Anchor" href="#向google提交站点地图"></a> 向Google提交站点地图</h3>
 <p>在Google Console中，左侧栏选择“站点地图”，在“添加新的站点地图”中，输入你的站点地图网址，比如<code>sitemap.xml</code>。</p>
-<p><img src="/images/sitemap/4.png" srcset="/img/loading.gif" lazyload alt="添加站点地图"></p>
+<p><img src="/images/sitemap/4.png" alt="添加站点地图"></p>
 <p>提交成功后，Google会在“已提交的站点地图”中显示该sitemap。<br>
-<img src="/images/sitemap/5.png" srcset="/img/loading.gif" lazyload alt="已提交的站点地图"></p>
+<img src="/images/sitemap/5.png" alt="已提交的站点地图"></p>
 <p>索引需要一段时间编制并生效。通常情况下，48小时内Google即可完成收录。</p>
 
-                
-              </div>
-            
-            <hr/>
-            <div>
-              <div class="post-metas my-3">
-  
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
+  </div>
+</article>
 
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
+
+
         
-  <a href="/categories/%E5%BB%BA%E7%AB%99%E7%9B%B8%E5%85%B3/" class="category-chain-item">建站相关</a>
-  
-  
+          <div id="footer-post-container">
+  <div id="footer-post">
 
-      </span>
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
     
-  
-</span>
-
-    </div>
-  
-  
-</div>
-
-
-              
-  
-
-  <div class="license-box my-3">
-    <div class="license-title">
-      <div>将基于Hexo的个人网站提交至Google收录</div>
-      <div>http://akichen891.github.io/2024/07/13/将基于Hexo的个人网站提交至Google收录/</div>
-    </div>
-    <div class="license-meta">
-      
-        <div class="license-meta-item">
-          <div>作者</div>
-          <div>Aki Chen</div>
-        </div>
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>发布于</div>
-          <div>2024年7月13日</div>
-        </div>
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>更新于</div>
-          <div>2024年7月13日</div>
-        </div>
-      
-      
-        <div class="license-meta-item">
-          <div>许可协议</div>
-          <div>
-            
-              
-              
-                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
-                  </span>
-                </a>
-              
-            
-          </div>
-        </div>
-      
-    </div>
-    <div class="license-icon iconfont"></div>
-  </div>
-
-
-
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2024/07/14/%E3%80%90%E7%94%B5%E6%9C%BA%E7%9E%AC%E6%80%81%E5%88%86%E6%9E%90%E3%80%91%E4%BA%A4%E6%B5%81%E7%94%B5%E6%9C%BA%E6%96%B9%E7%A8%8B%E5%BC%8F%EF%BC%88dq0%E5%9D%90%E6%A0%87%E7%B3%BB%EF%BC%89/" title="【电机瞬态分析】交流电机方程式（dq0坐标系）">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【电机瞬态分析】交流电机方程式（dq0坐标系）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2024/07/11/%E5%9C%A8Hexo%E4%B8%AD%E5%90%AF%E7%94%A8%E6%96%B0Markdown%E8%A7%A3%E9%87%8A%E5%99%A8%E5%B9%B6%E9%85%8D%E7%BD%AEKatex/" title="在Hexo中启用新Markdown解释器并配置Katex">
-                        <span class="hidden-mobile">在Hexo中启用新Markdown解释器并配置Katex</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-          </article>
-        </div>
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text"> 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80-%E7%A1%AE%E8%AE%A4%E5%8D%9A%E5%AE%A2%E6%98%AF%E5%90%A6%E8%A2%AB%E6%94%B6%E5%BD%95"><span class="toc-number">1.1.</span> <span class="toc-text"> 一、确认博客是否被收录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C-%E9%AA%8C%E8%AF%81%E7%BD%91%E7%AB%99%E6%89%80%E6%9C%89%E8%80%85"><span class="toc-number">1.2.</span> <span class="toc-text"> 二、验证网站所有者</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#html%E6%96%87%E4%BB%B6%E9%AA%8C%E8%AF%81"><span class="toc-number">1.2.1.</span> <span class="toc-text"> HTML文件验证</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#html%E6%A0%87%E8%AE%B0%E9%AA%8C%E8%AF%81"><span class="toc-number">1.2.2.</span> <span class="toc-text"> HTML标记验证</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E7%AB%99%E7%82%B9%E5%9C%B0%E5%9B%BEsitemap"><span class="toc-number">2.</span> <span class="toc-text"> 三、站点地图(Sitemap)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%AB%99%E7%82%B9%E5%9C%B0%E5%9B%BE"><span class="toc-number">2.1.</span> <span class="toc-text"> 什么是站点地图？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BAhexo%E7%94%9F%E6%88%90%E7%AB%99%E7%82%B9%E5%9C%B0%E5%9B%BE"><span class="toc-number">2.2.</span> <span class="toc-text"> 为Hexo生成站点地图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91google%E6%8F%90%E4%BA%A4%E7%AB%99%E7%82%B9%E5%9C%B0%E5%9B%BE"><span class="toc-number">2.3.</span> <span class="toc-text"> 向Google提交站点地图</span></a></li></ol></li></ol>
       </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&text=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&is_video=false&description=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=将基于Hexo的个人网站提交至Google收录&body=Check out this article: http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&title=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&name=将基于Hexo的个人网站提交至Google收录&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/07/13/%E5%B0%86%E5%9F%BA%E4%BA%8EHexo%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E6%8F%90%E4%BA%A4%E8%87%B3Google%E6%94%B6%E5%BD%95/&t=将基于Hexo的个人网站提交至Google收录"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
     </div>
 
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-  <aside class="sidebar" style="margin-left: -1rem">
-    <div id="toc">
-  <p class="toc-header">
-    <i class="iconfont icon-list"></i>
-    <span>目录</span>
-  </p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-
-
-  </aside>
-
-
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
     </div>
+
   </div>
 </div>
 
-
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-  
-  
-
-
-
-
-
-
-
-
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
     
-
     
-      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
+    2016-2025
+    Aki
   </div>
-</div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
 
-    
-
-    
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-  
-    <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
-  
-  
-  
-  
-</div>
+    <!-- styles -->
 
-  </footer>
 
-  <!-- Scripts -->
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
   
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
     })
+  })
   </script>
 
 
-<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
+<script src="/js/main.js"></script>
 
+<!-- search -->
 
+<!-- Baidu Analytics -->
 
+<!-- Cloudflare Analytics -->
 
+<!-- Disqus Comments -->
 
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
+<!-- utterances Comments -->
 
-
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
-    var toc = jQuery('#toc');
-    if (toc.length === 0 || !window.tocbot) { return; }
-    var boardCtn = jQuery('#board-ctn');
-    var boardTop = boardCtn.offset().top;
-
-    window.tocbot.init(Object.assign({
-      tocSelector     : '#toc-body',
-      contentSelector : '.markdown-body',
-      linkClass       : 'tocbot-link',
-      activeLinkClass : 'tocbot-active-link',
-      listClass       : 'tocbot-list',
-      isCollapsedClass: 'tocbot-is-collapsed',
-      collapsibleClass: 'tocbot-is-collapsible',
-      scrollSmooth    : true,
-      includeTitleTags: true,
-      headingsOffset  : -boardTop,
-    }, CONFIG.toc));
-    if (toc.find('.toc-list-item').length > 0) {
-      toc.css('visibility', 'visible');
-    }
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('tocbot' in window) {
-        tocbot.refresh();
-        var toc = jQuery('#toc');
-        if (toc.length === 0 || !tocbot) {
-          return;
-        }
-        if (toc.find('.toc-list-item').length > 0) {
-          toc.css('visibility', 'visible');
-        }
-      }
-    });
-  });
-</script>
-
-
-  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
-
-  <script>Fluid.plugins.codeWidget();</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
-    window.anchors.options = {
-      placement: CONFIG.anchorjs.placement,
-      visible  : CONFIG.anchorjs.visible
-    };
-    if (CONFIG.anchorjs.icon) {
-      window.anchors.options.icon = CONFIG.anchorjs.icon;
-    }
-    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-    var res = [];
-    for (var item of el) {
-      res.push('.markdown-body > ' + item.trim());
-    }
-    if (CONFIG.anchorjs.placement === 'left') {
-      window.anchors.options.class = 'anchorjs-link-left';
-    }
-    window.anchors.add(res.join(', '));
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('anchors' in window) {
-        anchors.removeAll();
-        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-        var res = [];
-        for (var item of el) {
-          res.push('.markdown-body > ' + item.trim());
-        }
-        if (CONFIG.anchorjs.placement === 'left') {
-          anchors.options.class = 'anchorjs-link-left';
-        }
-        anchors.add(res.join(', '));
-      }
-    });
-  });
-</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
-    Fluid.plugins.fancyBox();
-  });
-</script>
-
-
-  <script>Fluid.plugins.imageCaption();</script>
-
-  <script  src="/js/local-search.js" ></script>
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
-
-
-  
-
-  <noscript>
-    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
-  </noscript>
 </body>
 </html>

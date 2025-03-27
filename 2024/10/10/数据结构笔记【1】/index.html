@@ -1,281 +1,165 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=auto>
-
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
-
+<html lang=zh>
 <head>
-  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
-  <link rel="icon" href="/images/favicon_mos.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#233BA7">
-  <meta name="author" content="Aki Chen">
-  <meta name="keywords" content="">
-  
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="数据的三种结构  逻辑结构 包含：  集合 线性结构（一对一），如线性表、栈、队列 树形结构 一个对多个 图状结构 多个对多个   存储结构  顺序存储：按照逻辑顺序存放于连续空间 链式存储（重点）：放到存储区的不同位置，用地址（指针）方式建立逻辑上的联系 索引存储：建立附加的索引表（电话簿） 散列存储：依据数据元素的特殊字段（关键字key）计算元素的存放地址，然后按地址存放   线性表 线性表">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构笔记【1】">
 <meta property="og:url" content="http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="Aki&#39;s Blog">
 <meta property="og:description" content="数据的三种结构  逻辑结构 包含：  集合 线性结构（一对一），如线性表、栈、队列 树形结构 一个对多个 图状结构 多个对多个   存储结构  顺序存储：按照逻辑顺序存放于连续空间 链式存储（重点）：放到存储区的不同位置，用地址（指针）方式建立逻辑上的联系 索引存储：建立附加的索引表（电话簿） 散列存储：依据数据元素的特殊字段（关键字key）计算元素的存放地址，然后按地址存放   线性表 线性表">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-10T12:00:17.000Z">
 <meta property="article:modified_time" content="2024-10-11T12:06:48.000Z">
-<meta property="article:author" content="Aki Chen">
-<meta name="twitter:card" content="summary_large_image">
-  
-  
-    <meta name="referrer" content="no-referrer-when-downgrade">
-  
-  
-  <title>数据结构笔记【1】 - Hexo</title>
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
-
-
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<meta property="article:author" content="Aki">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>数据结构笔记【1】</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
 
 
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
+    <!-- Umami Analytics -->
 
 
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
-  
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
 
-
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
-
-    if (CONFIG.web_analytics.follow_dnt) {
-      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
-    }
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-  
-
-
-  
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/10/11/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%902%E3%80%91/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/09/14/%E5%8D%81%E4%B9%9D%E9%98%B6%E5%90%8C%E6%AD%A5%E5%8F%91%E7%94%B5%E6%9C%BA%E7%BB%84%E6%A8%A1%E5%9E%8B%E9%99%8D%E9%98%B6%E7%A0%94%E7%A9%B6/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&text=数据结构笔记【1】"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&is_video=false&description=数据结构笔记【1】"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数据结构笔记【1】&body=Check out this article: http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&name=数据结构笔记【1】&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&t=数据结构笔记【1】"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
 
-<body>
-  
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text"> 数据的三种结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text"> 逻辑结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text"> 存储结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E8%A1%A8"><span class="toc-number">2.</span> <span class="toc-text"> 线性表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E8%A1%A8%E7%9A%84%E9%A1%BA%E5%BA%8F%E5%AD%98%E5%82%A8%E7%BC%BA%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text"> 线性表的顺序存储缺点</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
 
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
   <header>
     
+    <h1 class="posttitle p-name" itemprop="name headline">
+        数据结构笔记【1】
+    </h1>
 
-<div class="header-inner" style="height: 70vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <strong>Aki&#39;s blog</strong>
-    </a>
 
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
 
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Aki</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-10T12:00:17.000Z" class="dt-published" itemprop="datePublished">2024-10-10</time>
         
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/" target="_self">
-                <i class="iconfont icon-home-fill"></i>
-                <span>首页</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/" target="_self">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/" target="_self">
-                <i class="iconfont icon-category-fill"></i>
-                <span>分类</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/" target="_self">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
-              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
-            </a>
-          </li>
-        
-      </ul>
+      
     </div>
-  </div>
-</nav>
 
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
   
 
-<div id="banner" class="banner" parallax=true
-     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          
-            <span id="subtitle">数据结构笔记【1】</span>
-          
-        </div>
-
-        
-          
-  <div class="mt-3">
-    
-    
-      <span class="post-meta">
-        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-10-10 20:00" pubdate>
-          2024年10月10日 晚上
-        </time>
-      </span>
-    
-  </div>
-
-  <div class="mt-1">
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-chart"></i>
-        
-          2k 字
-        
-      </span>
-    
-
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-clock-fill"></i>
-        
-        
-        
-          17 分钟
-        
-      </span>
-    
-
-    
-    
-      
-        <span id="busuanzi_container_page_pv" style="display: none">
-          <i class="iconfont icon-eye" aria-hidden="true"></i>
-          <span id="busuanzi_value_page_pv"></span> 次
-        </span>
-        
-      
-    
-  </div>
-
-
-        
-      </div>
-
-      
-    </div>
-  </div>
-</div>
-
-</div>
-
-  </header>
-
-  <main>
-    
-      
-
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-
-    </div>
-
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div id="board">
-          <article class="post-content mx-auto">
-            <h1 id="seo-header">数据结构笔记【1】</h1>
-            
-            
-              <div class="markdown-body">
-                
-                <h3 id="数据的三种结构"><a class="markdownIt-Anchor" href="#数据的三种结构"></a> 数据的三种结构</h3>
+  <div class="content e-content" itemprop="articleBody">
+    <h3 id="数据的三种结构"><a class="markdownIt-Anchor" href="#数据的三种结构"></a> 数据的三种结构</h3>
 <h4 id="逻辑结构"><a class="markdownIt-Anchor" href="#逻辑结构"></a> 逻辑结构</h4>
 <p>包含：</p>
 <ul>
@@ -319,369 +203,150 @@
 <li>对表的插入和删除等运算的时间复杂度高</li>
 </ul>
 <p>C语言中，可借助一维数组类型来表述线性表的顺序存储结构</p>
-<figure class="highlight zephir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br></pre></td><td class="code"><pre><code class="hljs zephir"><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:创建新线性表</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>:无</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:线性表指针(sqlink类型)，申请失败返回NULL</span><br><span class="hljs-comment">*/</span><br>sqlink list_create()<br>&#123;<br>    sqlink L;   <span class="hljs-comment">//声明sqlink类型的表L</span><br>    L = (sqlink)malloc(sizeof(sqlist));  <span class="hljs-comment">// 为空表申请内存，返回分配的内存地址</span><br>    <br>    <span class="hljs-comment">//判断内存是否申请成功</span><br>    <span class="hljs-keyword">if</span> (L == NULL)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;memory allocation failed\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> NULL;<br>    &#125;<br><br>    memset(L, <span class="hljs-number">0</span>, sizeof(sqlist));   <span class="hljs-comment">//L指向的sqlist结构体的内存清零</span><br>    L-&gt;last = <span class="hljs-number">-1</span>;   <span class="hljs-comment">//表示线性表为空</span><br><br>    <span class="hljs-keyword">return</span> L;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:清除线性表内的元素，全部置为零</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L:指向表的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:成功返回0，失败返回-1</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_clear(sqlink L)<br>&#123;<br>    <span class="hljs-comment">//判断是否是空表</span><br>    <span class="hljs-keyword">if</span> (L == NULL)<br>    &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br><br>    memset(L, <span class="hljs-number">0</span>, sizeof(sqlist));   <span class="hljs-comment">//L指向的sqlist结构体的内存清零</span><br>    L-&gt;last = <span class="hljs-number">-1</span>;   <span class="hljs-comment">//last置为-1，表示线性表为空 </span><br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:判断线性表是否为空表</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L:指向线性表的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:空表返回1，非空表返回0</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_empty(sqlink L)<br>&#123;<br>    <span class="hljs-comment">//判断是否为空表</span><br>    <span class="hljs-keyword">if</span> (L-&gt;last == <span class="hljs-number">-1</span>)<br>    &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-keyword">else</span><br>    &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:求线性表的长度(有效元素个数)</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L:指向线性表的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:表不存在返回-1，否则返回长度</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_length(sqlink L)<br>&#123;<br>    <span class="hljs-keyword">if</span> (L == NULL)<br>    &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> (L-&gt;last + <span class="hljs-number">1</span>);   <span class="hljs-comment">//长度为表尾下标加1</span><br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:向线性表内插入数值，插入后原位置向后的所有元素后移一位</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L:指向线性表的指针 </span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: value:待插入值 </span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: pos:插入位置</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:插入成功返回0，失败返回-1</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_insert(sqlink L, data_t value, <span class="hljs-keyword">int</span> pos)<br>&#123;<br>    <span class="hljs-keyword">if</span> (L == NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">//表不存在返回-1</span><br>    <span class="hljs-comment">//判断线性表是否满</span><br>    <span class="hljs-keyword">if</span> (L-&gt;last == N - <span class="hljs-number">1</span>)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;table is full\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    <span class="hljs-comment">//检查插入位置是否正确，应属于[0,last]，如果是空表则不检查</span><br>    <span class="hljs-keyword">if</span> (pos &lt; <span class="hljs-number">0</span> || pos &gt;= L-&gt;last + <span class="hljs-number">1</span>)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (L-&gt;last != <span class="hljs-number">-1</span>) <br>        &#123;<br>            printf(<span class="hljs-string">&quot;pos is illegal\n&quot;</span>);<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>        &#125;<br><br>    &#125;<br>    <span class="hljs-comment">//向后移动原有元素，从最后一个元素开始</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = L-&gt;last; i &gt;= pos; i--)<br>    &#123;<br>        L-&gt;data[i+<span class="hljs-number">1</span>] = L-&gt;data[i];<br>    &#125;<br>    <span class="hljs-comment">//更新插入值和last</span><br>    L-&gt;data[pos] = value;<br>    L-&gt;last++;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;    <br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:遍历并打印线性表内元素</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L:指向线性表的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:成功返回0，失败返回-1</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_show(sqlink L)<br>&#123;<br>    <span class="hljs-keyword">if</span> (L == NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">//判断是否为有效表</span><br>    <span class="hljs-keyword">if</span> (L-&gt;last == <span class="hljs-number">-1</span>) printf(<span class="hljs-string">&quot;table is empty\n&quot;</span>);  <span class="hljs-comment">//判断是否为空表</span><br>    <span class="hljs-comment">//遍历并打印</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= L-&gt;last; i++)  <span class="hljs-comment">//注意是小于等于，不然不显示表尾</span><br>    &#123;<br>        printf(<span class="hljs-string">&quot;%d &quot;</span>,L-&gt;data[i]);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:删除全表，包括创建表时所分配的内存</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L:指向线性表的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:表不存在返回-1，成功返回0</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_delete(sqlink L)<br>&#123;<br>    <span class="hljs-keyword">if</span> (L == NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    free(L);    <span class="hljs-comment">//释放为表L申请的内存</span><br>    L = NULL;   <span class="hljs-comment">//标记表L为无效表</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:删除表中某一位置的元素</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L：指向线性表的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: pos：待删除元素位置</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:删除成功返回0，失败返回-1</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_delete_single(sqlink L, <span class="hljs-keyword">int</span> pos)<br>&#123;<br>    <span class="hljs-keyword">if</span> (L == NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;   <span class="hljs-comment">//判断是否为无效表</span><br><br>    <span class="hljs-comment">//判断pos是否位于有效范围内 应为[0,last]</span><br>    <span class="hljs-keyword">if</span> (pos &lt; <span class="hljs-number">0</span> || pos &gt; L-&gt;last)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;pos is illegal\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br><br>    <span class="hljs-comment">//[pos+1,last]区间内已有元素前移</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = pos + <span class="hljs-number">1</span>; i &lt; L-&gt;last + <span class="hljs-number">1</span>; i++)<br>    &#123;<br>       L-&gt;data[i<span class="hljs-number">-1</span>] = L-&gt;data[i];   <span class="hljs-comment">//数据前移，自动覆盖</span><br>    &#125;<br><br>    <span class="hljs-comment">//更新last</span><br>    L-&gt;last--;   <br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:合并两个线性表，L2全表元素置于L1元素之后</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L1：指向待合并线性表L1的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L1：指向待合并线性表L2的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:合并成功返回0，失败返回-1</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_merge(sqlink L1, sqlink L2)<br>&#123;<br>    <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (L1 == NULL || L2 == NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br><br>    <span class="hljs-comment">//判断合并后L1是否越界</span><br>    <span class="hljs-keyword">if</span> (L1-&gt;last + <span class="hljs-number">1</span> + L2-&gt;last + <span class="hljs-number">1</span> &gt; N) printf(<span class="hljs-string">&quot;table is too big\n&quot;</span>);<br><br>    <span class="hljs-comment">//L2的第i位加到L1的last+1+i位置，总共传递L2-&gt;last个数</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= L2-&gt;last; i++)<br>    &#123;<br>        L1-&gt;data[L1-&gt;last+<span class="hljs-number">1</span>+i] = L2-&gt;data[i];<br>        count++;    <span class="hljs-comment">//计数</span><br>    &#125;<br><br>    <span class="hljs-comment">//更新L1-&gt;last为原last值+传递完成的元素个数</span><br>    L1-&gt;last = L1-&gt;last + count;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:查询线性表中是否存在某一元素</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L：指向待查询线性表L的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: value：待查询值</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:值对应的元素存在返回1，不成功返回-1</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_locate(sqlink L, data_t value)<br>&#123;<br>    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">//搜索L中是否有元素等于value</span><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span> ; i &lt;=L-&gt;last; i++)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (L-&gt;data[i] == value) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:查找L1和L2中是否有相同的元素，将不同的元素存于新表L3</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L1：指向待合并线性表L1的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L2：指向待合并线性表L2的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:合并成功返回0，失败返回-1</span><br><span class="hljs-comment">*/</span><br>sqlink list_mergetonewtable(sqlink L1, sqlink L2)<br>&#123;<br>    sqlink L3 = list_create();  <span class="hljs-comment">//创建新表L3</span><br>    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> ret;<br><br>    <span class="hljs-keyword">if</span> (L1 == NULL || L2 == NULL) <br>    &#123;<br>        printf(<span class="hljs-string">&quot;no such table&quot;</span>);<br>        <span class="hljs-keyword">return</span> NULL;<br>    &#125;<br>    <span class="hljs-comment">//遍历L2内元素</span><br>    <span class="hljs-keyword">while</span> (i &lt;= L2-&gt;last)<br>    &#123;<br>        ret = list_locate(L1, L2-&gt;data[i]);   <span class="hljs-comment">//查找L1中是否有L2中的第i个元素，即判断是否重复</span><br>        <span class="hljs-comment">//某元素不重复则向L3插入</span><br>        <span class="hljs-keyword">if</span> (ret == <span class="hljs-number">-1</span>)<br>        &#123;<br>            list_insert(L3, L2-&gt;data[i], L3-&gt;last+<span class="hljs-number">1</span>);   <span class="hljs-comment">//按顺序向L3插入非重复值</span><br>        &#125;<br>        i++;    <span class="hljs-comment">//更新索引</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> L3;<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@brief</span>:清除线性表内的重复元素，清除后所有元素前移补空</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span>: L：指向待合并线性表L1的指针</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span>:操作成功返回0，失败返回-1</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">int</span> list_purge(sqlink L)<br>&#123;<br>    <span class="hljs-keyword">if</span> (L == NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;= L-&gt;last; i++)  <span class="hljs-comment">//遍历线性表</span><br>    &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>; j &lt;= L-&gt;last; j++)  <span class="hljs-comment">//从索引i+1开始，如果i+1及之后的元素和data[i]相等，判断为重复</span><br>        &#123;<br>            <span class="hljs-keyword">if</span> (L-&gt;data[i] == L-&gt;data[j])<br>            &#123;<br>                printf(<span class="hljs-string">&quot;The repeated elements are:%d\n&quot;</span>,L-&gt;data[i]);<br>                list_delete_single(L, j);   <span class="hljs-comment">//删除重复的第j个元素</span><br>                j--;    <span class="hljs-comment">//回退索引，防止跳过未检查的元素</span><br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125; <br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    * @brief:创建新线性表</span><br><span class="line">    * @param:无</span><br><span class="line">    * @return:线性表指针(sqlink类型)，申请失败返回NULL</span><br><span class="line">*/</span><br><span class="line">sqlink list_create()</span><br><span class="line">&#123;</span><br><span class="line">    sqlink L;   //声明sqlink类型的表L</span><br><span class="line">    L = (sqlink)malloc(sizeof(sqlist));  // 为空表申请内存，返回分配的内存地址</span><br><span class="line">    </span><br><span class="line">    //判断内存是否申请成功</span><br><span class="line">    if (L == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;memory allocation failed\n&quot;);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    memset(L, 0, sizeof(sqlist));   //L指向的sqlist结构体的内存清零</span><br><span class="line">    L-&gt;last = -1;   //表示线性表为空</span><br><span class="line"></span><br><span class="line">    return L;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:清除线性表内的元素，全部置为零</span><br><span class="line">    * @param: L:指向表的指针</span><br><span class="line">    * @return:成功返回0，失败返回-1</span><br><span class="line">*/</span><br><span class="line">int list_clear(sqlink L)</span><br><span class="line">&#123;</span><br><span class="line">    //判断是否是空表</span><br><span class="line">    if (L == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    memset(L, 0, sizeof(sqlist));   //L指向的sqlist结构体的内存清零</span><br><span class="line">    L-&gt;last = -1;   //last置为-1，表示线性表为空 </span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:判断线性表是否为空表</span><br><span class="line">    * @param: L:指向线性表的指针</span><br><span class="line">    * @return:空表返回1，非空表返回0</span><br><span class="line">*/</span><br><span class="line">int list_empty(sqlink L)</span><br><span class="line">&#123;</span><br><span class="line">    //判断是否为空表</span><br><span class="line">    if (L-&gt;last == -1)</span><br><span class="line">    &#123;</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:求线性表的长度(有效元素个数)</span><br><span class="line">    * @param: L:指向线性表的指针</span><br><span class="line">    * @return:表不存在返回-1，否则返回长度</span><br><span class="line">*/</span><br><span class="line">int list_length(sqlink L)</span><br><span class="line">&#123;</span><br><span class="line">    if (L == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    return (L-&gt;last + 1);   //长度为表尾下标加1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:向线性表内插入数值，插入后原位置向后的所有元素后移一位</span><br><span class="line">    * @param: L:指向线性表的指针 </span><br><span class="line">    * @param: value:待插入值 </span><br><span class="line">    * @param: pos:插入位置</span><br><span class="line">    * @return:插入成功返回0，失败返回-1</span><br><span class="line">*/</span><br><span class="line">int list_insert(sqlink L, data_t value, int pos)</span><br><span class="line">&#123;</span><br><span class="line">    if (L == NULL) return -1;   //表不存在返回-1</span><br><span class="line">    //判断线性表是否满</span><br><span class="line">    if (L-&gt;last == N - 1)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;table is full\n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    //检查插入位置是否正确，应属于[0,last]，如果是空表则不检查</span><br><span class="line">    if (pos &lt; 0 || pos &gt;= L-&gt;last + 1)</span><br><span class="line">    &#123;</span><br><span class="line">        if (L-&gt;last != -1) </span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;pos is illegal\n&quot;);</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    //向后移动原有元素，从最后一个元素开始</span><br><span class="line">    for (int i = L-&gt;last; i &gt;= pos; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        L-&gt;data[i+1] = L-&gt;data[i];</span><br><span class="line">    &#125;</span><br><span class="line">    //更新插入值和last</span><br><span class="line">    L-&gt;data[pos] = value;</span><br><span class="line">    L-&gt;last++;</span><br><span class="line"></span><br><span class="line">    return 0;    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:遍历并打印线性表内元素</span><br><span class="line">    * @param: L:指向线性表的指针</span><br><span class="line">    * @return:成功返回0，失败返回-1</span><br><span class="line">*/</span><br><span class="line">int list_show(sqlink L)</span><br><span class="line">&#123;</span><br><span class="line">    if (L == NULL) return -1;   //判断是否为有效表</span><br><span class="line">    if (L-&gt;last == -1) printf(&quot;table is empty\n&quot;);  //判断是否为空表</span><br><span class="line">    //遍历并打印</span><br><span class="line">    for (int i = 0; i &lt;= L-&gt;last; i++)  //注意是小于等于，不然不显示表尾</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;%d &quot;,L-&gt;data[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:删除全表，包括创建表时所分配的内存</span><br><span class="line">    * @param: L:指向线性表的指针</span><br><span class="line">    * @return:表不存在返回-1，成功返回0</span><br><span class="line">*/</span><br><span class="line">int list_delete(sqlink L)</span><br><span class="line">&#123;</span><br><span class="line">    if (L == NULL) return -1;</span><br><span class="line">    free(L);    //释放为表L申请的内存</span><br><span class="line">    L = NULL;   //标记表L为无效表</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:删除表中某一位置的元素</span><br><span class="line">    * @param: L：指向线性表的指针</span><br><span class="line">    * @param: pos：待删除元素位置</span><br><span class="line">    * @return:删除成功返回0，失败返回-1</span><br><span class="line">*/</span><br><span class="line">int list_delete_single(sqlink L, int pos)</span><br><span class="line">&#123;</span><br><span class="line">    if (L == NULL) return -1;   //判断是否为无效表</span><br><span class="line"></span><br><span class="line">    //判断pos是否位于有效范围内 应为[0,last]</span><br><span class="line">    if (pos &lt; 0 || pos &gt; L-&gt;last)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;pos is illegal\n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //[pos+1,last]区间内已有元素前移</span><br><span class="line">    for (int i = pos + 1; i &lt; L-&gt;last + 1; i++)</span><br><span class="line">    &#123;</span><br><span class="line">       L-&gt;data[i-1] = L-&gt;data[i];   //数据前移，自动覆盖</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //更新last</span><br><span class="line">    L-&gt;last--;   </span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:合并两个线性表，L2全表元素置于L1元素之后</span><br><span class="line">    * @param: L1：指向待合并线性表L1的指针</span><br><span class="line">    * @param: L1：指向待合并线性表L2的指针</span><br><span class="line">    * @return:合并成功返回0，失败返回-1</span><br><span class="line">*/</span><br><span class="line">int list_merge(sqlink L1, sqlink L2)</span><br><span class="line">&#123;</span><br><span class="line">    int count = 0;</span><br><span class="line">    if (L1 == NULL || L2 == NULL) return -1;</span><br><span class="line"></span><br><span class="line">    //判断合并后L1是否越界</span><br><span class="line">    if (L1-&gt;last + 1 + L2-&gt;last + 1 &gt; N) printf(&quot;table is too big\n&quot;);</span><br><span class="line"></span><br><span class="line">    //L2的第i位加到L1的last+1+i位置，总共传递L2-&gt;last个数</span><br><span class="line">    for (int i = 0; i &lt;= L2-&gt;last; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        L1-&gt;data[L1-&gt;last+1+i] = L2-&gt;data[i];</span><br><span class="line">        count++;    //计数</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //更新L1-&gt;last为原last值+传递完成的元素个数</span><br><span class="line">    L1-&gt;last = L1-&gt;last + count;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:查询线性表中是否存在某一元素</span><br><span class="line">    * @param: L：指向待查询线性表L的指针</span><br><span class="line">    * @param: value：待查询值</span><br><span class="line">    * @return:值对应的元素存在返回1，不成功返回-1</span><br><span class="line">*/</span><br><span class="line">int list_locate(sqlink L, data_t value)</span><br><span class="line">&#123;</span><br><span class="line">    int i = 0;</span><br><span class="line"></span><br><span class="line">    //搜索L中是否有元素等于value</span><br><span class="line">    for (i = 0 ; i &lt;=L-&gt;last; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        if (L-&gt;data[i] == value) return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return -1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:查找L1和L2中是否有相同的元素，将不同的元素存于新表L3</span><br><span class="line">    * @param: L1：指向待合并线性表L1的指针</span><br><span class="line">    * @param: L2：指向待合并线性表L2的指针</span><br><span class="line">    * @return:合并成功返回0，失败返回-1</span><br><span class="line">*/</span><br><span class="line">sqlink list_mergetonewtable(sqlink L1, sqlink L2)</span><br><span class="line">&#123;</span><br><span class="line">    sqlink L3 = list_create();  //创建新表L3</span><br><span class="line">    int i = 0;</span><br><span class="line">    int ret;</span><br><span class="line"></span><br><span class="line">    if (L1 == NULL || L2 == NULL) </span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;no such table&quot;);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line">    //遍历L2内元素</span><br><span class="line">    while (i &lt;= L2-&gt;last)</span><br><span class="line">    &#123;</span><br><span class="line">        ret = list_locate(L1, L2-&gt;data[i]);   //查找L1中是否有L2中的第i个元素，即判断是否重复</span><br><span class="line">        //某元素不重复则向L3插入</span><br><span class="line">        if (ret == -1)</span><br><span class="line">        &#123;</span><br><span class="line">            list_insert(L3, L2-&gt;data[i], L3-&gt;last+1);   //按顺序向L3插入非重复值</span><br><span class="line">        &#125;</span><br><span class="line">        i++;    //更新索引</span><br><span class="line">    &#125;</span><br><span class="line">    return L3;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">    * @brief:清除线性表内的重复元素，清除后所有元素前移补空</span><br><span class="line">    * @param: L：指向待合并线性表L1的指针</span><br><span class="line">    * @return:操作成功返回0，失败返回-1</span><br><span class="line">*/</span><br><span class="line">int list_purge(sqlink L)</span><br><span class="line">&#123;</span><br><span class="line">    if (L == NULL) return -1;</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt;= L-&gt;last; i++)  //遍历线性表</span><br><span class="line">    &#123;</span><br><span class="line">        for (int j = i + 1; j &lt;= L-&gt;last; j++)  //从索引i+1开始，如果i+1及之后的元素和data[i]相等，判断为重复</span><br><span class="line">        &#123;</span><br><span class="line">            if (L-&gt;data[i] == L-&gt;data[j])</span><br><span class="line">            &#123;</span><br><span class="line">                printf(&quot;The repeated elements are:%d\n&quot;,L-&gt;data[i]);</span><br><span class="line">                list_delete_single(L, j);   //删除重复的第j个元素</span><br><span class="line">                j--;    //回退索引，防止跳过未检查的元素</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
 <h4 id="线性表的顺序存储缺点"><a class="markdownIt-Anchor" href="#线性表的顺序存储缺点"></a> 线性表的顺序存储缺点</h4>
 <ul>
 <li>要求系统提供一大片连续存储空间</li>
 <li>插入、删除等运算需要遍历整个内存，运算耗时，且元素可能在存储器中成片移动</li>
 </ul>
 
-                
-              </div>
-            
-            <hr/>
-            <div>
-              <div class="post-metas my-3">
-  
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
+  </div>
+</article>
 
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
+
+
         
-  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="category-chain-item">数据结构</a>
-  
-  
+          <div id="footer-post-container">
+  <div id="footer-post">
 
-      </span>
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
     
-  
-</span>
-
-    </div>
-  
-  
-</div>
-
-
-              
-  
-
-  <div class="license-box my-3">
-    <div class="license-title">
-      <div>数据结构笔记【1】</div>
-      <div>http://akichen891.github.io/2024/10/10/数据结构笔记【1】/</div>
-    </div>
-    <div class="license-meta">
-      
-        <div class="license-meta-item">
-          <div>作者</div>
-          <div>Aki Chen</div>
-        </div>
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>发布于</div>
-          <div>2024年10月10日</div>
-        </div>
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>更新于</div>
-          <div>2024年10月11日</div>
-        </div>
-      
-      
-        <div class="license-meta-item">
-          <div>许可协议</div>
-          <div>
-            
-              
-              
-                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
-                  </span>
-                </a>
-              
-            
-          </div>
-        </div>
-      
-    </div>
-    <div class="license-icon iconfont"></div>
-  </div>
-
-
-
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2024/10/11/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%902%E3%80%91/" title="数据结构笔记【2】">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">数据结构笔记【2】</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2024/09/14/%E5%8D%81%E4%B9%9D%E9%98%B6%E5%90%8C%E6%AD%A5%E5%8F%91%E7%94%B5%E6%9C%BA%E7%BB%84%E6%A8%A1%E5%9E%8B%E9%99%8D%E9%98%B6%E7%A0%94%E7%A9%B6/" title="十九阶同步发电机组模型降阶研究">
-                        <span class="hidden-mobile">十九阶同步发电机组模型降阶研究</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-          </article>
-        </div>
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text"> 数据的三种结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text"> 逻辑结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text"> 存储结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E8%A1%A8"><span class="toc-number">2.</span> <span class="toc-text"> 线性表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E8%A1%A8%E7%9A%84%E9%A1%BA%E5%BA%8F%E5%AD%98%E5%82%A8%E7%BC%BA%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text"> 线性表的顺序存储缺点</span></a></li></ol></li></ol>
       </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&text=数据结构笔记【1】"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&is_video=false&description=数据结构笔记【1】"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=数据结构笔记【1】&body=Check out this article: http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&title=数据结构笔记【1】"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&name=数据结构笔记【1】&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://akichen891.github.io/2024/10/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0%E3%80%901%E3%80%91/&t=数据结构笔记【1】"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
     </div>
 
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-  <aside class="sidebar" style="margin-left: -1rem">
-    <div id="toc">
-  <p class="toc-header">
-    <i class="iconfont icon-list"></i>
-    <span>目录</span>
-  </p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-
-
-  </aside>
-
-
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
     </div>
+
   </div>
 </div>
 
-
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-  
-  
-
-
-
-
-
-
-
-
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
     
-
     
-      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
+    2016-2025
+    Aki
   </div>
-</div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
 
-    
-
-    
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-  
-    <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
-  
-  
-  
-  
-</div>
+    <!-- styles -->
 
-  </footer>
 
-  <!-- Scripts -->
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
   
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
     })
+  })
   </script>
 
 
-<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
+<script src="/js/main.js"></script>
 
+<!-- search -->
 
+<!-- Baidu Analytics -->
 
+<!-- Cloudflare Analytics -->
 
+<!-- Disqus Comments -->
 
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
+<!-- utterances Comments -->
 
-
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
-    var toc = jQuery('#toc');
-    if (toc.length === 0 || !window.tocbot) { return; }
-    var boardCtn = jQuery('#board-ctn');
-    var boardTop = boardCtn.offset().top;
-
-    window.tocbot.init(Object.assign({
-      tocSelector     : '#toc-body',
-      contentSelector : '.markdown-body',
-      linkClass       : 'tocbot-link',
-      activeLinkClass : 'tocbot-active-link',
-      listClass       : 'tocbot-list',
-      isCollapsedClass: 'tocbot-is-collapsed',
-      collapsibleClass: 'tocbot-is-collapsible',
-      scrollSmooth    : true,
-      includeTitleTags: true,
-      headingsOffset  : -boardTop,
-    }, CONFIG.toc));
-    if (toc.find('.toc-list-item').length > 0) {
-      toc.css('visibility', 'visible');
-    }
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('tocbot' in window) {
-        tocbot.refresh();
-        var toc = jQuery('#toc');
-        if (toc.length === 0 || !tocbot) {
-          return;
-        }
-        if (toc.find('.toc-list-item').length > 0) {
-          toc.css('visibility', 'visible');
-        }
-      }
-    });
-  });
-</script>
-
-
-  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
-
-  <script>Fluid.plugins.codeWidget();</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
-    window.anchors.options = {
-      placement: CONFIG.anchorjs.placement,
-      visible  : CONFIG.anchorjs.visible
-    };
-    if (CONFIG.anchorjs.icon) {
-      window.anchors.options.icon = CONFIG.anchorjs.icon;
-    }
-    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-    var res = [];
-    for (var item of el) {
-      res.push('.markdown-body > ' + item.trim());
-    }
-    if (CONFIG.anchorjs.placement === 'left') {
-      window.anchors.options.class = 'anchorjs-link-left';
-    }
-    window.anchors.add(res.join(', '));
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('anchors' in window) {
-        anchors.removeAll();
-        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-        var res = [];
-        for (var item of el) {
-          res.push('.markdown-body > ' + item.trim());
-        }
-        if (CONFIG.anchorjs.placement === 'left') {
-          anchors.options.class = 'anchorjs-link-left';
-        }
-        anchors.add(res.join(', '));
-      }
-    });
-  });
-</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
-    Fluid.plugins.fancyBox();
-  });
-</script>
-
-
-  <script>Fluid.plugins.imageCaption();</script>
-
-  <script  src="/js/local-search.js" ></script>
-
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
-
-
-
-
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
-
-
-  
-
-  <noscript>
-    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
-  </noscript>
 </body>
 </html>
