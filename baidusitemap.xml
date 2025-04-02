@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://AkiChen891.github.io/2025/04/02/RTOS%E4%BB%BB%E5%8A%A1%E5%9F%BA%E7%A1%80/</loc>
+    <lastmod>2025-04-02</lastmod>
+  </url>
+  <url>
+    <loc>http://AkiChen891.github.io/2025/04/02/LinuxSPI/</loc>
+    <lastmod>2025-04-02</lastmod>
+  </url>
+  <url>
     <loc>http://AkiChen891.github.io/2025/04/01/LinuxI2C/</loc>
     <lastmod>2025-04-01</lastmod>
   </url>

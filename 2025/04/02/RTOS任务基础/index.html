@@ -1,0 +1,740 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="任务状态  运行态(Running)  任务当前正在 CPU 上执行 在单核系统中，同时只有一个任务处于运行态 任务只有在调度器（Scheduler）选择它执行时，才会进入运行态   就绪态（Ready）  任务已经具备执行条件，但由于 CPU 资源被其他更高优先级任务占用，它暂时无法运行 任务处于就绪列表（Ready List），等待 FreeRTOS 调度它运行 当更高优先级任务阻塞或时间片">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FreeRTOS 任务基础">
+<meta property="og:url" content="http://akichen891.github.io/2025/04/02/RTOS%E4%BB%BB%E5%8A%A1%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Aki&#39;s Blog">
+<meta property="og:description" content="任务状态  运行态(Running)  任务当前正在 CPU 上执行 在单核系统中，同时只有一个任务处于运行态 任务只有在调度器（Scheduler）选择它执行时，才会进入运行态   就绪态（Ready）  任务已经具备执行条件，但由于 CPU 资源被其他更高优先级任务占用，它暂时无法运行 任务处于就绪列表（Ready List），等待 FreeRTOS 调度它运行 当更高优先级任务阻塞或时间片">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://akichen891.github.io/images/rtos/task_1.png">
+<meta property="article:published_time" content="2025-04-02T07:11:44.000Z">
+<meta property="article:modified_time" content="2025-04-02T08:38:42.300Z">
+<meta property="article:author" content="Aki">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://akichen891.github.io/images/rtos/task_1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>FreeRTOS 任务基础 - Aki&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">FreeRTOS 任务基础</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-02 15:11" pubdate>
+          2025年4月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">FreeRTOS 任务基础</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="任务状态"><a class="markdownIt-Anchor" href="#任务状态"></a> 任务状态</h2>
+<ul>
+<li>运行态(Running)
+<ul>
+<li>任务当前正在 CPU 上执行</li>
+<li>在单核系统中，同时只有一个任务处于运行态</li>
+<li>任务只有在调度器（Scheduler）选择它执行时，才会进入运行态</li>
+</ul>
+</li>
+<li>就绪态（Ready）
+<ul>
+<li>任务已经具备执行条件，但由于 CPU 资源被其他更高优先级任务占用，它暂时无法运行</li>
+<li>任务处于就绪列表（Ready List），等待 FreeRTOS 调度它运行</li>
+<li>当更高优先级任务阻塞或时间片结束，调度器可能会让它进入运行态</li>
+</ul>
+</li>
+<li>阻塞态（Blocked）
+<ul>
+<li>任务正在等待某个事件（如 <code>vTaskDelay</code>、信号量、消息队列、事件组等），暂时无法运行</li>
+<li>任务在等待事件时会从就绪态转换到 阻塞态，避免占用 CPU 资源</li>
+<li>当等待的事件发生后（如 信号量释放、消息到达、延时时间结束），任务会转换回 就绪态</li>
+</ul>
+</li>
+<li>挂起态（Suspended）
+<ul>
+<li>任务被显式挂起（使用 <code>vTaskSuspend()</code>），不会被调度执行</li>
+<li>任务不会自动恢复，必须调用 <code>vTaskResume()</code> 或 <code>vTaskResumeFromISR()</code> 才能恢复运行</li>
+<li>与阻塞态不同，挂起任务不会因为外部事件自动恢复</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/rtos/task_1.png" srcset="/img/loading.gif" lazyload alt="task状态转换图"></p>
+<h2 id="任务优先级"><a class="markdownIt-Anchor" href="#任务优先级"></a> 任务优先级</h2>
+<p>FreeRTOS 任务的优先级用一个整数表示，数值越大，优先级越高。默认情况下，FreeRTOS 的最低优先级是 0，最大优先级由 <code>configMAX_PRIORITIES</code> 定义（通常在 <code>FreeRTOSConfig.h</code> 中配置）。</p>
+<h2 id="任务调度方式"><a class="markdownIt-Anchor" href="#任务调度方式"></a> 任务调度方式</h2>
+<ul>
+<li>抢占式调度</li>
+<li>时间片调度</li>
+<li>协程式调度（已基本弃用）</li>
+</ul>
+<h3 id="抢占式调度"><a class="markdownIt-Anchor" href="#抢占式调度"></a> 抢占式调度</h3>
+<p>即高优先级任务抢占低优先级任务。当高优先级任务进入就绪态，调度器会立刻<em>抢占</em>低优先级任务，并切换到高优先级任务执行。只有当优先级高的任务发生阻塞或者被挂起，低优先级的任务才可以运行。</p>
+<h3 id="时间片调度"><a class="markdownIt-Anchor" href="#时间片调度"></a> 时间片调度</h3>
+<p>相同优先级的任务采用时间片轮转。若多个任务拥有相同优先级，FreeRTOS 默认使用时间片轮转调度，每个任务轮流执行一个时间片（依赖于 <code>configUSE_TIME_SLICING</code>），即调度器会在每一次时间片之后切换任务，CPU轮流运行优先级相同的任务。</p>
+<h3 id="任务控制块tcbtask-control-block"><a class="markdownIt-Anchor" href="#任务控制块tcbtask-control-block"></a> 任务控制块（TCB，Task Control Block）</h3>
+<p>TCB为一结构体：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">tskTaskControlBlock</span> &#123;<br>    <span class="hljs-keyword">volatile</span> StackType_t *pxTopOfStack;  <span class="hljs-comment">// 任务栈指针</span><br>    ListItem_t xStateListItem;          <span class="hljs-comment">// 任务在就绪、阻塞等列表中的位置</span><br>    StackType_t *pxStack;               <span class="hljs-comment">// 任务栈的起始地址</span><br>    <span class="hljs-type">char</span> pcTaskName[configMAX_TASK_NAME_LEN]; <span class="hljs-comment">// 任务名称</span><br>    UBaseType_t uxPriority;             <span class="hljs-comment">// 任务优先级</span><br>    ...<br>&#125; tskTCB;<br><br></code></pre></td></tr></table></figure>
+<h3 id="任务栈"><a class="markdownIt-Anchor" href="#任务栈"></a> 任务栈</h3>
+<p>动态方式创建任务时，系统会自动从系统heap中分配一块内存作为任务的栈空间：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function">BaseType_t <span class="hljs-title">xTaskCreate</span><span class="hljs-params">( TaskFunction_t pxTaskCode,</span></span><br><span class="hljs-params"><span class="hljs-function">                        <span class="hljs-type">const</span> <span class="hljs-type">char</span> * <span class="hljs-type">const</span> pcName,</span></span><br><span class="hljs-params"><span class="hljs-function">                        <span class="hljs-type">const</span> configSTACK_DEPTH_TYPE usStackDepth,</span></span><br><span class="hljs-params"><span class="hljs-function">                        <span class="hljs-type">void</span> * <span class="hljs-type">const</span> pvParameters,</span></span><br><span class="hljs-params"><span class="hljs-function">                        UBaseType_t uxPriority,</span></span><br><span class="hljs-params"><span class="hljs-function">                        TaskHandle_t * <span class="hljs-type">const</span> pxCreatedTask)</span></span><br></code></pre></td></tr></table></figure>
+<p><code>usStackDepth</code>即为栈大小，以字(32位)为单位（非字节）。</p>
+<h2 id="api函数"><a class="markdownIt-Anchor" href="#api函数"></a> API函数</h2>
+<ul>
+<li><code>xTaskCreate()</code>：动态创建任务</li>
+<li><code>xTaskCreateStatic()</code>： 静态创建任务</li>
+<li><code>xTaskCreateRestricted()</code>： 动态创建使用 MPU 限制的任务</li>
+<li><code>xTaskCreateRestrictedStatic()</code>： 静态创建使用 MPU 限制的任务</li>
+<li><code>vTaskDelete()</code>： 删除任务</li>
+</ul>
+<h3 id="xtaskcreate"><a class="markdownIt-Anchor" href="#xtaskcreate"></a> xTaskCreate()</h3>
+<p><code>FreeRTOSConfig.h</code>中需要将<code>configSUPPORT_DYNAMIC_ALLOCATION</code>配置为<code>1</code></p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function">BaseType_t <span class="hljs-title">xTaskCreate</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">            TaskFunction_t pxTaskCode,</span></span><br><span class="hljs-params"><span class="hljs-function">            <span class="hljs-type">const</span> <span class="hljs-type">char</span> * <span class="hljs-type">const</span> pcName,</span></span><br><span class="hljs-params"><span class="hljs-function">            <span class="hljs-type">const</span> configSTACK_DEPTH_TYPE usStackDepth,</span></span><br><span class="hljs-params"><span class="hljs-function">            <span class="hljs-type">void</span> * <span class="hljs-type">const</span> pvParameters,</span></span><br><span class="hljs-params"><span class="hljs-function">            UBaseType_t uxPriority,</span></span><br><span class="hljs-params"><span class="hljs-function">            TaskHandle_t * <span class="hljs-type">const</span> pxCreatedTask)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>pxTaskCode</code> 指向任务函数的指针</li>
+<li><code>pcName</code> 任务名，最大长度为 configMAX_TASK_NAME_LEN</li>
+<li><code>usStackDepth</code> 任务堆栈大小，单位：字（注意，单位不是字节）</li>
+<li><code>pvParameters</code> 传递给任务函数的参数</li>
+<li><code>uxPriority</code> 任务优先级，最大值为(configMAX_PRIORITIES-1)</li>
+<li><code>pxCreatedTask</code> 任务句柄，任务成功创建后，会返回任务句柄。任务句柄就<br>
+是任务的任务控制块</li>
+</ul>
+<p>返回值：</p>
+<ul>
+<li><code>pdPASS</code> 任务创建成功</li>
+<li><code>errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY</code> 内存不足，任务创建失败</li>
+</ul>
+<h3 id="xtaskcreatestatic"><a class="markdownIt-Anchor" href="#xtaskcreatestatic"></a> xTaskCreateStatic()</h3>
+<p><code>FreeRTOSConfig.h</code>中需要将<code>configSUPPORT_STATIC_ALLOCATION</code>配置为<code>1</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">TaskHandle_t <span class="hljs-title">xTaskCreateStatic</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">           TaskFunction_t pxTaskCode,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-type">const</span> <span class="hljs-type">char</span> * <span class="hljs-type">const</span> pcName,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-type">const</span> <span class="hljs-type">uint32_t</span> ulStackDepth,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-type">void</span> * <span class="hljs-type">const</span> pvParameters,</span></span><br><span class="hljs-params"><span class="hljs-function">           UBaseType_t uxPriority,</span></span><br><span class="hljs-params"><span class="hljs-function">           StackType_t * <span class="hljs-type">const</span> puxStackBuffer,</span></span><br><span class="hljs-params"><span class="hljs-function">           StaticTask_t * <span class="hljs-type">const</span> pxTaskBuffer)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>和动态分配基本一致，不同在于：</p>
+<ul>
+<li><code>puxStackBuffer</code> 任务栈指针，内存由用户分配提供</li>
+<li><code>pxTaskBuffer</code> 任务控制块指针，内存由用户分配提供</li>
+</ul>
+<p>返回值：</p>
+<ul>
+<li><code>NULL</code> 用户没有提供相应的内存，任务创建失败</li>
+<li><code>其他值</code> 任务句柄，任务创建成功</li>
+</ul>
+<h3 id="xtaskcreaterestricted"><a class="markdownIt-Anchor" href="#xtaskcreaterestricted"></a> xTaskCreateRestricted()</h3>
+<p>用于使用动态的方式创建受 MPU 保护的任务，任务的任务控制块以及任务的栈空<br>
+间所需的内存，均由 FreeRTOS 从 FreeRTOS 管理的堆中分配，若使用此函数，需要将宏<code>configSUPPORT_DYNAMIC_ALLOCATION``和宏portUSING_MPU_WRAPPERS</code> 同时配置为 <code>1</code>。此函数创建的任务会立刻进入就绪态，由任务调度器调度运行。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function">BaseType_t <span class="hljs-title">xTaskCreateRestricted</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">            <span class="hljs-type">const</span> TaskParameters_t * <span class="hljs-type">const</span> pxTaskDefinition,</span></span><br><span class="hljs-params"><span class="hljs-function">            TaskHandle_t * pxCreatedTask)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>pxTaskDefinition</code> 指向任务参数结构体的指针，建结构体中包含任务函数、任<br>
+务名、任务优先级等任务参数</li>
+<li><code>pxCreadedTask</code> 任务句柄，任务成功创建后，会返回任务句柄。任务句柄就<br>
+是任务的任务控制块</li>
+</ul>
+<h3 id="vtaskdelete"><a class="markdownIt-Anchor" href="#vtaskdelete"></a> vTaskDelete()</h3>
+<p>数用于删除已被创建的任务，被删除的任务将被从就绪态任务列表、阻塞态任务列表、挂起态任务列表和事件列表中移除.</p>
+<p><em>注意</em>：空闲任务会负责释放被删除任务中由系统分配的内存，但是由用户在任务删除前申请的内存，则需要由用户在任务被删除前提前释放，否则将导致内存泄露。</p>
+<p>若使用此函数，需要在<code>FreeRTOSConfig.h</code>文件中将宏<code>INCLUDE_vTaskDelete</code>配置为 <code>1</code>。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">vTaskDelete</span><span class="hljs-params">(TaskHandle_t xTaskToDelete)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>xTaskToDelete</code> 待删除任务的任务句柄</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-RTOS%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(RTOS开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>FreeRTOS 任务基础</div>
+      <div>http://akichen891.github.io/2025/04/02/RTOS任务基础/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年4月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/04/02/LinuxSPI/" title="Linux SPI驱动通用框架和编写细节">
+                        <span class="hidden-mobile">Linux SPI驱动通用框架和编写细节</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -217,6 +217,114 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/04/02/RTOS%E4%BB%BB%E5%8A%A1%E5%9F%BA%E7%A1%80/" target="_self">
+          FreeRTOS 任务基础
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/04/02/RTOS%E4%BB%BB%E5%8A%A1%E5%9F%BA%E7%A1%80/" target="_self">
+        <div>
+          任务状态  运行态(Running)  任务当前正在 CPU 上执行 在单核系统中，同时只有一个任务处于运行态 任务只有在调度器（Scheduler）选择它执行时，才会进入运行态   就绪态（Ready）  任务已经具备执行条件，但由于 CPU 资源被其他更高优先级任务占用，它暂时无法运行 任务处于就绪列表（Ready List），等待 FreeRTOS 调度它运行 当更高优先级任务阻塞或时间片
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-04-02 15:11" pubdate>
+              2025-04-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-RTOS%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(RTOS开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/04/02/LinuxSPI/" target="_self">
+          Linux SPI驱动通用框架和编写细节
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/04/02/LinuxSPI/" target="_self">
+        <div>
+          设备树  追加节点： 需要确保UART2节点为disabled，因IO占用  1234567891011121314/* Note: to enable ecspi3, uart2 node in imx6ul-14x14-evk.dtsi must be disabled */&amp;ecspi3 &#123;	fsl,spi-num-chipselects = &lt;1&gt;;	cs-
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-04-02 12:39" pubdate>
+              2025-04-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2025/04/01/LinuxI2C/" target="_self">
           Linux I2C驱动通用框架和编写细节
         </a>
@@ -613,114 +721,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2025-03-26 13:58" pubdate>
               2025-03-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/03/24/Linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/" target="_self">
-          Linux并发与竞争
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/24/Linux%E5%B9%B6%E5%8F%91%E4%B8%8E%E7%AB%9E%E4%BA%89/" target="_self">
-        <div>
-          原子操作 原子操作能够在无锁条件下实现线程安全操作，避免多个线程同时修改变量导致数据竞争。比较适用于简单的计数或标志变量等小型共享数据。但是原子操作只能保证单个原子变量的原子性，不能保护复杂数据结构。并且虽然其不会导致线程阻塞，但可能导致活锁，即多个线程不断重试并竞争CPU资源。 驱动中通过原子操作来保护进程的方式为：  在设备结构体中声明原子变量  1234struct gpioled_dev
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-03-24 16:36" pubdate>
-              2025-03-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/03/14/Linux%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6/" target="_self">
-          Linux字符设备驱动框架
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/14/Linux%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6/" target="_self">
-        <div>
-          字符设备 字符设备是 Linux 驱动中最基本的一类设备驱动，字符设备就是一个一个字节，按照字节流进行读写操作的设备，读写数据是分先后顺序的。最常见的点灯、按键、IIC、SPI，LCD 等等都是字符设备，这些设备的驱动就叫做字符设备驱动。  字符设备驱动工作流程  加载/卸载驱动模块 Linux的驱动有两种工作方式：  驱动编译进kernel，kernel启动时自动运行驱动程序 驱动编译为模块(
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-03-14 14:02" pubdate>
-              2025-03-14
             </time>
           </div>
         
