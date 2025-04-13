@@ -19,16 +19,17 @@
   <meta name="author" content="Aki">
   <meta name="keywords" content="">
   
-    <meta name="description" content="任务状态  运行态(Running)  任务当前正在 CPU 上执行 在单核系统中，同时只有一个任务处于运行态 任务只有在调度器（Scheduler）选择它执行时，才会进入运行态   就绪态（Ready）  任务已经具备执行条件，但由于 CPU 资源被其他更高优先级任务占用，它暂时无法运行 任务处于就绪列表（Ready List），等待 FreeRTOS 调度它运行 当更高优先级任务阻塞或时间片">
+    <meta name="description" content="任务  任务状态  运行态(Running)  任务当前正在 CPU 上执行 在单核系统中，同时只有一个任务处于运行态 任务只有在调度器（Scheduler）选择它执行时，才会进入运行态   就绪态（Ready）  任务已经具备执行条件，但由于 CPU 资源被其他更高优先级任务占用，它暂时无法运行 任务处于就绪列表（Ready List），等待 FreeRTOS 调度它运行 当更高优先级任务阻塞">
 <meta property="og:type" content="article">
-<meta property="og:title" content="FreeRTOS 任务基础">
+<meta property="og:title" content="FreeRTOS 任务、任务列表、任务切换和任务间通信">
 <meta property="og:url" content="http://akichen891.github.io/2025/04/02/RTOS%E4%BB%BB%E5%8A%A1%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="Aki&#39;s Blog">
-<meta property="og:description" content="任务状态  运行态(Running)  任务当前正在 CPU 上执行 在单核系统中，同时只有一个任务处于运行态 任务只有在调度器（Scheduler）选择它执行时，才会进入运行态   就绪态（Ready）  任务已经具备执行条件，但由于 CPU 资源被其他更高优先级任务占用，它暂时无法运行 任务处于就绪列表（Ready List），等待 FreeRTOS 调度它运行 当更高优先级任务阻塞或时间片">
+<meta property="og:description" content="任务  任务状态  运行态(Running)  任务当前正在 CPU 上执行 在单核系统中，同时只有一个任务处于运行态 任务只有在调度器（Scheduler）选择它执行时，才会进入运行态   就绪态（Ready）  任务已经具备执行条件，但由于 CPU 资源被其他更高优先级任务占用，它暂时无法运行 任务处于就绪列表（Ready List），等待 FreeRTOS 调度它运行 当更高优先级任务阻塞">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://akichen891.github.io/images/rtos/task_1.png">
+<meta property="og:image" content="http://akichen891.github.io/images/rtos/pendsv_1.png">
 <meta property="article:published_time" content="2025-04-02T07:11:44.000Z">
-<meta property="article:modified_time" content="2025-04-02T09:18:40.093Z">
+<meta property="article:modified_time" content="2025-04-08T13:40:19.448Z">
 <meta property="article:author" content="Aki">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://akichen891.github.io/images/rtos/task_1.png">
@@ -37,7 +38,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>FreeRTOS 任务基础 - Aki&#39;s Blog</title>
+  <title>FreeRTOS 任务、任务列表、任务切换和任务间通信 - Aki&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -193,7 +194,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">FreeRTOS 任务基础</span>
+            <span id="subtitle">FreeRTOS 任务、任务列表、任务切换和任务间通信</span>
           
         </div>
 
@@ -216,7 +217,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          3.3k 字
         
       </span>
     
@@ -227,7 +228,7 @@
         
         
         
-          13 分钟
+          28 分钟
         
       </span>
     
@@ -272,12 +273,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">FreeRTOS 任务基础</h1>
+            <h1 id="seo-header">FreeRTOS 任务、任务列表、任务切换和任务间通信</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="任务状态"><a class="markdownIt-Anchor" href="#任务状态"></a> 任务状态</h2>
+                <h1 id="任务"><a class="markdownIt-Anchor" href="#任务"></a> 任务</h1>
+<h2 id="任务状态"><a class="markdownIt-Anchor" href="#任务状态"></a> 任务状态</h2>
 <ul>
 <li>运行态(Running)
 <ul>
@@ -384,6 +386,11 @@
 <ul>
 <li><code>xTaskToDelete</code> 待删除任务的任务句柄</li>
 </ul>
+<h3 id="vtasksuspend"><a class="markdownIt-Anchor" href="#vtasksuspend"></a> vTaskSuspend()</h3>
+<p>挂起任务</p>
+<h3 id="vtaskresume"><a class="markdownIt-Anchor" href="#vtaskresume"></a> vTaskResume()</h3>
+<p>恢复被挂起的任务<br>
+<code>vTaskResumeFromISR()</code>可用于在中断中恢复被挂起的任务。</p>
 <h2 id="注意事项"><a class="markdownIt-Anchor" href="#注意事项"></a> 注意事项</h2>
 <ol>
 <li>FreeRTOS 任务函数不允许返回，因此<code>void task1(void *pvParameters)</code>中<code>task</code>的具体实现必须包含在<code>while(1)</code>中，否则会触发异常（HardFault 或任务栈溢出）</li>
@@ -391,6 +398,135 @@
 </ol>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">void</span> <span class="hljs-title function_">vTaskFunction</span>(<span class="hljs-params"> <span class="hljs-keyword">void</span> * pvParameters </span>)<br>&#123;<br>    <span class="hljs-comment">/* Block for 500ms. */</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-title class_">TickType</span>_t xDelay = <span class="hljs-number">500</span> / portTICK_PERIOD_MS;<br><br>    <span class="hljs-keyword">for</span>( ;; )<br>    &#123;<br>        <span class="hljs-comment">/* Simply toggle the LED every 500ms, blocking between each toggle. */</span><br>        <span class="hljs-title function_">vToggleLED</span>();<br>        <span class="hljs-title function_">vTaskDelay</span>( xDelay );<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>该函数通过阻塞的方式来进行延时，因此<code>vTaskDelay()</code>不能很好的控制周期性任务的频率，因为途径代码的路径和其他任务/中断会影响<code>vTaskDelay()</code>被调用的频率，久而久之会影响周期性任务的触发。请参阅 <code>vTaskDelayUntil()</code>，了解设计用于方便 固定频率执行的替代 API 函数。此函数指定调用任务应取消阻塞的绝对时间（而非相对时间）来实现这一点 。</p>
+<h1 id="列表list"><a class="markdownIt-Anchor" href="#列表list"></a> 列表(List)</h1>
+<h2 id="定义"><a class="markdownIt-Anchor" href="#定义"></a> 定义</h2>
+<p>列表（List） 是一个非常核心的数据结构，主要用于管理各种内核对象的状态和优先级排序，比如就绪任务、延时任务、阻塞任务等。FreeRTOS 的调度器、延时机制、同步机制（如信号量）都依赖于列表来实现。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs abnf">/* 双向链表 */<br>typedef struct xLIST_ITEM<br>&#123;<br>    TickType_t xItemValue<span class="hljs-comment">;</span><br>    struct xLIST_ITEM *pxNext<span class="hljs-comment">;</span><br>    struct xLIST_ITEM *pxPrevious<span class="hljs-comment">;</span><br>    void *pvOwner<span class="hljs-comment">;</span><br>    void *pvContainer<span class="hljs-comment">;</span><br>&#125; ListItem_t<span class="hljs-comment">;</span><br><br>typedef struct xLIST<br>&#123;<br>    UBaseType_t uxNumberOfItems<span class="hljs-comment">;</span><br>    ListItem_t *pxIndex<span class="hljs-comment">;</span><br>    ListItem_t xListEnd<span class="hljs-comment">;  // 哨兵节点，值最大</span><br>&#125; List_t<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<h2 id="作用"><a class="markdownIt-Anchor" href="#作用"></a> 作用</h2>
+<ol>
+<li>任务调度：就绪列表（Ready List）</li>
+</ol>
+<ul>
+<li>FreeRTOS 会根据任务优先级把就绪任务插入对应的列表（每个优先级一个 List）。</li>
+<li>调度器从最高优先级的列表中选出第一个任务来运行。</li>
+</ul>
+<ol start="2">
+<li>任务延时：延时列表（Delay List）</li>
+</ol>
+<ul>
+<li>当任务调用 vTaskDelay() 等函数后，会被放入延时列表，列表按照时间排序（Tick 值）。</li>
+<li>每个系统节拍（tick）检查列表，时间到了就移回就绪列表。</li>
+</ul>
+<ol start="3">
+<li>阻塞管理：等待列表（例如队列、信号量）</li>
+</ol>
+<ul>
+<li>当任务在等待某些资源时（比如消息队列、信号量），会被挂入等待列表中。</li>
+<li>当资源可用时，从列表中唤醒一个或多个任务。</li>
+</ul>
+<h2 id="api"><a class="markdownIt-Anchor" href="#api"></a> API</h2>
+<ul>
+<li><code>vListInitialise()</code>: 初始化一个 List。</li>
+<li><code>vListInitialiseItem()</code>: 初始化一个 ListItem。</li>
+<li><code>vListInsert()</code>: 插入元素到列表中（按 xItemValue 排序）。</li>
+<li><code>vListInsertEnd()</code>: 插入到列表末尾。</li>
+<li><code>uxListRemove()</code>: 从列表中删除一个项。</li>
+</ul>
+<h1 id="任务切换"><a class="markdownIt-Anchor" href="#任务切换"></a> 任务切换</h1>
+<h2 id="基本概念"><a class="markdownIt-Anchor" href="#基本概念"></a> 基本概念</h2>
+<p>OS内核中的任务切换有两种触发方式：</p>
+<ol>
+<li>应用程序通过SVC指令触发</li>
+<li>SysTick周期性中断<br>
+但是如果有IRQ请求在SysTick中断前产生，SysTick就可能抢占IRQ，导致IRQ被延迟处理，影响RTOS的实时性并导致Usage Fault.</li>
+</ol>
+<h2 id="pendsv"><a class="markdownIt-Anchor" href="#pendsv"></a> PendSV</h2>
+<p>PendSV 全称是 “Pendable Service Call”，是 Cortex-M 系列处理器（比如 STM32）特有的一个系统异常，用于延迟处理的一种软件中断。</p>
+<ul>
+<li>“Pend” 表示它是可以“挂起”的。</li>
+<li>它的优先级可以被设置为最低，确保只有当别的高优先级中断都处理完之后才会执行。</li>
+</ul>
+<p>PendSV 是 FreeRTOS 实现任务上下文切换（context switch）的关键机制，具体而言：</p>
+<ol>
+<li>执行任务切换：当 FreeRTOS 决定要从一个任务切换到另一个任务时（比如发生了任务阻塞、任务优先级发生变化等），不会立即切换，而是设置一个“请求切换任务”的标志，让 PendSV 异常触发，延迟到安全时机再做真正的上下文切换。</li>
+</ol>
+<p><img src="/images/rtos/pendsv_1.png" srcset="/img/loading.gif" lazyload alt="PendSV中执行任务切换"></p>
+<ol start="2">
+<li>保护上下文切换不被打断：PendSV 的优先级设置为最低，意味着它执行的时候不会打断别的中断，保证了上下文切换过程是原子且稳定的。</li>
+</ol>
+<h2 id="任务切换的本质"><a class="markdownIt-Anchor" href="#任务切换的本质"></a> 任务切换的本质</h2>
+<p>保存-&gt;切换-&gt;恢复-&gt;跳转</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">__asm</span> void xPortPendSVHandler( void )<br>&#123;<br>    <span class="hljs-meta">extern</span> uxCriticalNesting<span class="hljs-comment">;</span><br>    <span class="hljs-meta">extern</span> pxCurrentTCB<span class="hljs-comment">;</span><br>    <span class="hljs-meta">extern</span> vTaskSwitchContext<span class="hljs-comment">;</span><br><br><span class="hljs-comment">/* *INDENT-OFF* */</span><br>    <span class="hljs-meta">PRESERVE8</span><br><br>    <span class="hljs-comment">/* 从 PSP（进程堆栈指针）获取当前任务的栈顶指针到 r0，即当前任务栈的位置 */</span><br>    <span class="hljs-keyword">mrs</span> <span class="hljs-built_in">r0</span>, psp<br>    <span class="hljs-keyword">isb</span>     <span class="hljs-comment">/* 清洗流水线，确保指令顺序执行完成 */</span><br>    <br>    <span class="hljs-comment">/* 加载TCB地址到R3，再取出TCB到R2 */</span><br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r3</span>, <span class="hljs-symbol">=pxCurrentTCB</span><br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r2</span>, [ <span class="hljs-built_in">r3</span> ]<br><br>    <span class="hljs-comment">/* 检查是否启用了浮点协处理器（FPU） */</span><br>    <span class="hljs-comment">/* 如果启用，将高位VFQ寄存器压栈，防止浮点任务之间干扰 */</span><br>    <span class="hljs-keyword">tst</span> <span class="hljs-built_in">r14</span>, <span class="hljs-number">#0x10</span><br>    <span class="hljs-keyword">it</span> eq<br>    vstmdbeq <span class="hljs-built_in">r0</span>!, &#123;<span class="hljs-built_in">s16</span>-<span class="hljs-built_in">s31</span>&#125;<br><br>    <span class="hljs-comment">/* 保存核心寄存器 */</span><br>    <span class="hljs-keyword">stmdb</span> <span class="hljs-built_in">r0</span>!, &#123;<span class="hljs-built_in">r4</span>-<span class="hljs-built_in">r11</span>, <span class="hljs-built_in">r14</span>&#125;<br><br>    <span class="hljs-comment">/* 将新栈顶保存至TCB，更新栈顶 */</span><br>    <span class="hljs-keyword">str</span> <span class="hljs-built_in">r0</span>, [ <span class="hljs-built_in">r2</span> ]<br><br>    <span class="hljs-comment">/* 1. 暂存R0、R3 */</span><br>    <span class="hljs-comment">/* 2.设置basepri，屏蔽低优先级中断，防止上下文切换被打断 */</span><br>    <span class="hljs-comment">/* 3.调用vTaskSwitchContext(),即调度器，更新TCB至新任务 */</span><br>    <span class="hljs-comment">/* 4.取消中断屏蔽 */</span><br>    <span class="hljs-keyword">stmdb</span> <span class="hljs-built_in">sp</span>!, &#123;<span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r3</span>&#125;<br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">r0</span>, <span class="hljs-symbol">#configMAX_SYSCALL_INTERRUPT_PRIORITY</span><br>    <span class="hljs-keyword">msr</span> basepri, <span class="hljs-built_in">r0</span><br>    <span class="hljs-keyword">dsb</span><br>    <span class="hljs-keyword">isb</span><br>    <span class="hljs-keyword">bl</span> vTaskSwitchContext<br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">r0</span>, <span class="hljs-number">#0</span><br>    <span class="hljs-keyword">msr</span> basepri, <span class="hljs-built_in">r0</span><br>    <span class="hljs-keyword">ldmia</span> <span class="hljs-built_in">sp</span>!, &#123;<span class="hljs-built_in">r0</span>, <span class="hljs-built_in">r3</span>&#125;<br><br>    <span class="hljs-comment">/* 获取新任务的TCB至R1，再获取新任务的栈顶地址至R0 */</span><br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r1</span>, [ <span class="hljs-built_in">r3</span> ]<br>    <span class="hljs-keyword">ldr</span> <span class="hljs-built_in">r0</span>, [ <span class="hljs-built_in">r1</span> ]<br><br>    <span class="hljs-comment">/* 恢复核心寄存器 */</span><br>    <span class="hljs-keyword">ldmia</span> <span class="hljs-built_in">r0</span>!, &#123;<span class="hljs-built_in">r4</span>-<span class="hljs-built_in">r11</span>, <span class="hljs-built_in">r14</span>&#125;<br><br>    <span class="hljs-comment">/* 检查是否启用了浮点协处理器（FPU） */</span><br>    <span class="hljs-comment">/* 如果启用，将高位VFQ寄存器出栈 */</span><br>    <span class="hljs-keyword">tst</span> <span class="hljs-built_in">r14</span>, <span class="hljs-number">#0x10</span><br>    <span class="hljs-keyword">it</span> eq<br>    vldmiaeq <span class="hljs-built_in">r0</span>!, &#123;<span class="hljs-built_in">s16</span>-<span class="hljs-built_in">s31</span>&#125;<br><br>    <span class="hljs-comment">/* 设置新的堆栈指针 */</span><br>    <span class="hljs-keyword">msr</span> psp, <span class="hljs-built_in">r0</span><br>    <span class="hljs-keyword">isb</span><br><br>    <span class="hljs-comment">#ifdef WORKAROUND_PMU_CM001 /* XMC4000 specific errata */</span><br>        <span class="hljs-comment">#if WORKAROUND_PMU_CM001 == 1</span><br>            <span class="hljs-keyword">push</span> &#123; <span class="hljs-built_in">r14</span> &#125;<br>            <span class="hljs-keyword">pop</span> &#123; <span class="hljs-built_in">pc</span> &#125;<br>            <span class="hljs-keyword">nop</span><br>        <span class="hljs-comment">#endif</span><br>    <span class="hljs-comment">#endif</span><br><br>    <span class="hljs-comment">/* 返回新任务的执行地址 */</span><br>    <span class="hljs-keyword">bx</span> <span class="hljs-built_in">r14</span><br><span class="hljs-comment">/* *INDENT-ON* */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="任务间通信"><a class="markdownIt-Anchor" href="#任务间通信"></a> 任务间通信</h1>
+<h2 id="队列queue"><a class="markdownIt-Anchor" href="#队列queue"></a> 队列(Queue)</h2>
+<ul>
+<li>FIFO（先进先出）</li>
+<li>既能同步（阻塞），又能传数据</li>
+<li>任务和中断都可以用</li>
+<li>可设长度 N，缓存多个元素</li>
+</ul>
+<p>常见用法：</p>
+<ul>
+<li>从中断向任务发送传感器数据</li>
+<li>一个任务给另一个任务派发命令</li>
+<li>UART/ADC驱动中，任务读取缓冲区数据</li>
+</ul>
+<p>即“不仅要通知，还要带点东西”：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-type">uint8_t</span> cmd;<br>    <span class="hljs-type">uint16_t</span> value;<br>&#125; Message_t;<br><br><span class="hljs-built_in">xQueueSend</span>(xQueue, &amp;msg, portMAX_DELAY);<br><span class="hljs-built_in">xQueueReceive</span>(xQueue, &amp;msg, portMAX_DELAY);<br></code></pre></td></tr></table></figure>
+<h2 id="队列集queue-set"><a class="markdownIt-Anchor" href="#队列集queue-set"></a> 队列集(Queue Set)</h2>
+<p>多个队列的集合，用于处理单个队列只能传输同一类型数据的情况，可在多个队列/信号量之间选择哪个先有数据/事件发生，避免无效率的轮询。</p>
+<p>常见用法：</p>
+<ul>
+<li>一个任务等待多个外设的输入（例如：UART1 / UART2 / CAN 同时接收）</li>
+<li>管理多个任务发来的指令队列，集中处理</li>
+</ul>
+<p>即“有很多输入源，我想让一个任务来监听它们，并优先处理哪个先有数据”</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">xQueueSelectFromSet</span>(xQueueSet, portMAX_DELAY); <span class="hljs-comment">// 等哪个先来</span><br></code></pre></td></tr></table></figure>
+<h2 id="信号量semaphore"><a class="markdownIt-Anchor" href="#信号量semaphore"></a> 信号量(Semaphore)</h2>
+<p>普通信号量分为Binary Semaphore和Counting Semaphore，都用于任务同步和中断通知，本身并不传输数据，类似于一个信号灯。</p>
+<p>常见用法：</p>
+<ul>
+<li>中断服务程序用 <code>xSemaphoreGiveFromISR()</code> 通知任务去处理数据</li>
+<li>任务 A 通知任务 B 某件事完成</li>
+<li>控制允许 N 个任务并发访问某资源（计数型）</li>
+</ul>
+<p>中断通知任务下，二值信号量的工作机制为：</p>
+<ol>
+<li>任务A等待某件事发生，于是它调用：</li>
+</ol>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">xSemaphoreTake</span>(xSemaphore, portMAX_DELAY);<br></code></pre></td></tr></table></figure>
+<p>并且任务A状态变为<strong>阻塞</strong>，直到信号量更新或超时</p>
+<ol start="2">
+<li>某个中断发生后，ISR内调用</li>
+</ol>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lisp">xSemaphoreGiveFromISR(<span class="hljs-name">xSemaphore</span>, <span class="hljs-symbol">&amp;xHigherPriorityTaskWoken</span>)<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+<p>通过信号量发出信号，告知任务A期所期望的事件已经到达</p>
+<ol start="3">
+<li>FreeRTOS检测到信号到达，任务A由阻塞变为就绪</li>
+</ol>
+<p>把信号量看成门铃：</p>
+<ol>
+<li>任务按下 <code>Take()</code> 就是“等门铃响”。</li>
+<li>中断调用 <code>Give()</code> 就是“按门铃”。</li>
+<li>门铃一响，任务就醒了，去执行它的事情。</li>
+</ol>
+<h2 id="互斥信号量mutex-semaphore"><a class="markdownIt-Anchor" href="#互斥信号量mutex-semaphore"></a> 互斥信号量(Mutex Semaphore)</h2>
+<p>保护共享资源，防止多个任务同时访问。互斥信号量基于信号量实现，但只能由拥有者释放，支持优先级继承（防止优先级反转）。</p>
+<p>常见用法：</p>
+<ul>
+<li>多任务访问串口、SPI、LCD等，避免同一硬件被多任务使用</li>
+<li>避免数据竞争</li>
+</ul>
+<p>即“我只想让一个任务进入临界区，并防止资源冲突”</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">xSemaphoreTake</span>(xMutex, portMAX_DELAY);<br><span class="hljs-built_in">LCD_Print</span>(&quot;Hello&quot;);  <span class="hljs-comment">// 临界区</span><br><span class="hljs-built_in">xSemaphoreGive</span>(xMutex);<br></code></pre></td></tr></table></figure>
+<h2 id="对比"><a class="markdownIt-Anchor" href="#对比"></a> 对比</h2>
+<p>假设有个任务控制打印机，有多个任务要发打印请求：</p>
+<ul>
+<li>队列：多个任务传“打印任务结构体”给打印机任务</li>
+<li>队列集：多个来源（如 GUI、网络、中断）发任务 → 打印任务监听哪个先到</li>
+<li>信号量：中断来了发一个信号量通知任务“有数据了”</li>
+<li>互斥信号量：多个任务打印时共享串口 → 用互斥锁保护 printf()</li>
+</ul>
 
                 
               </div>
@@ -429,7 +565,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>FreeRTOS 任务基础</div>
+      <div>FreeRTOS 任务、任务列表、任务切换和任务间通信</div>
       <div>http://akichen891.github.io/2025/04/02/RTOS任务基础/</div>
     </div>
     <div class="license-meta">
@@ -448,7 +584,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年4月2日</div>
+          <div>2025年4月8日</div>
         </div>
       
       
@@ -478,6 +614,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2025/04/12/Linux%E5%BF%AB%E9%80%9F%E5%88%87%E6%8D%A2%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%99%A8%E7%89%88%E6%9C%AC/" title="Linux快速切换交叉编译器版本">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux快速切换交叉编译器版本</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
