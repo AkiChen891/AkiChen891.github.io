@@ -1,0 +1,662 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="设备树 6.6.52版本Kernel中NXP已经默认在imx6ul-14x14-evk.dtsi中配置好了wm8960的节点，但是是配置在i2c2下，而正点原子阿尔法开发板中wm8960接在i2c1下，所以要把节点从i2c2移到i2c1： 12345678910111213141516171819&amp;i2c1 &#123;	clock-frequency &#x3D; &lt;100000&gt;;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinuxWM8960和声卡驱动">
+<meta property="og:url" content="http://akichen891.github.io/2025/04/16/LinuxWM8960%E5%92%8C%E5%A3%B0%E5%8D%A1%E9%A9%B1%E5%8A%A8/index.html">
+<meta property="og:site_name" content="Aki&#39;s Blog">
+<meta property="og:description" content="设备树 6.6.52版本Kernel中NXP已经默认在imx6ul-14x14-evk.dtsi中配置好了wm8960的节点，但是是配置在i2c2下，而正点原子阿尔法开发板中wm8960接在i2c1下，所以要把节点从i2c2移到i2c1： 12345678910111213141516171819&amp;i2c1 &#123;	clock-frequency &#x3D; &lt;100000&gt;;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-16T10:33:12.000Z">
+<meta property="article:modified_time" content="2025-04-16T14:07:49.691Z">
+<meta property="article:author" content="Aki">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>LinuxWM8960和声卡驱动 - Aki&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">LinuxWM8960和声卡驱动</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-16 18:33" pubdate>
+          2025年4月16日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          674 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          6 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LinuxWM8960和声卡驱动</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="设备树"><a class="markdownIt-Anchor" href="#设备树"></a> 设备树</h2>
+<p>6.6.52版本Kernel中NXP已经默认在imx6ul-14x14-evk.dtsi中配置好了wm8960的节点，但是是配置在i2c2下，而正点原子阿尔法开发板中wm8960接在i2c1下，所以要把节点从i2c2移到i2c1：</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">&amp;i2c1 &#123;<br>	clock-frequency = <span class="hljs-variable">&lt;100000&gt;</span>;<br>	pinctrl-names = <span class="hljs-string">&quot;default&quot;</span>;<br>	pinctrl-0 = <span class="hljs-variable">&lt;&amp;pinctrl_i2c1&gt;</span>;<br>	status = <span class="hljs-string">&quot;okay&quot;</span>;<br><br>    /<span class="hljs-symbol">*</span> 省略其他节点 <span class="hljs-symbol">*</span>/<br><br>	codec: wm8960<span class="hljs-meta">@1a</span> &#123;<br>		<span class="hljs-comment">#sound-dai-cells = &lt;0&gt;;</span><br>		compatible = <span class="hljs-string">&quot;wlf,wm8960&quot;</span>;<br>		reg = <span class="hljs-variable">&lt;0x1a&gt;</span>;<br>		wlf,shared-lrclk;<br>		wlf,hp-cfg = <span class="hljs-variable">&lt;3 2 3&gt;</span>;<br>		wlf,gpio-cfg = <span class="hljs-variable">&lt;1 3&gt;</span>;<br>		clocks = <span class="hljs-variable">&lt;&amp;clks IMX6UL_CLK_SAI2&gt;</span>;<br>		clock-names = <span class="hljs-string">&quot;mclk&quot;</span>;<br>	&#125;;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>根节点下还需要创建一个sound节点，NXP默认也已经配置好了：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-title class_">/</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-comment">/* 省略其他节点 */</span><br><br>    <span class="hljs-title class_">sound-wm8960</span> <span class="hljs-punctuation">&#123;</span><br>		<span class="hljs-attr">compatible</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;fsl,imx-audio-wm8960&quot;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-attr">model</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;wm8960-audio&quot;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-attr">audio-cpu</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;sai2</span>&gt;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-attr">audio-codec</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;codec</span>&gt;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-attr">audio-asrc</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;asrc</span>&gt;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-attr">hp-det-gpio</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;gpio5</span> <span class="hljs-number">4</span> <span class="hljs-number">0</span>&gt;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-attr">audio-routing</span> <span class="hljs-operator">=</span><br>			<span class="hljs-string">&quot;Headphone Jack&quot;</span>, <span class="hljs-string">&quot;HP_L&quot;</span>,<br>			<span class="hljs-string">&quot;Headphone Jack&quot;</span>, <span class="hljs-string">&quot;HP_R&quot;</span>,<br>			<span class="hljs-string">&quot;Ext Spk&quot;</span>, <span class="hljs-string">&quot;SPK_LP&quot;</span>,<br>			<span class="hljs-string">&quot;Ext Spk&quot;</span>, <span class="hljs-string">&quot;SPK_LN&quot;</span>,<br>			<span class="hljs-string">&quot;Ext Spk&quot;</span>, <span class="hljs-string">&quot;SPK_RP&quot;</span>,<br>			<span class="hljs-string">&quot;Ext Spk&quot;</span>, <span class="hljs-string">&quot;SPK_RN&quot;</span>,<br>			<span class="hljs-string">&quot;LINPUT2&quot;</span>, <span class="hljs-string">&quot;Mic Jack&quot;</span>,<br>			<span class="hljs-string">&quot;LINPUT3&quot;</span>, <span class="hljs-string">&quot;Mic Jack&quot;</span>,<br>			<span class="hljs-string">&quot;RINPUT1&quot;</span>, <span class="hljs-string">&quot;AMIC&quot;</span>,<br>			<span class="hljs-string">&quot;RINPUT2&quot;</span>, <span class="hljs-string">&quot;AMIC&quot;</span>,<br>			<span class="hljs-string">&quot;Mic Jack&quot;</span>, <span class="hljs-string">&quot;MICB&quot;</span>,<br>			<span class="hljs-string">&quot;AMIC&quot;</span>, <span class="hljs-string">&quot;MICB&quot;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-attr">status</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;okay&quot;</span><span class="hljs-punctuation">;</span>		<span class="hljs-comment">/* must add this */</span><br>	<span class="hljs-punctuation">&#125;;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<p>注意最后的<code>status = &quot;okay&quot;</code>必须要加，不然ALSA识别不到。</p>
+<p>Menuconfig里默认已经启用了wm8960在imx系列board上的区别，ALSA模拟OSS的API也已经关闭，保持默认即可。</p>
+<h2 id="alsa-lib-alsa-utils"><a class="markdownIt-Anchor" href="#alsa-lib-alsa-utils"></a> alsa-lib &amp; alsa-utils</h2>
+<p>照着教程来做就可以，不一样的地方在于，65.4.2节移植alsa-utils时，makefile可能会报错：</p>
+<blockquote>
+<p>mv: 无法获取&quot;t-ja.gmo&quot; 的文件状态(stat): 没有那个文件或目录<br>
+make[2]: *** [ja.gmo] 错误 1</p>
+</blockquote>
+<p>而且报错不止一个文件，都位于<code>alsaconf/po/</code>下，解决办法是自己创建一个空文件 <code>~/alsa-utils-xxx/alsaconf/po/t-ja.gmo</code>，缺什么就添加什么，反正alsaconf这个功能暂时用不到。</p>
+<h2 id="aplay报错"><a class="markdownIt-Anchor" href="#aplay报错"></a> aplay报错</h2>
+<p>按照教程执行aplay后kernel报错：</p>
+<blockquote>
+<p>Playing WAVE ‘RWR.wav’ : Signed 16 bit Little Endian, Rate 48000 Hz, Stereo</p>
+</blockquote>
+<blockquote>
+<p>imx-sdma 20ec000.dma-controller: sdma or sdma firmware not ready!</p>
+</blockquote>
+<blockquote>
+<p>fsl-sai 202c000.sai: ASoC: error at soc_component_trigger on 202c000.sai: -12</p>
+</blockquote>
+<blockquote>
+<p>aplay: pcm_write:2178: write error: Input/output error</p>
+</blockquote>
+<p>考虑到这四条消息是一起跳出来的，上网查了一圈ASoC错误很少有人提及，一般都是时钟配置有问题，要么就是硬件设计时的错误，但考虑到我直接用的是NXP原厂的设备树，并且板子是现成的开发板，基本可以排除硬件设计原因。因此我猜测问题是由sdma没初始化引起的，因为alsa会调用sdma来进行音频流的传输。</p>
+<p>参考这篇文章进行sdma的配置：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_61320035/article/details/140298343?spm=1001.2014.3001.5506">正点原子I.MAX6ULL kernel6.6移植遇到的问题</a></p>
+<p>配置完成后，重新编译kernel，下载，再调用aplay，就能够成功播放了。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LinuxWM8960和声卡驱动</div>
+      <div>http://akichen891.github.io/2025/04/16/LinuxWM8960和声卡驱动/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月16日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年4月16日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/04/13/Linux%E4%B8%8BGT911%E9%A9%B1%E5%8A%A8%E7%A7%BB%E6%A4%8D/" title="Linux下GT911驱动移植">
+                        <span class="hidden-mobile">Linux下GT911驱动移植</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
