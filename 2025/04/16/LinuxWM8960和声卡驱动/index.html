@@ -27,7 +27,7 @@
 <meta property="og:description" content="设备树 6.6.52版本Kernel中NXP已经默认在imx6ul-14x14-evk.dtsi中配置好了wm8960的节点，但是是配置在i2c2下，而正点原子阿尔法开发板中wm8960接在i2c1下，所以要把节点从i2c2移到i2c1： 12345678910111213141516171819&amp;i2c1 &#123;	clock-frequency &#x3D; &lt;100000&gt;;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-16T10:33:12.000Z">
-<meta property="article:modified_time" content="2025-04-16T14:07:49.691Z">
+<meta property="article:modified_time" content="2025-04-16T14:17:43.699Z">
 <meta property="article:author" content="Aki">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -214,7 +214,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          674 字
+          724 字
         
       </span>
     
@@ -225,7 +225,7 @@
         
         
         
-          6 分钟
+          7 分钟
         
       </span>
     
@@ -306,6 +306,9 @@ make[2]: *** [ja.gmo] 错误 1</p>
 <p>考虑到这四条消息是一起跳出来的，上网查了一圈ASoC错误很少有人提及，一般都是时钟配置有问题，要么就是硬件设计时的错误，但考虑到我直接用的是NXP原厂的设备树，并且板子是现成的开发板，基本可以排除硬件设计原因。因此我猜测问题是由sdma没初始化引起的，因为alsa会调用sdma来进行音频流的传输。</p>
 <p>参考这篇文章进行sdma的配置：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_61320035/article/details/140298343?spm=1001.2014.3001.5506">正点原子I.MAX6ULL kernel6.6移植遇到的问题</a></p>
 <p>配置完成后，重新编译kernel，下载，再调用aplay，就能够成功播放了。</p>
+<h2 id="alsactl-提示no-such-file-or-directory"><a class="markdownIt-Anchor" href="#alsactl-提示no-such-file-or-directory"></a> alsactl 提示no such file or directory</h2>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/JasonTD/article/details/131927546">参考文章</a><br>
+制作根文件系统的时候没有/var/lock的目录，alsactl默认会在/var/lock目录操作，所以就会失败。解决办法是<code>mkdir -p /var/lock</code></p>
 
                 
               </div>
@@ -393,6 +396,12 @@ make[2]: *** [ja.gmo] 错误 1</p>
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2025/04/17/LinuxFlexCAN%E8%B0%83%E8%AF%95/" title="Linux FlexCAN调试">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux FlexCAN调试</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
