@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用于CAN-utils调试的CAN报文生成器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            word-wrap: break-word;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>CAN命令生成器</h2>
+        <h3>此工具用于Linux下调试CAN_utils时通过Terminal发送报文，报文具体格式为：</h3>
+        <h4>1. 标准11位ID，表现为三位十六进制，缺位补全</h4>
+        <h4>2. 报文数据段共8字节，由四个无符号16位整型数(uint16_t)组成，0-1字节为数据1，2-3字节为数据2，4-5字节为数据3，6-7字节为数据4</h4>
+        <h4>3. 接收端解码方式参见：https://github.com/AkiChen891/Embedded-IPS-Fault-Detec-System</h4>
+        
+        <div class="input-group">
+            <label>CAN ID (十六进制 0-FFF):</label>
+            <input type="text" id="canId" placeholder="例如：12(即0x12)">
+        </div>
+
+        <div class="input-group">
+            <label>数据1 (0-65535):</label>
+            <input type="number" id="data1">
+        </div>
+
+        <!-- 重复类似结构生成数据2-4 -->
+        <div class="input-group">
+            <label>数据2 (0-65535):</label>
+            <input type="number" id="data2">
+        </div>
+        <div class="input-group">
+            <label>数据3 (0-65535):</label>
+            <input type="number" id="data3">
+        </div>
+        <div class="input-group">
+            <label>数据4 (0-65535):</label>
+            <input type="number" id="data4">
+        </div>
+
+        <button onclick="generateCommand()">生成命令</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function validateInput(value, min, max) {
+            const num = Number(value);
+            if (isNaN(num) || num < min || num > max) return false;
+            return true;
+        }
+
+        function toHex(num, length) {
+            return num.toString(16).toUpperCase().padStart(length, '0');
+        }
+
+        function generateCommand() {
+            // 获取输入值
+            const canIdInput = document.getElementById('canId').value;
+            const dataValues = [
+                document.getElementById('data1').value,
+                document.getElementById('data2').value,
+                document.getElementById('data3').value,
+                document.getElementById('data4').value
+            ];
+
+            // 验证CAN ID
+            const canId = parseInt(canIdInput, 16);
+            if (isNaN(canId) || canId < 0 || canId > 0xFFF) {
+                alert("请输入有效的CAN ID (0x000-0xFFF)");
+                return;
+            }
+
+            // 验证并转换数据
+            let bytes = [];
+            for (let i = 0; i < 4; i++) {
+                const value = Number(dataValues[i]);
+                if (!validateInput(value, 0, 65535)) {
+                    alert(`数据${i+1}无效，请输入0-65535之间的数字`);
+                    return;
+                }
+                
+                // 小端转换
+                const lowByte = value & 0xFF;
+                const highByte = (value >> 8) & 0xFF;
+                bytes.push(toHex(lowByte, 2), toHex(highByte, 2));
+            }
+
+            // 生成命令
+            const command = `cansend can0 ${toHex(canId, 3)}#${bytes.join('.')}`;
+            document.getElementById('result').innerText = command;
+        }
+    </script>
+</body>
+</html>
