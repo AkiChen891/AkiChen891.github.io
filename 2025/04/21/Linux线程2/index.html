@@ -1,0 +1,921 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="简介  线程 线程是参与系统调度的最小单位。它被包含在进程之中，是进程中的实际运行单位。一个线程指的是进程中一个单一顺序的控制流（或者说是执行路线、执行流），一个进程中可以创建多个线程，多个线程实现并发运行，每个线程执行不同的任务。譬如某应用程序设计了两个需要并发运行的任务 task1 和 task2，可将两个不同的任务分别放置在两个线程中。RTOS中的任务就是线程的一种表现形式。 线程是程序最">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 进程与线程（二）线程">
+<meta property="og:url" content="http://akichen891.github.io/2025/04/21/Linux%E7%BA%BF%E7%A8%8B2/index.html">
+<meta property="og:site_name" content="Aki&#39;s Blog">
+<meta property="og:description" content="简介  线程 线程是参与系统调度的最小单位。它被包含在进程之中，是进程中的实际运行单位。一个线程指的是进程中一个单一顺序的控制流（或者说是执行路线、执行流），一个进程中可以创建多个线程，多个线程实现并发运行，每个线程执行不同的任务。譬如某应用程序设计了两个需要并发运行的任务 task1 和 task2，可将两个不同的任务分别放置在两个线程中。RTOS中的任务就是线程的一种表现形式。 线程是程序最">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-21T08:27:46.000Z">
+<meta property="article:modified_time" content="2025-04-21T13:46:15.087Z">
+<meta property="article:author" content="Aki">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Linux 进程与线程（二）线程 - Aki&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                <span>工具</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://akichen891.github.io/tools/cangenerate.html" target="_self">
+                    
+                    <span>CAN报文生成</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Linux 进程与线程（二）线程</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-21 16:27" pubdate>
+          2025年4月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Linux 进程与线程（二）线程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h2>
+<h3 id="线程"><a class="markdownIt-Anchor" href="#线程"></a> 线程</h3>
+<p>线程是参与系统调度的最小单位。它被包含在进程之中，是进程中的实际运行单位。一个线程指的是进程中一个单一顺序的控制流（或者说是执行路线、执行流），一个进程中可以创建多个线程，多个线程实现并发运行，每个线程执行不同的任务。譬如某应用程序设计了两个需要并发运行的任务 task1 和 task2，可将两个不同的任务分别放置在两个线程中。RTOS中的任务就是线程的一种表现形式。</p>
+<p>线程是程序最基本的运行单位，而进程不能运行，真正运行的是进程中的线程。当启动应用程序后，系统就创建了一个进程，可以认为进程仅仅是一个容器，它包含了线程运行所需的数据结构、环境变量等信息。</p>
+<p>同一进程中的多个线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等。但同一进程中的多个线程有各自的调用栈（call stack，我们称为线程栈），自己的寄存器环境（register context）、自己的线程本地存储（thread-local storage）。</p>
+<p>在多线程应用程序中，通常一个进程中包括了多个线程，每个线程都可以参与系统调度、被 CPU 执行，线程具有以下一些特点：</p>
+<ul>
+<li>不单独存在，包含在进程中</li>
+<li>线程是参与系统调度的基本单位</li>
+<li>同一进程的多线程可并发执行，宏观上实现同时运行的效果</li>
+<li>同一进程的各个线程共享该进程拥有的资源：
+<ul>
+<li>所有线程具有相同的地址空间</li>
+<li>线程可访问该地址空间的每一个虚地址</li>
+<li>可访问进程所拥有的已打开文件、定时器和信号量</li>
+</ul>
+</li>
+</ul>
+<h3 id="线程与进程的优劣"><a class="markdownIt-Anchor" href="#线程与进程的优劣"></a> 线程与进程的优劣</h3>
+<p>多进程编程的劣势：</p>
+<ul>
+<li>内存空间不共享：每个进程有独立的虚拟地址空间，数据共享麻烦，必须通过 IPC（如管道、共享内存、消息队列等）</li>
+<li>创建开销大：使用 fork() 创建新进程代价高（复制页表、上下文等）。频繁创建/销毁进程会显著降低性能</li>
+<li>通信复杂：不同进程间通信（IPC）机制种类多、实现复杂，尤其是同步控制（例如多个进程同时写共享内存）容易出错</li>
+<li>切换成本高：进程上下文切换比线程慢很多，因为需要切换整个地址空间、页表等</li>
+<li>资源管理复杂：每个进程资源独立，协调管理（如关闭文件描述符、回收子进程）更复杂</li>
+</ul>
+<p>多线程编程的优势：</p>
+<ul>
+<li>共享地址空间：线程共享进程的内存，通信和共享数据非常方便，比如共享变量、缓冲区</li>
+<li>创建/销毁成本小：创建线程用 pthread_create() 等，比 fork() 快很多，开销更小</li>
+<li>上下文切换快：线程切换只需切换寄存器、栈等，不涉及页表等操作，切换代价低</li>
+<li>通信简单：直接通过全局变量或堆内存通信，不需要复杂的 IPC 机制</li>
+<li>适合高并发任务：在 Web 服务器、实时系统中常见，用来处理高并发连接更高效</li>
+</ul>
+<p>多线程编程的劣势：</p>
+<ul>
+<li>数据竞争：线程共享数据，必须使用互斥锁、读写锁等手段保护，稍不注意就出 bug</li>
+<li>调试困难：多线程问题（死锁、竞态条件）很难重现和排查</li>
+<li>一个线程崩溃可能导致整个进程崩溃</li>
+</ul>
+<h3 id="并发和并行"><a class="markdownIt-Anchor" href="#并发和并行"></a> 并发和并行</h3>
+<ul>
+<li>串行：一件事、一件事接着做
+<ul>
+<li>只用一口锅，先做完第一碗面，再做第二碗，最后做第三碗</li>
+</ul>
+</li>
+<li>并发：交替做不同的事
+<ul>
+<li>烧水的时候准备下碗；水烧着时你不闲着；一会煮面，一会加料；只要锅没闲着，切来切去地忙</li>
+</ul>
+</li>
+<li>并行：同时做不同的事
+<ul>
+<li>3个厨师 + 3口锅，每人煮一碗面，互不干扰</li>
+</ul>
+</li>
+</ul>
+<p>对于单核处理器，只有一个执行单元，因此同时只能执行一条指令；对于多核处理器，可并行执行多条指令，譬如8核处理器可并行执行8条不同的指令。</p>
+<h3 id="线程id"><a class="markdownIt-Anchor" href="#线程id"></a> 线程ID</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">pthread_t</span> <span class="hljs-title">pthread_self</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>该函数返回当前线程的线程ID。</p>
+<p>还可以使用<code>pthread_equal()</code>函数检查两个线程ID是否相等：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_equal</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> t1, <span class="hljs-type">pthread_t</span> t2)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>如果相等，返回非零值；否则返回0.</p>
+<h3 id="创建线程"><a class="markdownIt-Anchor" href="#创建线程"></a> 创建线程</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_create</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> *thread, <span class="hljs-type">const</span> <span class="hljs-type">pthread_attr_t</span> *attr, <span class="hljs-type">void</span> *(*start_routine)(<span class="hljs-type">void</span> *), <span class="hljs-type">void</span> *arg)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>形参：</p>
+<ul>
+<li><code>thread</code>：函数成功返回时，创建成功的线程ID会保存在thread指向的内存中</li>
+<li><code>attr</code>：定义了线程的各种属性，如果设置为NULL，表示所有属性设为默认值</li>
+<li><code>start_routine</code>：新创建的线程从start_routine()函数开始执行</li>
+<li><code>arg</code>：要传递给start_routine()函数的参数，一般情况下需要将<code>arg</code>指向一个全局或堆变量，即需要保证线程的生命周期中<code>arg</code>指向的对象必须存在，否则会出现段错误。如果设置为NULL，表示不需要传入参数。</li>
+</ul>
+<p>和进程创建时相同，一旦线程创建成功，新线程就会立即被加入到系统调度队列并开始执行，通常无法确定系统会首先调度哪一个线程来使用CPU资源（主线程或新创建的线程）。如果程序对不同线程的执行顺序有要求，就必须采用一些同步技术来实现。</p>
+<p>简单的创建线程的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title">new_theard_start</span><span class="hljs-params">(<span class="hljs-type">void</span> *arg)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;新线程：进程ID&lt;%d&gt;，线程ID&lt;%lu&gt;\n&quot;</span>, <span class="hljs-built_in">getpid</span>(), <span class="hljs-built_in">pthread_self</span>());<br>    <span class="hljs-keyword">return</span> (<span class="hljs-type">void</span> *)<span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">pthread_t</span> tid;<br>    <span class="hljs-type">int</span> ret;<br><br>    ret = <span class="hljs-built_in">pthread_create</span>(&amp;tid, <span class="hljs-literal">NULL</span>, new_theard_start, <span class="hljs-literal">NULL</span>);<br>    <span class="hljs-keyword">if</span> (ret)&#123;<br>        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Error:%s\n&quot;</span>, <span class="hljs-built_in">strerror</span>(ret));<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>);<br>    &#125;<br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;主线程：进程ID&lt;%d&gt;，线程ID&lt;%lu&gt;\n&quot;</span>, <span class="hljs-built_in">getpid</span>(), <span class="hljs-built_in">pthread_self</span>());<br>    <span class="hljs-built_in">sleep</span>(<span class="hljs-number">1</span>);<br>    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="终止线程"><a class="markdownIt-Anchor" href="#终止线程"></a> 终止线程</h3>
+<p>线程可以通过以下方式终止：</p>
+<ul>
+<li>线程的start函数执行return并返回指定值，返回值就是线程的退出码</li>
+<li>线程调用<code>pthread_exit()</code>函数</li>
+<li>调用<code>pthread_cancel()</code>取消线程</li>
+</ul>
+<p><code>pthread_exit()</code>将终止调用它的线程：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">pthread_exit</span><span class="hljs-params">(<span class="hljs-type">void</span> *retval)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>形参retval指定了线程的返回值，也就是线程的退出码。retval指向的内容不应分配在线程栈中，因为线程终止后将无法确认线程栈中的内存还是否有效。</p>
+<h3 id="回收线程"><a class="markdownIt-Anchor" href="#回收线程"></a> 回收线程</h3>
+<p>可调用<code>pthread_join()</code>函数来<strong>阻塞</strong>等待线程的终止，并获取线程的退出码，回收线程资源：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_join</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> thread, <span class="hljs-type">void</span> **retval)</span></span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>retval</code>：如果不为NULL，函数将目标线程的退出状态复制到<code>*retval</code>；如果目标线程被cancel，则将<code>PTHREAD_CANCELED</code>放在<code>*retval</code>中；如果对目标线程的终止状态不感兴趣，可设置为NULL</li>
+</ul>
+<p><code>pthread_join()</code>类似于针对进程的<code>waitpid()</code>，但是：</p>
+<ul>
+<li>线程之间关系是平等的。同一进程中的任意线程均可调用<code>pthread_join()</code>来等待另一个线程的终止</li>
+<li>不能以非阻塞的方式调用<code>pthread_join()</code>。<code>pthread_join()</code>一旦被调用，对应线程即阻塞。</li>
+</ul>
+<p>例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title">new_theard_start</span><span class="hljs-params">(<span class="hljs-type">void</span> *arg)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">/* 线程创建2秒后即终止 */</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;New thread start\n&quot;</span>);<br>    <span class="hljs-built_in">sleep</span>(<span class="hljs-number">2</span>);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;New thread end\n&quot;</span>);<br>    <span class="hljs-built_in">pthread_exit</span>((<span class="hljs-type">void</span> *)<span class="hljs-number">10</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">pthread_t</span> tid;<br>    <span class="hljs-type">void</span> *tret;<br>    <span class="hljs-type">int</span> ret;<br><br>    ret = <span class="hljs-built_in">pthread_create</span>(&amp;tid, <span class="hljs-literal">NULL</span>, new_theard_start, <span class="hljs-literal">NULL</span>);<br>    <span class="hljs-keyword">if</span> (ret)&#123;<br>        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;Error:%s\n&quot;</span>, <span class="hljs-built_in">strerror</span>(ret));<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/* 阻塞等待tid结束 */</span><br>    ret = <span class="hljs-built_in">pthread_join</span>(tid, &amp;tret);<br>    <span class="hljs-keyword">if</span> (ret)&#123;<br>        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;pthread join error: %s\n&quot;</span>, <span class="hljs-built_in">strerror</span>(ret));<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>);<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;New thread end, code = %ld\n&quot;</span>, (<span class="hljs-type">long</span>)tret);<br><br>    <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="取消线程"><a class="markdownIt-Anchor" href="#取消线程"></a> 取消线程</h3>
+<p>取消线程特指某一个线程向另一个线程发送请求，要求其立即退出的操作。</p>
+<h4 id="取消一个线程"><a class="markdownIt-Anchor" href="#取消一个线程"></a> 取消一个线程</h4>
+<p>通过<code>pthread_cancel()</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_cancel</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> thread)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>该函数仅提出请求，不会等待目标线程退出，而是会立即返回。</p>
+<h4 id="取消状态和类型"><a class="markdownIt-Anchor" href="#取消状态和类型"></a> 取消状态和类型</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_setcancelstate</span><span class="hljs-params">(<span class="hljs-type">int</span> state, <span class="hljs-type">int</span> *oldstate)</span></span>;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_setcanceltype</span><span class="hljs-params">(<span class="hljs-type">int</span> type, <span class="hljs-type">int</span> *oldtype)</span></span>;<br></code></pre></td></tr></table></figure>
+<p><code>pthread_setcancelstate</code>和<code>pthread_setcanceltype</code>可用于设置线程的取消性状态和类型。<code>pthread_setcancelstate</code>会将调用线程的取消性状态设置为state，并将线程之前的取消性状态保存在oldstate中。如果对旧状态不感兴趣，可设置为NULL。state必须是以下值之一：</p>
+<ul>
+<li><code>PTHREAD_CANCEL_ENABLE</code>：线程可以取消，这是新创建的线程取消性状态的默认值，所以新建线程以及主线程默认都是可以取消的</li>
+<li><code>PTHREAD_CANCEL_DISABLE</code>：线程不可被取消，如果此类线程接收到取消请求，则会将请求挂起，直至线程的取消性状态变为 <code>PTHREAD_CANCEL_ENABLE</code></li>
+</ul>
+<p>示例：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs scss">static void *<span class="hljs-built_in">new_theard_start</span>(void *arg)<br>&#123;<br>    <span class="hljs-comment">/* 设置线程为不可取消 */</span><br>    <span class="hljs-built_in">pthread_setcancelstate</span>(PTHREAD_CANCEL_DISABLE, NULL);<br><br>    for (; ;)<br>    &#123;<br>        <span class="hljs-built_in">printf</span>(&quot;new thread is running\r\n&quot;);<br>        <span class="hljs-built_in">sleep</span>(<span class="hljs-number">2</span>);<br>    &#125;<br>    return (void *) <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果线程的取消性状态为ENABLE，那么其对取消请求的处理取决于线程的取消性类型，可通过<code>pthread_setcanceltype()</code>来设置。type必须是以下值之一：</p>
+<ul>
+<li><code>PTHREAD_CANCEL_DEFERRED</code>：取消请求到来时，线程还是继续运行，取消请求被挂起，直到线程到达某个取消点（cancellation point）为止，这是所有新建线程包括主线程默认的取消性类型。</li>
+<li><code>PTHREAD_CANCEL_ASYNCHRONOUS</code>：很少使用。</li>
+</ul>
+<h4 id="取消点"><a class="markdownIt-Anchor" href="#取消点"></a> 取消点</h4>
+<p>当线程可以取消并且canceltype设置为<code>PTHREAD_CANCEL_DEFERRED</code>时，当收到其他线程通过<code>pthread_cancel()</code>发送到来的取消请求时，仅当线程抵达某个取消点时，取消请求才会起作用。</p>
+<p>取消点的作用是更精确的设置响应取消请求的位置，未到达取消点时，已经到达的取消请求将不会被响应。这是系统的一种保护机制，用于保证取消请求不会影响到关键代码的执行。<code>man 7 pthreads</code>可查询可用作取消点的函数。</p>
+<h4 id="可取消性的检测"><a class="markdownIt-Anchor" href="#可取消性的检测"></a> 可取消性的检测</h4>
+<p>如果线程执行的是一个无取消点的死循环，比如<code>while(1)</code>，那么似乎这时候线程永远都不会响应外部的取消请求；除了线程自己主动退出，其他线程将无法通过向它发送取消请求而终止它。</p>
+<p>此时可以使用<code>pthread_testcancel</code>:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">pthread_testcancel</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>该函数会产生一个取消点：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scss">static void *<span class="hljs-built_in">new_theard_start</span>(void *arg)<br>&#123;<br>    <span class="hljs-built_in">printf</span>(&quot;new thread is running\r\n&quot;);<br>    for (; ;)&#123;<br>        <span class="hljs-comment">/* 人为产生取消点 */</span><br>        <span class="hljs-built_in">pthread_testcancel</span>();<br>    &#125;<br>    return (void *) <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="分离线程"><a class="markdownIt-Anchor" href="#分离线程"></a> 分离线程</h3>
+<p>默认情况下，当线程终止时，其它线程可以通过调用<code>pthread_join()</code>获取其返回状态、回收线程资源。有时，代码并不关心线程的返回状态，也不打算join它，只是希望系统在线程终止时能够自动回收线程资源并将其移除。在这种情况下，可以调用<code>pthread_detach()</code>将指定线程进行分离，也就是分离线程：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_detach</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> thread)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>一个线程可以将另一个线程分离，也可以将自己分离：<code>pthread_detach(pthread_self())</code></p>
+<p>分离之后的线程无法通过<code>pthread_join</code>获取终止状态，该过程不可逆，分离之后就无法恢复到之前的状态。处于分离状态的线程终止后能够自动回收线程资源。</p>
+<p>线程的分离状态通过<code>pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate)</code>设置，参数可选为：</p>
+<ul>
+<li><code>PTHREAD_CREATE_DETACHED</code>：分离线程</li>
+<li><code>PTHREAD _CREATE_JOINABLE</code>：非分离线程</li>
+</ul>
+<p><em>注意</em>：如果一个线程被设置为分离线程，而该线程运行又非常快，很有可能在<code>pthread_create()</code>返回之前该线程就终止了，终止之后它就可能将线程号和系统资源移交给其他线程，这样<code>pthread_create()</code>可能就会返回错误的线程号。避免这种情况最常见的措施就是同步通知，比如在被创建的线程里调用<code>pthread_cond_timedwait()</code>函数，让线程等待一会儿，留出足够的时间让<br>
+<code>pthread_create()</code>返回：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_cond_timedwait</span><span class="hljs-params">(<span class="hljs-type">pthread_cond_t</span> *cond, </span></span><br><span class="hljs-params"><span class="hljs-function">                           <span class="hljs-type">pthread_mutex_t</span> *mutex, </span></span><br><span class="hljs-params"><span class="hljs-function">                           <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> timespec *abstime)</span></span>;<br><br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>cond</code>：条件变量指针，是一个事件通知器，用于判断某种条件是否成立</li>
+<li><code>mutex</code>：互斥锁指针</li>
+<li><code>abstime</code>：绝对时间，等待超时的截止时间，单位为秒+纳秒<br>
+注意：<code>pthread_cond_timedwait()</code> 等待的是 “到指定时间点” 为止，而不是 “等待N秒”！</li>
+</ul>
+<p><code>pthread_cond_timedwait()</code>本质上是一个带锁的同步等待机制，目的是等待某个线程间的“条件”成立。它会阻塞线程，但可以通过事件唤醒，还可以设置超时时间，防止死锁。适合：</p>
+<ul>
+<li>等待某个事件的发生，如数据就绪或任务完成</li>
+<li>在一段时间内等待，而非无限等待</li>
+<li>希望在等待期间自动释放资源</li>
+</ul>
+<p>该函数一般不能用<code>sleep()</code>和<code>wait()</code>代替：</p>
+<ul>
+<li><code>sleep()</code>只是简单的挂起线程，无法被事件唤醒，也无法和条件变量配合使用</li>
+<li><code>wait()</code>用于进程，不能用于线程同步</li>
+</ul>
+<p>应用示例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span><br><br><span class="hljs-type">pthread_mutex_t</span> mutex = PTHREAD_MUTEX_INITIALIZER;<br><span class="hljs-type">pthread_cond_t</span> cond = PTHREAD_COND_INITIALIZER;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title">thread_func</span><span class="hljs-params">(<span class="hljs-type">void</span> *arg)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;线程启动了（ID=%lu）\n&quot;</span>, <span class="hljs-built_in">pthread_self</span>());<br><br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">timespec</span> ts;<br>    <span class="hljs-built_in">clock_gettime</span>(CLOCK_REALTIME, &amp;ts);<br>    ts.tv_sec += <span class="hljs-number">1</span>;  <span class="hljs-comment">// 等待1秒钟</span><br><br>    <span class="hljs-built_in">pthread_mutex_lock</span>(&amp;mutex);<br>    <span class="hljs-comment">// 等待条件变量1秒，让主线程有足够时间返回pthread_create()</span><br>    <span class="hljs-built_in">pthread_cond_timedwait</span>(&amp;cond, &amp;mutex, &amp;ts);<br>    <span class="hljs-built_in">pthread_mutex_unlock</span>(&amp;mutex);<br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;线程准备退出\n&quot;</span>);<br><br>    <span class="hljs-built_in">pthread_exit</span>(<span class="hljs-literal">NULL</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">pthread_t</span> tid;<br>    <span class="hljs-type">pthread_attr_t</span> attr;<br><br>    <span class="hljs-built_in">pthread_attr_init</span>(&amp;attr);<br>    <span class="hljs-built_in">pthread_attr_setdetachstate</span>(&amp;attr, PTHREAD_CREATE_DETACHED);  <span class="hljs-comment">// 设置为分离状态</span><br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">pthread_create</span>(&amp;tid, &amp;attr, thread_func, <span class="hljs-literal">NULL</span>) != <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;pthread_create error&quot;</span>);<br>        <span class="hljs-built_in">exit</span>(EXIT_FAILURE);<br>    &#125;<br><br>    <span class="hljs-comment">// 保证pthread_create返回前线程还在运行</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;主线程：pthread_create成功，线程ID=%lu\n&quot;</span>, tid);<br><br>    <span class="hljs-built_in">pthread_attr_destroy</span>(&amp;attr);<br><br>    <span class="hljs-built_in">sleep</span>(<span class="hljs-number">2</span>);  <span class="hljs-comment">// 等待子线程退出</span><br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;主线程退出\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="线程清理函数thread-cleanup-handler"><a class="markdownIt-Anchor" href="#线程清理函数thread-cleanup-handler"></a> 线程清理函数(Thread cleanup handler)</h3>
+<p>线程可通过函数 <code>pthread_cleanup_push()</code>和 <code>pthread_cleanup_pop()</code>分别负责向调用线程的清理函数栈中添加和移除清理函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">pthread_cleanup_push</span><span class="hljs-params">(<span class="hljs-type">void</span> (*routine)(<span class="hljs-type">void</span> *), <span class="hljs-type">void</span> *arg)</span></span>;<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">pthread_cleanup_pop</span><span class="hljs-params">(<span class="hljs-type">int</span> execute)</span></span>;<br></code></pre></td></tr></table></figure>
+<p><code>pthread_cleanup_push()</code>用于注册一个清理函数<code>routine(arg)</code>，<code>pthread_cleanup_pop()</code>负责移除栈顶的cleanup handler，如果<code>excute != 0</code>，则调用它。</p>
+<p>线程执行以下动作时，清理函数栈中的清理函数才会被执行：</p>
+<ul>
+<li>调用<code>pthread_exit()</code>退出时</li>
+<li>响应取消请求时(<code>pthread_cancel</code>)</li>
+<li>用非0参数调用<code>pthread_cleanup_pop()</code></li>
+</ul>
+<p><code>pthread_cleanup_push()</code>和 <code>pthread_cleanup_pop()</code>实际上是两个宏，必须成对出现，并在同一个函数作用域中使用。</p>
+<p>示例：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs scss">static void <span class="hljs-built_in">cleanup</span>(void *arg)<br>&#123;<br>    <span class="hljs-built_in">printf</span>(&quot;cleanup: %s\n&quot;, (char *)arg);<br>&#125;<br><br>static void *<span class="hljs-built_in">new_thread_start</span>(void *arg)<br>&#123;<br>    <span class="hljs-built_in">printf</span>(&quot;新线程--start run\n&quot;);<br>    <span class="hljs-built_in">pthread_cleanup_push</span>(cleanup, &quot;第 <span class="hljs-number">1</span> 次调用&quot;);<br>    <span class="hljs-built_in">pthread_cleanup_push</span>(cleanup, &quot;第 <span class="hljs-number">2</span> 次调用&quot;);<br>    <span class="hljs-built_in">pthread_cleanup_push</span>(cleanup, &quot;第 <span class="hljs-number">3</span> 次调用&quot;);<br><br>    <span class="hljs-built_in">pthread_cleanup_pop</span>(<span class="hljs-number">1</span>); <span class="hljs-comment">//执行最顶层的清理函数</span><br>    <span class="hljs-built_in">printf</span>(&quot;~~~~~~~~~~~~~~~~~\n&quot;);<br>    <span class="hljs-built_in">sleep</span>(<span class="hljs-number">2</span>);<br>    <span class="hljs-built_in">pthread_exit</span>((void *)<span class="hljs-number">0</span>); <span class="hljs-comment">//线程终止</span><br><br>    <span class="hljs-comment">/* 为了与 pthread_cleanup_push 配对 */</span><br>    <span class="hljs-built_in">pthread_cleanup_pop</span>(<span class="hljs-number">0</span>);<br>    <span class="hljs-built_in">pthread_cleanup_pop</span>(<span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="线程属性"><a class="markdownIt-Anchor" href="#线程属性"></a> 线程属性</h3>
+<p>线程属性是<code>pthread_attr_t</code>类型的，其在线程创建前被创建、初始化和修改，并在线程创建时通过形参传入线程。</p>
+<h4 id="初始化与销毁属性对象"><a class="markdownIt-Anchor" href="#初始化与销毁属性对象"></a> 初始化与销毁属性对象</h4>
+<ul>
+<li>
+<p><code>int pthread_attr_init(pthread_attr_t *attr);</code><br>
+// 初始化线程属性对象</p>
+</li>
+<li>
+<p><code>int pthread_attr_destroy(pthread_attr_t *attr);</code><br>
+// 销毁属性对象，释放资源</p>
+</li>
+</ul>
+<hr>
+<h4 id="设置线程是否可分离joinabledetached"><a class="markdownIt-Anchor" href="#设置线程是否可分离joinabledetached"></a> 设置线程是否可分离（joinable/detached）</h4>
+<ul>
+<li>
+<p><code>int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate);</code><br>
+// 设置线程分离属性（<code>PTHREAD_CREATE_JOINABLE</code> 或 <code>PTHREAD_CREATE_DETACHED</code>）</p>
+</li>
+<li>
+<p><code>int pthread_attr_getdetachstate(const pthread_attr_t *attr, int *detachstate);</code><br>
+// 获取当前分离属性状态</p>
+</li>
+</ul>
+<hr>
+<h4 id="设置线程栈大小与起始地址"><a class="markdownIt-Anchor" href="#设置线程栈大小与起始地址"></a> 设置线程栈大小与起始地址</h4>
+<ul>
+<li>
+<p><code>int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize);</code><br>
+// 设置线程栈大小</p>
+</li>
+<li>
+<p><code>int pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize);</code><br>
+// 获取线程栈大小</p>
+</li>
+<li>
+<p><code>int pthread_attr_setstack(pthread_attr_t *attr, void *stackaddr, size_t stacksize);</code><br>
+// 设置线程栈地址和大小</p>
+</li>
+<li>
+<p><code>int pthread_attr_getstack(const pthread_attr_t *attr, void **stackaddr, size_t *stacksize);</code><br>
+// 获取线程栈地址和大小</p>
+</li>
+</ul>
+<hr>
+<h4 id="设置线程调度策略和参数"><a class="markdownIt-Anchor" href="#设置线程调度策略和参数"></a> 设置线程调度策略和参数</h4>
+<ul>
+<li>
+<p><code>int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy);</code><br>
+// 设置调度策略（如 <code>SCHED_FIFO</code>, <code>SCHED_RR</code>, <code>SCHED_OTHER</code>）</p>
+</li>
+<li>
+<p><code>int pthread_attr_getschedpolicy(const pthread_attr_t *attr, int *policy);</code><br>
+// 获取调度策略</p>
+</li>
+<li>
+<p><code>int pthread_attr_setschedparam(pthread_attr_t *attr, const struct sched_param *param);</code><br>
+// 设置调度参数（如优先级）</p>
+</li>
+<li>
+<p><code>int pthread_attr_getschedparam(const pthread_attr_t *attr, struct sched_param *param);</code><br>
+// 获取调度参数</p>
+</li>
+</ul>
+<hr>
+<h4 id="设置调度继承属性"><a class="markdownIt-Anchor" href="#设置调度继承属性"></a> 设置调度继承属性</h4>
+<ul>
+<li>
+<p><code>int pthread_attr_setinheritsched(pthread_attr_t *attr, int inherit);</code><br>
+// 设置调度属性是否继承（<code>PTHREAD_INHERIT_SCHED</code> 或 <code>PTHREAD_EXPLICIT_SCHED</code>）</p>
+</li>
+<li>
+<p><code>int pthread_attr_getinheritsched(const pthread_attr_t *attr, int *inherit);</code><br>
+// 获取调度继承属性</p>
+</li>
+</ul>
+<hr>
+<h4 id="设置线程作用域系统级-进程级"><a class="markdownIt-Anchor" href="#设置线程作用域系统级-进程级"></a> 设置线程作用域（系统级 / 进程级）</h4>
+<ul>
+<li>
+<p><code>int pthread_attr_setscope(pthread_attr_t *attr, int scope);</code><br>
+// 设置作用域（<code>PTHREAD_SCOPE_SYSTEM</code> 或 <code>PTHREAD_SCOPE_PROCESS</code>）</p>
+</li>
+<li>
+<p><code>int pthread_attr_getscope(const pthread_attr_t *attr, int *scope);</code><br>
+// 获取线程作用域</p>
+</li>
+</ul>
+<h4 id="代码范例"><a class="markdownIt-Anchor" href="#代码范例"></a> 代码范例</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> *<span class="hljs-title">thread_1_start</span><span class="hljs-params">(<span class="hljs-type">void</span> *arg)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">size_t</span> stacksize;<br><br>    <span class="hljs-comment">/* 获取线程栈大小 */</span><br>    <span class="hljs-built_in">pthread_attr_getstacksize</span>((<span class="hljs-type">pthread_attr_t</span> *)arg, &amp;stacksize);<br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Thread 1 start, stack size: %zu\n&quot;</span>, stacksize);<br><br>    <span class="hljs-built_in">sleep</span>(<span class="hljs-number">2</span>);<br><br>    <span class="hljs-comment">/* 退出线程 */</span><br>    <span class="hljs-built_in">pthread_exit</span>(<span class="hljs-literal">NULL</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> ret;<br>    <span class="hljs-type">pthread_t</span> thread_1;<br>    <span class="hljs-type">pthread_attr_t</span> thread_1_attr;<br><br>    <span class="hljs-comment">/* 初始化线程属性 */</span><br>    <span class="hljs-built_in">pthread_attr_init</span>(&amp;thread_1_attr);<br><br>    <span class="hljs-comment">/* 设置线程为分离态 */</span><br>    <span class="hljs-built_in">pthread_attr_setdetachstate</span>(&amp;thread_1_attr, PTHREAD_CREATE_DETACHED);<br><br>    <span class="hljs-comment">/* 设置线程栈大小 */</span><br>    ret = <span class="hljs-built_in">pthread_attr_setstacksize</span>(&amp;thread_1_attr, <span class="hljs-number">88888</span>);<br>    <span class="hljs-keyword">if</span> (ret != <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;pthread_attr_setstacksize failed: %s\n&quot;</span>, <span class="hljs-built_in">strerror</span>(ret));<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">-1</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/* 创建线程 */</span><br>    ret = <span class="hljs-built_in">pthread_create</span>(&amp;thread_1, &amp;thread_1_attr, thread_1_start, &amp;thread_1_attr);<br><br>    <span class="hljs-comment">/* 销毁线程属性 */</span><br>    <span class="hljs-built_in">pthread_attr_destroy</span>(&amp;thread_1_attr);<br><br>    <span class="hljs-built_in">sleep</span>(<span class="hljs-number">3</span>);<br><br>    <span class="hljs-comment">/* 退出线程 */</span><br>    <span class="hljs-built_in">pthread_exit</span>(<span class="hljs-literal">NULL</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Linux-%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="category-chain-item">Linux 进程与线程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux 进程与线程（二）线程</div>
+      <div>http://akichen891.github.io/2025/04/21/Linux线程2/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月21日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年4月21日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/04/17/LinuxWifi%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95/" title="Linux RTL8188EUS Wifi驱动调试">
+                        <span class="hidden-mobile">Linux RTL8188EUS Wifi驱动调试</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
