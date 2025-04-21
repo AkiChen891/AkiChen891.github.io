@@ -21,13 +21,13 @@
   
     <meta name="description" content="基本概念  进程：资源管理的最小单位 线程：程序执行的最小单位  每个进程拥有自己的数据段、代码段和堆栈段。 线程通常叫做轻型的进程，包含独立的栈和CPU寄存器状态。线程是进程的一条执行路径，每个线程共享其所附属进程的所有资源。 线程和进程比起来很小，相对来说线程花费更少的CPU资源。 更形象一点：  进程是资源的管理单位  进程就像一个工厂，里面有自己的设备（CPU、内存、文件、网络连接等）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux线程（一）基本概念">
+<meta property="og:title" content="Linux 进程与线程（一）基本概念与信号">
 <meta property="og:url" content="http://akichen891.github.io/2025/03/31/Linux%E7%BA%BF%E7%A8%8B1/index.html">
 <meta property="og:site_name" content="Aki&#39;s Blog">
 <meta property="og:description" content="基本概念  进程：资源管理的最小单位 线程：程序执行的最小单位  每个进程拥有自己的数据段、代码段和堆栈段。 线程通常叫做轻型的进程，包含独立的栈和CPU寄存器状态。线程是进程的一条执行路径，每个线程共享其所附属进程的所有资源。 线程和进程比起来很小，相对来说线程花费更少的CPU资源。 更形象一点：  进程是资源的管理单位  进程就像一个工厂，里面有自己的设备（CPU、内存、文件、网络连接等）">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-31T04:07:03.000Z">
-<meta property="article:modified_time" content="2025-03-31T04:30:17.576Z">
+<meta property="article:modified_time" content="2025-04-21T08:06:22.645Z">
 <meta property="article:author" content="Aki">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Linux线程（一）基本概念 - Aki&#39;s Blog</title>
+  <title>Linux 进程与线程（一）基本概念与信号 - Aki&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Linux线程（一）基本概念</span>
+            <span id="subtitle">Linux 进程与线程（一）基本概念与信号</span>
           
         </div>
 
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          680 字
+          4.1k 字
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          6 分钟
+          34 分钟
         
       </span>
     
@@ -294,7 +294,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Linux线程（一）基本概念</h1>
+            <h1 id="seo-header">Linux 进程与线程（一）基本概念与信号</h1>
             
             
               <div class="markdown-body">
@@ -354,6 +354,291 @@
 <li>线程切换涉及内核态和用户态切换，开销较大</li>
 <li>适合多核CPU调度、多线程并发任务，如 I/O 密集型任务</li>
 </ul>
+<h2 id="信号"><a class="markdownIt-Anchor" href="#信号"></a> 信号</h2>
+<h3 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h3>
+<p>信号是事件发生时一个进程对另一个进程的通知机制，也可以被称作软件中断。大多数情况下进程无法预测信号到达的时间，因此信号提供了一种处理<em>异步事件</em>的方法。</p>
+<p>信号可以由以下情况产生：</p>
+<ul>
+<li>硬件异常：如除数为0、数组访问越界等异常，硬件会在检测到异常后通知Kernel，由Kernel通知进程</li>
+<li>终端输入能够产生信号的特殊字符，如Ctrl+C和Ctrl+Z</li>
+<li><code>kill()</code>：此方法有限制，接收信号的进程和发送信号的进程的所有者必须相同，或发送信号的进程的所有者为root</li>
+<li>发生软件事件，如定时器超时、CPU时间超限、子进程退出等等</li>
+</ul>
+<p>和RTOS相似，信号本质上就是一个int类型的数字编号，“传递信号”实际上就是传递一个整形变量。</p>
+<h3 id="信号的处理方式"><a class="markdownIt-Anchor" href="#信号的处理方式"></a> 信号的处理方式</h3>
+<ul>
+<li>忽略信号：信号到达进程后，进程直接忽略该信号，除了SIGKILL和SIGSTOP</li>
+<li>捕获信号：信号到达进程后，执行预先绑定后好的信号处理函数（回调函数）</li>
+<li>执行系统默认操作：对于大多数信号，系统的默认处理方式即为终止该进程</li>
+</ul>
+<h3 id="常见信号与默认行为"><a class="markdownIt-Anchor" href="#常见信号与默认行为"></a> 常见信号与默认行为</h3>
+<table>
+<thead>
+<tr>
+<th>信号编号</th>
+<th>信号名称</th>
+<th>含义</th>
+<th>默认操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>SIGHUP</td>
+<td>终端挂起或控制进程终止</td>
+<td>终止</td>
+</tr>
+<tr>
+<td>2</td>
+<td>SIGINT</td>
+<td>键盘中断 (Ctrl+C)</td>
+<td>终止</td>
+</tr>
+<tr>
+<td>3</td>
+<td>SIGQUIT</td>
+<td>键盘退出 (Ctrl+)</td>
+<td>核心转储</td>
+</tr>
+<tr>
+<td>4</td>
+<td>SIGILL</td>
+<td>非法机器语言指令</td>
+<td>核心转储</td>
+</tr>
+<tr>
+<td>5</td>
+<td>SIGTRAP</td>
+<td>跟踪断点</td>
+<td>核心转储</td>
+</tr>
+<tr>
+<td>6</td>
+<td>SIGABRT</td>
+<td>异常终止 (abort函数)</td>
+<td>核心转储</td>
+</tr>
+<tr>
+<td>7</td>
+<td>SIGBUS</td>
+<td>总线错误（某种内存访问错误）</td>
+<td>核心转储</td>
+</tr>
+<tr>
+<td>8</td>
+<td>SIGFPE</td>
+<td>浮点异常</td>
+<td>核心转储</td>
+</tr>
+<tr>
+<td>9</td>
+<td>SIGKILL</td>
+<td>强制终止</td>
+<td>终止（不可捕获）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>SIGUSR1</td>
+<td>用户自定义信号1</td>
+<td>终止</td>
+</tr>
+<tr>
+<td>11</td>
+<td>SIGSEGV</td>
+<td>段错误（无效内存引用）</td>
+<td>核心转储</td>
+</tr>
+<tr>
+<td>12</td>
+<td>SIGUSR2</td>
+<td>用户自定义信号2</td>
+<td>终止</td>
+</tr>
+<tr>
+<td>13</td>
+<td>SIGPIPE</td>
+<td>管道破裂（写无读端）</td>
+<td>终止</td>
+</tr>
+<tr>
+<td>14</td>
+<td>SIGALRM</td>
+<td>定时器超时</td>
+<td>终止</td>
+</tr>
+<tr>
+<td>15</td>
+<td>SIGTERM</td>
+<td>终止请求</td>
+<td>终止</td>
+</tr>
+<tr>
+<td>17</td>
+<td>SIGCHLD</td>
+<td>子进程状态变化</td>
+<td>忽略</td>
+</tr>
+<tr>
+<td>18</td>
+<td>SIGCONT</td>
+<td>继续执行</td>
+<td>忽略（可捕获）</td>
+</tr>
+<tr>
+<td>19</td>
+<td>SIGSTOP</td>
+<td>停止（不可忽略、不可捕获）</td>
+<td>停止</td>
+</tr>
+<tr>
+<td>20</td>
+<td>SIGTSTP</td>
+<td>终端停止信号 (Ctrl+Z)</td>
+<td>停止</td>
+</tr>
+<tr>
+<td>21</td>
+<td>SIGTTIN</td>
+<td>后台进程请求读取终端</td>
+<td>停止</td>
+</tr>
+<tr>
+<td>22</td>
+<td>SIGTTOU</td>
+<td>后台进程请求写终端</td>
+<td>停止</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 默认操作说明：</p>
+<ul>
+<li><strong>终止</strong>：终止进程。</li>
+<li><strong>核心转储</strong>：终止进程并生成 core 文件（用于调试）。</li>
+<li><strong>忽略</strong>：信号被忽略，进程不受影响。</li>
+<li><strong>停止</strong>：暂停进程，等待 SIGCONT 恢复。</li>
+</ul>
+</blockquote>
+<h3 id="进程处理信号"><a class="markdownIt-Anchor" href="#进程处理信号"></a> 进程处理信号</h3>
+<h4 id="signal"><a class="markdownIt-Anchor" href="#signal"></a> signal()</h4>
+<p><code>signal()</code>是Linux下设置信号处理方式最简单的接口，可设置信号的处理方式为捕获、忽略或默认操作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span> <span class="hljs-params">(*<span class="hljs-type">sig_t</span>)</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span></span>;<br><span class="hljs-function"><span class="hljs-type">sig_t</span> <span class="hljs-title">signal</span><span class="hljs-params">(<span class="hljs-type">int</span> signum, <span class="hljs-type">sig_t</span> handler)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>形参：</p>
+<ul>
+<li><code>signum</code>：指定需要设置的信号，可用信号名（宏）或信号的数字编号</li>
+<li><code>handler</code>：指向对应的信号处理函数，也可设置为<code>SIG_IGN</code>（忽略）或<code>SIG_DFL</code>（默认操作）</li>
+</ul>
+<h4 id="sigaction"><a class="markdownIt-Anchor" href="#sigaction"></a> sigaction()</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">sigaction</span><span class="hljs-params">(<span class="hljs-type">int</span> signum, <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> sigaction *act, <span class="hljs-keyword">struct</span> sigaction *oldact)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>形参：</p>
+<ul>
+<li><code>signum</code>：待设置信号，除了SIGKILL和SIGSTOP</li>
+<li><code>act</code>：指向一个struct sigaction结构，描述了信号的处理方式</li>
+<li><code>oldact</code>：信号之前的处理方式等信息通过该参数返回</li>
+</ul>
+<p>sigaction结构体：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">struct</span> sigaction &#123;<br>    <span class="hljs-keyword">void</span> (*sa_handler)(<span class="hljs-built_in">int</span>);<br>    <span class="hljs-keyword">void</span> (*sa_sigaction)(<span class="hljs-built_in">int</span>, siginfo_t*, <span class="hljs-keyword">void</span> *);<br>    sigset_t sa_mask;<br>    <span class="hljs-built_in">int</span> sa_flags;<br>    <span class="hljs-keyword">void</span> (*sa_restorer)(<span class="hljs-keyword">void</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><code>sa_handler</code>：指定的信号处理函数</li>
+<li><code>sa_sigaction</code>：也用于指定信号处理函数，这是替代的信号处理函数，提供了更多的参数，与<code>sa_handler</code>互斥</li>
+<li><code>sa_mask</code>：定义了一组信号，当进程在执行由 sa_handler 所定义的信号处理函数之前，会先将这组信号添加到进程的信号掩码字段中，当进程执行完处理函数之后再恢复信号掩码，将这组信号从信号掩码字段中删除。当进程在执行信号处理函数期间，可能又收到了同样的信号或其它信号，从而打断当前信号处理函数的执行，类似中断嵌套；如果进程接收到了信号掩码中的这些信号，那么这个信号将会被阻塞暂时不能得到处理，直到这些信号从进程的信号掩码中移除。在信号处理函数调用时，进程会自动将当前处理的信号添加到信号掩码字段中，这样保证了在处理一个给定的信号时，如果此信号再次发生，那么它将会被阻塞。</li>
+<li><code>sa_restorer</code>：已过时</li>
+<li><code>sa_flags</code>：标志位，用于控制信号的处理过程
+<ul>
+<li><code>SA_NOCLDSTOP</code>：子进程停止时（即当它们接收到SIGSTOP、SIGTSTP、SIGTTIN或SIGTTOU中的一种时）或恢复（即它们接收到 SIGCONT）时不会收到 SIGCHLD 信号</li>
+<li><code>SA_NOCLDWAIT</code>：子进程终止时不会将其转变为僵尸进程</li>
+<li><code>SA_NODEFER</code>：不要阻塞从某个信号自身的信号处理函数中接收此信号。也就是说当进程此时正在执行某个信号的处理函数，默认情况下，进程会自动将该信号添加到进程的信号掩码字段中，从而在执行信号处理函数期间阻塞该信号，默认情况下，我们期望进程在处理一个信号时阻塞同种信号，否则引起一些竞态条件；如果设置SA_NODEFER 标志，则表示不对它进行阻塞。</li>
+<li><code>SA_RESETHAND</code>：信号的处理方式设置为系统默认操作</li>
+<li><code>SA_RESTART</code>：被信号中断的系统调用在信号处理完成之后将自动重新发起</li>
+<li><code>SA_SIGINFO</code>：如果设置了该标志，则表示使用 sa_sigaction 作为信号处理函数、而不是 sa_handler。</li>
+</ul>
+</li>
+</ul>
+<h4 id="sigsuspend"><a class="markdownIt-Anchor" href="#sigsuspend"></a> sigsuspend()</h4>
+<p><code>sigsuspend()</code>是<code>pause()</code>的高级版本，当需要安全、精确地等待一个特定信号，而又不想错过它时，就该用 <code>sigsuspend()</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">sigsuspend</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">sigset_t</span> *mask)</span></span>;<br></code></pre></td></tr></table></figure>
+<p><code>mask</code>指向一个临时的信号屏蔽集（阻塞集）。<code>sigsuspend(&amp;mask_set)</code>实际上就意味着只有“要等的那个信号”能打断挂起、触发处理器，屏蔽其他所有不关心的信号。</p>
+<p>假设有两个进程，子进程执行完一个任务后，通过信号告诉父进程可以继续了。这时候你不能用 <code>pause()</code>，因为你可能在设置好处理函数之前就错过了信号:</p>
+<ol>
+<li>父进程提前屏蔽 SIGUSR1（防止它在处理器没准备好时到来）</li>
+<li>安装信号处理器</li>
+<li>子进程用 kill(getppid(), SIGUSR1) 发信号</li>
+<li>父进程使用 sigsuspend() 临时取消屏蔽，挂起自己直到 SIGUSR1 到达</li>
+<li>信号处理器运行，sigsuspend() 返回，父进程继续执行</li>
+</ol>
+<p>这样做可以防止 race condition（竞争条件）—— 例如信号在 pause() 之前到来，结果永远挂起。</p>
+<h4 id="两种不同状态下信号的处理方式"><a class="markdownIt-Anchor" href="#两种不同状态下信号的处理方式"></a> 两种不同状态下信号的处理方式</h4>
+<ul>
+<li>程序启动<br>
+当一个应用程序刚启动，还未执行到<code>signal()</code>处，或者程序中没有调用<code>signal()</code>函数时，进程对所有信号的处理方式都设置为默认操作。这也就是为什么平时都可以使用Ctrl+C来终止一个进程。</li>
+<li>进程创建<br>
+当一个进程调用 fork()创建子进程时，其子进程将会继承父进程的信号处理方式，因为子进程在开始时复制了父进程的内存映像，所以信号捕获函数的地址在子进程中是有意义的。</li>
+</ul>
+<h2 id="进程的内存布局"><a class="markdownIt-Anchor" href="#进程的内存布局"></a> 进程的内存布局</h2>
+<h3 id="c语言程序的内存布局"><a class="markdownIt-Anchor" href="#c语言程序的内存布局"></a> C语言程序的内存布局</h3>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">虚拟地址向上递增<br> ┌──────────────────────────┐<br> │  栈（Stack）             │ ← 局部变量、函数参数、返回地址<br> ├──────────────────────────┤<br> │  堆（Heap）             │ ← malloc / calloc / realloc 动态分配<br> ├──────────────────────────┤<br> │  BSS段（<span class="hljs-string">.bss</span>）          │ ← 未初始化的全局变量 &amp; 静态变量（全为0）<br> ├──────────────────────────┤<br> │  数据段（<span class="hljs-string">.data</span>）        │ ← 初始化的全局变量 &amp; 静态变量<br> ├──────────────────────────┤<br> │  代码段（<span class="hljs-string">.text</span>）        │ ← 可执行代码、只读常量（有时包含<span class="hljs-string">.rodata</span>）<br> └──────────────────────────┘<br></code></pre></td></tr></table></figure>
+<h3 id="进程的虚拟地址空间"><a class="markdownIt-Anchor" href="#进程的虚拟地址空间"></a> 进程的虚拟地址空间</h3>
+<p>Linux 为每个进程提供一个独立的虚拟地址空间，进程只能看到并访问自己的虚拟空间。实际的物理内存由内核通过页表映射维护：</p>
+<ul>
+<li>进程隔离，互不干扰，提升安全性</li>
+<li>可以实现内存保护、共享内存、内存映射等高级机制</li>
+<li>支持更大的地址空间</li>
+</ul>
+<p>以64位Linux系统为例：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs arduino">┌────────────────────────────┐<br>│     用户栈 (stack)         │ ← 地址高，向下增长<br>├────────────────────────────┤<br>│     mmap 区域（匿名映射/共享库） │<br>├────────────────────────────┤<br>│     堆 (heap)              │ ← 向上增长<br>├────────────────────────────┤<br>│     BSS段（.bss）          │<br>├────────────────────────────┤<br>│     数据段（.data）        │<br>├────────────────────────────┤<br>│     代码段（.text）        │<br>├────────────────────────────┤<br>│     <span class="hljs-literal">NULL</span>保留区（不可访问） │ ← 低地址，保护空指针访问<br>└────────────────────────────┘<br></code></pre></td></tr></table></figure>
+<p>x86下用户态虚拟地址空间上限为4GB，用户使用3GB，Kernel使用1GB。用户态程序操作的是虚拟地址，通过MMU（内存管理单元）由Kernel映射到真实的物理地址，用户态无法直接观测到物理地址。</p>
+<h2 id="创建子进程"><a class="markdownIt-Anchor" href="#创建子进程"></a> 创建子进程</h2>
+<h3 id="fork"><a class="markdownIt-Anchor" href="#fork"></a> fork()</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">fork</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br></code></pre></td></tr></table></figure>
+<p><code>fork()</code>调用后，将存在两个进程：</p>
+<ul>
+<li>原进程（父进程）</li>
+<li>新创建的子进程</li>
+</ul>
+<p>子进程实际上是父进程的一个副本，子进程拷贝了父进程的数据段、堆、栈，同时继承了父进程<code>fopen</code>的文件描述符，并且两个进程并不共享这些存储空间（除了代码段，它是只读的，父子进程共享代码段，内存中只存在一份代码段数据），因此<code>fork()</code>之后每个进程均可修改各自的栈数据和堆中的变量。</p>
+<p><code>fork()</code> 本身在被调用一次之后，将会返回两次：一次在父进程中返回，一次在子进程中返回。父进程中<code>fork()</code>返回新创建的子进程的PID，子进程中<code>fork()</code>返回0。因此可以通过判断返回值的方式来判断是父进程还是子进程：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-type">pid_t</span> pid = fork();<br><br><span class="hljs-keyword">if</span> (pid &gt; <span class="hljs-number">0</span>) &#123;<br>    <span class="hljs-comment">// 父进程</span><br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;<br>    <span class="hljs-comment">// 子进程</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-comment">// 错误处理</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>前面提到父进程和子进程会共享已经打开的文件标识符，那么这里就有两种可能的情况：</p>
+<ul>
+<li>父进程先<code>fopen</code>，再<code>fork()</code></li>
+</ul>
+<p>两个进程指向同一个文件标识符，并共享文件偏移量，也就是说子进程改变了文章偏移量之后，也会影响的父进程，反之亦然。</p>
+<ul>
+<li>父进程先<code>fork()</code>，再各自<code>fopen()</code></li>
+</ul>
+<p>两个进程获取到的文件标识符不同，各自拥有自己的文件编译量，进程之间不会同步文件偏移量的修改结果，因此写入的数据会发生竞争（覆盖或缺失）</p>
+<h3 id="vfork"><a class="markdownIt-Anchor" href="#vfork"></a> vfork()</h3>
+<p><code>vfork()</code>与 <code>fork()</code>函数主要有以下两个区别：</p>
+<ul>
+<li>
+<p><code>vfork()</code>与 <code>fork()</code>一样都创建了子进程，但 <code>vfork()</code>函数并不会将父进程的地址空间完全复制到子进程中，因为子进程会立即调用 <code>exec</code>（或<code>_exit</code>），于是也就不会引用该地址空间的数据。不过在子进程调用 <code>exec</code> 或 <code>_exit</code> 之前，它在父进程的空间中运行、子进程共享父进程的内存。这种优化工作方式的实现会提高进程创建的效率；但如果子进程修改了父进程的数据（除了 <code>vfork</code> 返回值的变量）、进行了函数调用、或者没有调用 <code>exec</code> 或 <code>_exit</code> 就返回将可能带来未知的结果。</p>
+</li>
+<li>
+<p>另一个区别在于，<code>vfork()</code>保证子进程先运行，子进程调用 <code>exec</code> 之后父进程才可能被调度运行。</p>
+</li>
+</ul>
+<p>实际应尽量避免<code>vfork()</code>来创建子进程，防止出现未知结果。</p>
+<h2 id="fork之后的竞争条件"><a class="markdownIt-Anchor" href="#fork之后的竞争条件"></a> fork()之后的竞争条件</h2>
+<p><code>fork()</code>之后父子进程都将被系统继续调度运行，此时无法确定父子两个进程谁先访问CPU，这导致两个进程谁先运行、谁后运行是不确定的（虽然大部分情况下都是父进程先执行）。这个时候可以通过某种进程间同步机制来实现，比如使用信号：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#include &lt;stdio.h&gt;</span><br><span class="hljs-comment">#include &lt;stdlib.h&gt;</span><br><span class="hljs-comment">#include &lt;signal.h&gt;</span><br><span class="hljs-comment">#include &lt;unistd.h&gt;</span><br><span class="hljs-comment">#include &lt;sys/types.h&gt;</span><br><br>static void sig_handler(int sig)<br>&#123;<br>    printf(<span class="hljs-string">&quot;接收到信号\n&quot;</span>);<br>&#125;<br><br>int main(void)<br>&#123;<br>    struct sigaction sig = &#123;<span class="hljs-number">0</span>&#125;;<br>    sigset_t wait_mask; <span class="hljs-regexp">/* 信号集 */</span><br><br>    sigemptyset(&amp;wait_mask);    <span class="hljs-regexp">/* 初始化信号集 */</span><br><br>    sig.sa_handler = sig_handler;<br>    sig.sa_flags = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (sigaction(SIGUSR1, &amp;sig, NULL) == -<span class="hljs-number">1</span>)&#123;<br>        perror(<span class="hljs-string">&quot;sigaction error&quot;</span>);<br>        <span class="hljs-keyword">exit</span>(-<span class="hljs-number">1</span>);<br>    &#125;<br><br>    switch (fork())<br>    &#123;<br>    case -<span class="hljs-number">1</span>:<br>        perror(<span class="hljs-string">&quot;fork error&quot;</span>);<br>        <span class="hljs-keyword">exit</span>(-<span class="hljs-number">1</span>);<br><br>    case <span class="hljs-number">0</span>:<br>        printf(<span class="hljs-string">&quot;子进程开始执行\n&quot;</span>);<br>        printf(<span class="hljs-string">&quot;子进程打印信息\n&quot;</span>);<br>        printf(<span class="hljs-string">&quot;~~~~~~~~~~~~~~~\n&quot;</span>);<br>        sleep(<span class="hljs-number">2</span>);<br>        kill(getppid(), SIGUSR1);   <span class="hljs-regexp">/* 向父进程发送SIGUSR1信号 */</span><br>        _exit(<span class="hljs-number">0</span>);<br>    <br>    default:<br>        <span class="hljs-regexp">/* 不屏蔽任何信号，等待信号到达 */</span><br>        <span class="hljs-keyword">if</span> (sigsuspend(&amp;wait_mask) != -<span class="hljs-number">1</span>)&#123;<br>            <span class="hljs-keyword">exit</span>(-<span class="hljs-number">1</span>);<br>        &#125;<br>        printf(<span class="hljs-string">&quot;父进程开始执行\n&quot;</span>);<br>        printf(<span class="hljs-string">&quot;父进程打印信息\n&quot;</span>);<br>        <span class="hljs-keyword">exit</span>(<span class="hljs-number">0</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="监视子进程"><a class="markdownIt-Anchor" href="#监视子进程"></a> 监视子进程</h2>
+<h3 id="wait"><a class="markdownIt-Anchor" href="#wait"></a> wait()</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">wait</span><span class="hljs-params">(<span class="hljs-type">int</span> *status)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>形参：</p>
+<ul>
+<li><code>status</code>：存放子进程终止时的状态信息</li>
+</ul>
+<p>系统调用<code>wait()</code>将执行如下动作：</p>
+<ul>
+<li>调用<code>wait()</code>函数，如果所有子进程都还在运行，则<code>wait()</code>会一直阻塞等待，直到某个子进程终止</li>
+<li>如果进程调用<code>wait()</code>，但是该进程没有子进程（该进程没有需要等待的子进程），那么<code>wait()</code>将返回错误</li>
+<li>如果进程调用<code>wait()</code>之前，其子进程已经有一个或多个终止了，那么调用<code>wait()</code>将不会阻塞，而是会回收子进程的一些资源，即“收尸”。</li>
+</ul>
+<p>形参<code>status</code>不为NULL的情况下，可通过以下宏来检查其参数：</p>
+<ul>
+<li><code>WIFEXITED(status)</code>：子进程正常终止，返回true</li>
+<li><code>WEXITSTATUS(status)</code>：返回子进程退出状态</li>
+</ul>
 
                 
               </div>
@@ -372,7 +657,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Linux-%E7%BA%BF%E7%A8%8B/" class="category-chain-item">Linux 线程</a>
+  <a href="/categories/Linux-%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="category-chain-item">Linux 进程与线程</a>
   
   
 
@@ -392,7 +677,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Linux线程（一）基本概念</div>
+      <div>Linux 进程与线程（一）基本概念与信号</div>
       <div>http://akichen891.github.io/2025/03/31/Linux线程1/</div>
     </div>
     <div class="license-meta">
@@ -411,7 +696,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月31日</div>
+          <div>2025年4月21日</div>
         </div>
       
       
