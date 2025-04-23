@@ -241,6 +241,114 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/04/01/LinuxI2C/" target="_self">
+          Linux I2C驱动通用框架和编写细节
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/04/01/LinuxI2C/" target="_self">
+        <div>
+          I2C子系统架构 I2C子系统采用分层设计：  I2C核心层  提供总线协议实现、设备注册/注销、总线通信接口（如i2c_transfer） struct i2c_adapter：抽象化的I2C控制器 struct i2c_client：连接到总线的I2C从机 管理适配器和设备，提供用户空间接口(/dev/i2c-*)   I2C总线驱动  控制物理I2C控制器硬件，实现底层时序和寄存器控制 填
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-04-01 13:40" pubdate>
+              2025-04-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/03/31/LinuxInput%E8%AE%BE%E5%A4%87/" target="_self">
+          Linux Input设备通用驱动框架
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/31/LinuxInput%E8%AE%BE%E5%A4%87/" target="_self">
+        <div>
+          Input子系统架构 1234567891011121314151617+-----------------------+|    用户空间         ||-----------------------|| /dev/input/eventX      |  &lt;-  应用程序通过读取这些设备文件获取输入事件+-----------------------+          ↑+--
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-03-31 14:20" pubdate>
+              2025-03-31
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2025/03/31/Linux%E7%BA%BF%E7%A8%8B1/" target="_self">
           Linux 进程与线程（一）基本概念与信号
         </a>
@@ -667,119 +775,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/03/11/Linux%E5%86%85%E6%A0%B8%E7%A7%BB%E6%A4%8D/" target="_self">
-          IMX6ULL Linux内核移植
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/11/Linux%E5%86%85%E6%A0%B8%E7%A7%BB%E6%A4%8D/" target="_self">
-        <div>
-          准备工作  网络设置 关闭主机的Ubuntu的防火墙： 1sudo ufw disable 确认VMWare使用桥接模式，主机、虚拟机和开发板三者处于同一网段，如：  主机：192.168.1.100 虚拟机：192.168.1.105 开发板：192.168.1.103 (DHCP获取)  在uboot下，开发板ping虚拟机和主机、虚拟机ping主机应当都能ping通。未加载Linux内核前
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-03-11 17:08" pubdate>
-              2025-03-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/03/07/uboot%E7%A7%BB%E6%A4%8D/" target="_self">
-          NXP 官方u-boot移植和启动过程
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/07/uboot%E7%A7%BB%E6%A4%8D/" target="_self">
-        <div>
-          官方U-Boot下载 Github 下载后拷贝tar.bz2至Linux，然后tar -vxjf  U-boot工程目录  除了文件夹之外，还有一些文件：   验证defconfig cd /configs/，确认存在有I.MX6ULL的配置文件：  新版本uboot中mx6ull_14x14_evk_defconfig用于传统的非安全启动（Non-Secure Boot）模式，而mx6ull_
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-03-07 13:58" pubdate>
-              2025-03-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#board">6</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/#board">7</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
