@@ -1,0 +1,699 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="交叉编译器 如果接触过Linux驱动或应用开发，那么你一定有一个交叉编译器，用于在x64的机器上将c文件编译成可供arm架构设备执行的二进制版本。Qt也是这样，不过不同的是Qt基于C运行，因此交叉编译器不再是xxx-gcc，而是xxx-g++或xxx-gnu。以我的交叉编译器为例，编译C语言时我使用的是7.5.0版本的Linaro公司的arm-linux-gnueabihf-gcc。同理，编译C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Qt 6.9 为 ARM 设备交叉编译应用程序">
+<meta property="og:url" content="http://akichen891.github.io/2025/04/24/Qt%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/index.html">
+<meta property="og:site_name" content="Aki&#39;s Blog">
+<meta property="og:description" content="交叉编译器 如果接触过Linux驱动或应用开发，那么你一定有一个交叉编译器，用于在x64的机器上将c文件编译成可供arm架构设备执行的二进制版本。Qt也是这样，不过不同的是Qt基于C运行，因此交叉编译器不再是xxx-gcc，而是xxx-g++或xxx-gnu。以我的交叉编译器为例，编译C语言时我使用的是7.5.0版本的Linaro公司的arm-linux-gnueabihf-gcc。同理，编译C">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-24T09:34:45.000Z">
+<meta property="article:modified_time" content="2025-04-24T13:26:09.491Z">
+<meta property="article:author" content="Aki">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>基于Qt 6.9 为 ARM 设备交叉编译应用程序 - Aki&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                <span>工具</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://akichen891.github.io/tools/cangenerate.html" target="_self">
+                    
+                    <span>CAN报文生成</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">基于Qt 6.9 为 ARM 设备交叉编译应用程序</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-24 17:34" pubdate>
+          2025年4月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">基于Qt 6.9 为 ARM 设备交叉编译应用程序</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="交叉编译器"><a class="markdownIt-Anchor" href="#交叉编译器"></a> 交叉编译器</h3>
+<p>如果接触过Linux驱动或应用开发，那么你一定有一个交叉编译器，用于在x64的机器上将c文件编译成可供arm架构设备执行的二进制版本。Qt也是这样，不过不同的是Qt基于C<ins>运行，因此交叉编译器不再是<code>xxx-gcc</code>，而是<code>xxx-g++</code>或<code>xxx-gnu</code>。以我的交叉编译器为例，编译C语言时我使用的是7.5.0版本的Linaro公司的<code>arm-linux-gnueabihf-gcc</code>。同理，编译C</ins>的就是<code>arm-linux-gnueabihf-g++</code>。</p>
+<p>有一个办法可以用来快速确认编译器是否可用。在开发板的根目录下（或者别的随便什么位置）新建一个测试文件<code>test.cpp</code>，输入：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>  cout &lt;&lt; <span class="hljs-string">&quot;Hello World!&quot;</span> &lt;&lt; endl; <br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>然后在Ubuntu虚拟机中将其交叉编译为arm：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">arm-linux-gnueabihf-g++ <span class="hljs-keyword">test</span>.cpp -o <span class="hljs-keyword">test</span><br></code></pre></td></tr></table></figure>
+<p>然后在开发板中执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./test<br></code></pre></td></tr></table></figure>
+<p>如果你看到终端打印出了&quot;Hello World!&quot;，说明你的交叉编译器工作正常。</p>
+<h3 id="qt环境配置"><a class="markdownIt-Anchor" href="#qt环境配置"></a> Qt环境配置</h3>
+<p>我们常说的“Qt&quot;其实由很多个东西组成，包括但不限于：</p>
+<ul>
+<li>Qt源码(source code)，比如 QtCore、QtWidgets、QtNetwork 等模块</li>
+<li>Qt Creator：Qt 官方的 IDE（集成开发环境），用来写代码、调试、构建 Qt 应用</li>
+<li>Qt UI designer：用于设计UI</li>
+</ul>
+<p>现在官方主推的安装Qt的方式是通过在线安装器安装，安装时一般会让你选择需要安装哪些组件。需要注意的是，安装器默认是不会安装Qt源码的，而交叉编译Qt给arm设备又必须需要Qt源码，因为Qt默认没有提供arm的二进制文件。因此我们需要从官网下载Qt源码，这里我选择6.9版本。</p>
+<p>在Qt5时代，可以只进行一次交叉编译。而Qt6则必须先用宿主机(Qt Host)编译一次以生成Host Build的Qt工具链用于后续的Qt tools构建，也就是必须基于x86_64先编译一次Qt的源码，生成一些Qt需要的宿主工具，比如moc和rcc。然后在这基础上，才能继续进行交叉编译。交叉编译时也需要向Cmake指定宿主工具的目录，否则交叉编译会失败。Qt5的编译步骤和Qt6差异较大，而关于Qt5的编译教程又有很多，这里就不展开了，主要讲Qt6.</p>
+<p>在浏览器中下载源码并拷贝至虚拟机：<a target="_blank" rel="noopener" href="https://download.qt.io/official_releases/qt/6.9/6.9.0/single/qt-everywhere-src-6.9.0.tar.xz">https://download.qt.io/official_releases/qt/6.9/6.9.0/single/qt-everywhere-src-6.9.0.tar.xz</a></p>
+<p>或者直接在虚拟机中<code>wget https://download.qt.io/official_releases/qt/6.9/6.9.0/single/qt-everywhere-src-6.9.0.tar.xz</code></p>
+<p>下载完成后，解压（耗时较长），进入源码目录。</p>
+<h3 id="基于x86_64编译获得qt-host"><a class="markdownIt-Anchor" href="#基于x86_64编译获得qt-host"></a> 基于x86_64编译获得Qt Host</h3>
+<p>首先要构建Host。在Qt源码目录下新建一个<code>build-qt-host</code>文件夹，用于存放编译结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/Qt_source_code/qt-everywhere-src-6.9.0<br><span class="hljs-built_in">mkdir</span> build-qt-host &amp;&amp; <span class="hljs-built_in">cd</span> build-qt-host<br></code></pre></td></tr></table></figure>
+<p>然后在终端中配置cmake：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">cmake <span class="hljs-built_in">..</span> \<br>  -GNinja \<br>  <span class="hljs-attribute">-DCMAKE_BUILD_TYPE</span>=Release \<br>  <span class="hljs-attribute">-DQT_BUILD_EXAMPLES</span>=OFF \<br>  <span class="hljs-attribute">-DQT_BUILD_TESTS</span>=OFF<br></code></pre></td></tr></table></figure>
+<p>执行编译：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">ninja</span><br></code></pre></td></tr></table></figure>
+<p>默认会编译所有模块，共计需要编译一万多个文件，时间会很长（我用了将近三个小时）。此构建必须成功，否则得不到Qt需要的宿主工具。</p>
+<p>这里当然也可以只编译自己需要的模块，比如我只需要Core、Gui、Widgets、Network这些比较基础的模块，可以指定：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs lasso"><span class="hljs-params">-DFEATURE_network</span>=<span class="hljs-keyword">ON</span> \<br><span class="hljs-params">-DFEATURE_gui</span>=<span class="hljs-keyword">ON</span> \<br><br><span class="hljs-params">...</span><span class="hljs-params">...</span><br></code></pre></td></tr></table></figure>
+<p>现在大语言模型这么发达，完全可以让gpt或者deepseek写一个shell脚本，告诉他想要的模块，然后一键编译。这样编译的文件数量和时长会大大减少。</p>
+<p>比如这是我的shell文件：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#!/bin/bash</span><br><br><span class="hljs-comment"># ======================</span><br><span class="hljs-comment"># Qt Host Build Script</span><br><span class="hljs-comment"># Author: ChatGPT</span><br><span class="hljs-comment"># ======================</span><br><br><span class="hljs-built_in">set</span> -e<br><br><span class="hljs-comment"># 设置变量</span><br><span class="hljs-attribute">QT_SRC_DIR</span>=~/Qt_source_code/qt-everywhere-src-6.9.0<br><span class="hljs-attribute">QT_INSTALL_PREFIX</span>=/usr/local/qt6-host<br><span class="hljs-attribute">BUILD_DIR</span>=<span class="hljs-variable">$QT_SRC_DIR</span>/build-qt-host<br><br><span class="hljs-comment"># 创建安装路径（如未存在）</span><br>sudo mkdir -p <span class="hljs-string">&quot;<span class="hljs-variable">$QT_INSTALL_PREFIX</span>&quot;</span><br>sudo chown $(whoami):$(whoami) <span class="hljs-string">&quot;<span class="hljs-variable">$QT_INSTALL_PREFIX</span>&quot;</span><br><br><span class="hljs-comment"># 清理旧构建目录</span><br>rm -rf <span class="hljs-string">&quot;<span class="hljs-variable">$BUILD_DIR</span>&quot;</span><br>mkdir -p <span class="hljs-string">&quot;<span class="hljs-variable">$BUILD_DIR</span>&quot;</span><br>cd <span class="hljs-string">&quot;<span class="hljs-variable">$BUILD_DIR</span>&quot;</span><br><br><span class="hljs-comment"># ========== Step 1: 构建 qtbase ==========</span><br>echo <span class="hljs-string">&quot;=== Configuring qtbase ===&quot;</span><br>cmake <span class="hljs-string">&quot;<span class="hljs-variable">$QT_SRC_DIR</span>/qtbase&quot;</span> \<br>  -GNinja \<br>  <span class="hljs-attribute">-DCMAKE_BUILD_TYPE</span>=Release \<br>  <span class="hljs-attribute">-DCMAKE_INSTALL_PREFIX</span>=<span class="hljs-string">&quot;<span class="hljs-variable">$QT_INSTALL_PREFIX</span>&quot;</span> \<br>  <span class="hljs-attribute">-DFEATURE_sql</span>=ON \<br>  <span class="hljs-attribute">-DFEATURE_network</span>=ON \<br>  <span class="hljs-attribute">-DFEATURE_gui</span>=ON \<br>  <span class="hljs-attribute">-DFEATURE_widgets</span>=ON \<br>  <span class="hljs-attribute">-DFEATURE_opengl</span>=OFF \<br>  <span class="hljs-attribute">-DFEATURE_dbus</span>=OFF \<br>  <span class="hljs-attribute">-DFEATURE_printsupport</span>=OFF \<br>  <span class="hljs-attribute">-DQT_BUILD_EXAMPLES</span>=OFF \<br>  <span class="hljs-attribute">-DQT_BUILD_TESTS</span>=OFF<br><br>echo <span class="hljs-string">&quot;=== Building qtbase ===&quot;</span><br>ninja<br>echo <span class="hljs-string">&quot;=== Installing qtbase ===&quot;</span><br>ninja install<br><br><span class="hljs-comment"># ========== Step 2: 构建 qtcharts ==========</span><br>echo <span class="hljs-string">&quot;=== Configuring qtcharts ===&quot;</span><br>mkdir -p <span class="hljs-string">&quot;<span class="hljs-variable">$QT_SRC_DIR</span>/build-qtcharts-host&quot;</span><br>cd <span class="hljs-string">&quot;<span class="hljs-variable">$QT_SRC_DIR</span>/build-qtcharts-host&quot;</span><br><br>cmake <span class="hljs-string">&quot;<span class="hljs-variable">$QT_SRC_DIR</span>/qtcharts&quot;</span> \<br>  -GNinja \<br>  <span class="hljs-attribute">-DCMAKE_BUILD_TYPE</span>=Release \<br>  <span class="hljs-attribute">-DCMAKE_PREFIX_PATH</span>=<span class="hljs-string">&quot;<span class="hljs-variable">$QT_INSTALL_PREFIX</span>&quot;</span> \<br>  <span class="hljs-attribute">-DCMAKE_INSTALL_PREFIX</span>=<span class="hljs-string">&quot;<span class="hljs-variable">$QT_INSTALL_PREFIX</span>&quot;</span> \<br>  <span class="hljs-attribute">-DQT_BUILD_EXAMPLES</span>=OFF \<br>  <span class="hljs-attribute">-DQT_BUILD_TESTS</span>=OFF<br><br>echo <span class="hljs-string">&quot;=== Building qtcharts ===&quot;</span><br>ninja<br>echo <span class="hljs-string">&quot;=== Installing qtcharts ===&quot;</span><br>ninja install<br><br>echo <span class="hljs-string">&quot;✅ Qt Host Build Completed and Installed to <span class="hljs-variable">$QT_INSTALL_PREFIX</span>&quot;</span><br></code></pre></td></tr></table></figure>
+<h3 id="交叉编译qt"><a class="markdownIt-Anchor" href="#交叉编译qt"></a> 交叉编译Qt</h3>
+<p>Qt6默认且推荐使用Cmake构建，和makefile相似，Cmake需要一个配置文件来向编译器告知交叉编译工具链。在源码目录下新建一个<code>arm-gnueabihf-toolchain.cmake</code>：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs gams"># arm-gnueabihf-toolchain.cmake<br><span class="hljs-keyword">SET</span>(CMAKE_SYSTEM_NAME <span class="hljs-comment">Linux)</span><br><span class="hljs-keyword">SET</span>(CMAKE_SYSTEM_PROCESSOR <span class="hljs-comment">arm)</span><br><br><span class="hljs-keyword">SET</span>(CMAKE_C_COMPILER <span class="hljs-comment">arm-linux-gnueabihf-gcc)</span><br><span class="hljs-keyword">SET</span>(CMAKE_CXX_COMPILER <span class="hljs-comment">arm-linux-gnueabihf-g++)</span><br><br># ARM根文件系统路径<br><span class="hljs-keyword">SET</span>(CMAKE_SYSROOT /home/<span class="hljs-comment">aki</span>/linux/<span class="hljs-comment">nfs</span>/NXP_rootfs/<span class="hljs-comment">)</span><br><br># ARM根文件系统路径<br><span class="hljs-keyword">SET</span>(CMAKE_FIND_ROOT_PATH /home/<span class="hljs-comment">aki</span>/linux/<span class="hljs-comment">nfs</span>/NXP_rootfs/<span class="hljs-comment">)</span><br><br><span class="hljs-keyword">SET</span>(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM <span class="hljs-comment">NEVER)</span><br><span class="hljs-keyword">SET</span>(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY <span class="hljs-comment">ONLY)</span><br><span class="hljs-keyword">SET</span>(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE <span class="hljs-comment">ONLY)</span><br><span class="hljs-keyword">SET</span>(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE <span class="hljs-comment">ONLY)</span><br></code></pre></td></tr></table></figure>
+<p>按照注释，将arm的根文件路径替换成自己开发板的路径。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Qt%E5%BC%80%E5%8F%91/" class="category-chain-item">Qt开发</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>基于Qt 6.9 为 ARM 设备交叉编译应用程序</div>
+      <div>http://akichen891.github.io/2025/04/24/Qt交叉编译/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年4月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/05/13/%E7%A0%94%E7%A9%B6%E5%A4%A7%E7%BA%B2/" title="研究大纲">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">研究大纲</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/04/24/Qt%E8%8E%B7%E5%8F%96%E7%BD%91%E7%BB%9C%E6%97%B6%E9%97%B4/" title="Qt 获取网络时间">
+                        <span class="hidden-mobile">Qt 获取网络时间</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
