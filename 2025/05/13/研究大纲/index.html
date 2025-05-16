@@ -27,7 +27,7 @@
 <meta property="og:description" content="基于多源建模 + 自监督时序对比学习的船舶中压直流电力系统故障诊断算法  研究痛点  特征少：利用自监督学习挖掘少量信号中隐藏的动态模式 工况复杂：融合控制逻辑建模，消除非故障引起的扰动影响 实船数据较难获取：通过模拟工况仿真生成伪故障数据，辅助训练 扩展全系统：构建模块级拓扑先验图，实现跨设备迁移泛化   核心思想与方法模块  系统级建模融合（结构感知） 模型输入前引入“设备连接关系”和“物理">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-13T09:05:24.000Z">
-<meta property="article:modified_time" content="2025-05-14T12:14:10.905Z">
+<meta property="article:modified_time" content="2025-05-16T09:25:26.187Z">
 <meta property="article:author" content="Aki">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -249,7 +249,7 @@
         
         
         
-          10 分钟
+          11 分钟
         
       </span>
     
@@ -422,6 +422,13 @@
 <p>目前比较合适的方法：DCRNN</p>
 <p>最主要的问题：系统结构已知，但是每个节点运行时的特征数据不可知（只能获取到发电机端的四个特征）</p>
 <p><strong>基于部分可观测 GNN 的系统级故障定位与分类</strong></p>
+<p><em>模型结构</em>：</p>
+<ul>
+<li>S波段346B型ASEA，每个TR模块100W，每个阵列5000块，S波段4个，C波段8个，峰值功率共<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>12</mn><mo>∗</mo><mn>5000</mn><mo>∗</mo><mn>100</mn><mo>=</mo><mn>6</mn><mi>M</mi><mi>W</mi></mrow><annotation encoding="application/x-tex">12*5000*100=6MW</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span></span></span></span></li>
+<li>大功率拖拽式声纳，0.5MW</li>
+<li>电子战系统，峰值1MW</li>
+<li></li>
+</ul>
 <h3 id="自监督对比学习少标签无标签训练"><a class="markdownIt-Anchor" href="#自监督对比学习少标签无标签训练"></a> 自监督对比学习（少标签/无标签训练）</h3>
 <p>使用 SimCLR / TS2Vec / TS-TCC 类型框架，设计如下流程：</p>
 <ul>
@@ -487,7 +494,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年5月14日</div>
+          <div>2025年5月16日</div>
         </div>
       
       
