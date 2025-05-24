@@ -241,6 +241,114 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/04/17/LinuxFlexCAN%E8%B0%83%E8%AF%95/" target="_self">
+          Linux FlexCAN调试
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/04/17/LinuxFlexCAN%E8%B0%83%E8%AF%95/" target="_self">
+        <div>
+          设备树 按照手册来即可，注意Alpha版上Flexcan2节点的引脚被ecspi3复用，节点中要屏蔽掉flexcan2: 1234567/* Conflict with ECSPI3 */&amp;can2 &#123;	pinctrl-names = &quot;default&quot;;	pinctrl-0 = &lt;&amp;pinctrl_flexcan2&gt;;	xceiver-
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-04-17 14:40" pubdate>
+              2025-04-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/04/16/LinuxWM8960%E5%92%8C%E5%A3%B0%E5%8D%A1%E9%A9%B1%E5%8A%A8/" target="_self">
+          LinuxWM8960和声卡驱动
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/04/16/LinuxWM8960%E5%92%8C%E5%A3%B0%E5%8D%A1%E9%A9%B1%E5%8A%A8/" target="_self">
+        <div>
+          设备树 6.6.52版本Kernel中NXP已经默认在imx6ul-14x14-evk.dtsi中配置好了wm8960的节点，但是是配置在i2c2下，而正点原子阿尔法开发板中wm8960接在i2c1下，所以要把节点从i2c2移到i2c1： 12345678910111213141516171819&amp;i2c1 &#123;	clock-frequency = &lt;100000&gt;;
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-04-16 18:33" pubdate>
+              2025-04-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2025/04/13/Linux%E4%B8%8BGT911%E9%A9%B1%E5%8A%A8%E7%A7%BB%E6%A4%8D/" target="_self">
           Linux下GT911驱动移植
         </a>
@@ -637,114 +745,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2025-03-28 16:12" pubdate>
               2025-03-28
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/03/26/Linux%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6/" target="_self">
-          Linux文件描述符
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/26/Linux%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6/" target="_self">
-        <div>
-          文件描述符(file descriptor) 我们知道在Linux系统中一切皆可以看成是文件，文件又可分为：普通文件、目录文件、链接文件和设备文件。在操作这些所谓的文件的时候，我们每操作一次就找一次名字，这会耗费大量的时间和效率。所以Linux中规定每一个文件对应一个索引，这样要操作文件的时候，我们直接找到索引就可以对其进行操作了。 文件描述符（file descriptor）就是内核为了高效管
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-03-26 21:56" pubdate>
-              2025-03-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式(Linux开发)</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/03/26/Linux%E9%98%BB%E5%A1%9E%E3%80%81%E9%9D%9E%E9%98%BB%E5%A1%9E%E4%B8%8E%E5%BC%82%E6%AD%A5%E9%80%9A%E7%9F%A5/" target="_self">
-          Linux阻塞、非阻塞与异步通知
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/03/26/Linux%E9%98%BB%E5%A1%9E%E3%80%81%E9%9D%9E%E9%98%BB%E5%A1%9E%E4%B8%8E%E5%BC%82%E6%AD%A5%E9%80%9A%E7%9F%A5/" target="_self">
-        <div>
-          阻塞IO 阻塞状态下应用程序从驱动读取函数时，若kernel回报设备不可用，应用程序对应的线程将会进入睡眠，等待设备可用后由设备通知应用程序并将其唤醒以继续执行。 Linux依靠等待队列(wait queue)来进行进程同步，其允许进程在某个条件满足前进入睡眠，并在条件满足时由驱动进行唤醒，避免CPU忙等。  等待队列 基本的等待队列包括：  事件(event)：通常是 硬件中断、数据可用 或
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-03-26 20:38" pubdate>
-              2025-03-26
             </time>
           </div>
         

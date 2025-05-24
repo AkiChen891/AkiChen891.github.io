@@ -1,0 +1,747 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+
+<head>
+  <meta name="google-site-verification" content="Qd4BJop_tJyti_Gc8cDS3G09bPdOfn-O0if6QYHhtXY" />
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-touch-icon.png">
+  <link rel="icon" href="/images/favicon_mos.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#F0E68C">
+  <meta name="author" content="Aki">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="综述文章  GNN4TS包括四个基本维度：  预测 分类 异常检测 插补   异常检测（P10） 异常检测用于识别偏离正常数据生成过程的数据观测值。无监督前提下的传统方法包括： 基于距离的方法：异常点在特征空间中与其他点的“距离”明显较大，因此不属于某个“簇”或“群体”。典型方法包括：   KNN  计算每个点与其最近的 k 个邻居的距离 若该距离的平均值很大 → 该点可能是异常    LOF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文研读">
+<meta property="og:url" content="http://akichen891.github.io/2025/05/24/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/index.html">
+<meta property="og:site_name" content="Aki&#39;s Blog">
+<meta property="og:description" content="综述文章  GNN4TS包括四个基本维度：  预测 分类 异常检测 插补   异常检测（P10） 异常检测用于识别偏离正常数据生成过程的数据观测值。无监督前提下的传统方法包括： 基于距离的方法：异常点在特征空间中与其他点的“距离”明显较大，因此不属于某个“簇”或“群体”。典型方法包括：   KNN  计算每个点与其最近的 k 个邻居的距离 若该距离的平均值很大 → 该点可能是异常    LOF">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/KimMeen/Awesome-GNN4TS">
+<meta property="article:published_time" content="2025-05-24T11:13:25.000Z">
+<meta property="article:modified_time" content="2025-05-24T12:34:30.348Z">
+<meta property="article:author" content="Aki">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://github.com/KimMeen/Awesome-GNN4TS">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>论文研读 - Aki&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akichen891.github.io","root":"/","version":"1.9.7","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"C"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Aki&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-books"></i>
+                <span>工具</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="https://akichen891.github.io/tools/cangenerate.html" target="_self">
+                    
+                    <span>CAN报文生成</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/Ringlan.JPG') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">论文研读</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-24 19:13" pubdate>
+          2025年5月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">论文研读</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="综述文章"><a class="markdownIt-Anchor" href="#综述文章"></a> 综述文章</h2>
+<p><img src="https://github.com/KimMeen/Awesome-GNN4TS" srcset="/img/loading.gif" lazyload alt="Awesome-GNN4TS"><br>
+GNN4TS包括四个基本维度：</p>
+<ul>
+<li>预测</li>
+<li>分类</li>
+<li>异常检测</li>
+<li>插补</li>
+</ul>
+<h3 id="异常检测p10"><a class="markdownIt-Anchor" href="#异常检测p10"></a> 异常检测（P10）</h3>
+<p>异常检测用于识别偏离正常数据生成过程的数据观测值。无监督前提下的传统方法包括：</p>
+<p><strong>基于距离的方法</strong>：异常点在特征空间中与其他点的“距离”明显较大，因此不属于某个“簇”或“群体”。典型方法包括：</p>
+<ul>
+<li>
+<p>KNN</p>
+<ul>
+<li>计算每个点与其最近的 k 个邻居的距离</li>
+<li>若该距离的平均值很大 → 该点可能是异常</li>
+</ul>
+</li>
+<li>
+<p>LOF</p>
+<ul>
+<li>衡量一个点的密度与其邻域点的密度的比值</li>
+<li>低密度点（与邻居差异大）被视为异常</li>
+</ul>
+</li>
+<li>
+<p>DBSCAN（密度聚类）</p>
+<ul>
+<li>离群点不属于任何高密度区域，即为异常</li>
+</ul>
+</li>
+</ul>
+<p>该类方法计算开销高，对高维数据处理能力很差，并且无法获取时间序列的前后关系。</p>
+<p><strong>基于分布的方法</strong>：异常点是那些不符合总体概率分布假设的数据点。</p>
+<ul>
+<li>高斯模型</li>
+<li>ARIMA残差检测</li>
+</ul>
+<p>该类方法依赖分布假设，对非高斯分布数据不稳健。</p>
+<p>深度学习下有两种主要策略用于无监督异常检测：</p>
+<p><strong>重构</strong>：模型学习如何重建原始输入序列，并使用重构误差来判断异常。考虑模型在训练中只输入正常数据，即其只会重建正常数据；当输入为异常序列时，模型无法准确重建它，因而重构误差变大。误差越大，越可能是异常。</p>
+<p>常见形式：</p>
+<ul>
+<li>Autoencoder / Seq2Seq（LSTM 编码器-解码器）</li>
+<li>Graph Autoencoder（用于图结构数据）</li>
+<li>Variational Autoencoder (VAE)（支持概率输出）</li>
+</ul>
+<p><strong>预测</strong>：模型学习如何预测下一个时间点（或未来若干步），异常点表现为“预测误差高”的时间点。要求样本之间通常存在时序模式。如果为正常点，模型应当能够准确预测；如果预测结果严重偏离实际观测值，可能为异常数据。</p>
+<p>常见形式：</p>
+<ul>
+<li>LSTM/GRU 预测模型</li>
+<li>Temporal Convolutional Network (TCN)</li>
+<li>Spatio-Temporal GNN（如 ST-GCN, GDN）</li>
+</ul>
+<h3 id="通用方法"><a class="markdownIt-Anchor" href="#通用方法"></a> 通用方法</h3>
+<p>将异常检测视为一项无监督任务依赖于模型学习给定数据集的正态性概念，深度学习架构一般部署一个由主干模块和评分模块组成的二叉模块化框架：</p>
+<ul>
+<li>主干模型用于拟合给定的训练数据（假定为正常值或包含极少的异常）</li>
+<li>评分模块通过将主干模块的输出与观察到的时间序列数据（实际数据）进行比较，生成一个分数</li>
+</ul>
+<p>“分数”旨在衡量正常和异常情况下预期信号之间的差异。评分函数通常首先计算每个单独通道的差异，然后将所有通道的差异合并为一个异常值。</p>
+<p>大多数异常检测模型都遵循相同的主干-评分器架构，但是主干模块从标准数据中学习数据结构的方式，以及评分模块的实现方式可以基于三类不同的方法实现：</p>
+<ul>
+<li>重构</li>
+<li>预测</li>
+<li>关系差异框架（relational discrepancy）</li>
+</ul>
+<p><strong>重构</strong>：框架的运行假设时，重构误差在正常时期较低，在异常时期较高，旨在将输入复制为输出，类似于自动编码器。一旦学习了数据结构，模型应该在正常时期很好地逼近输入，但在异常时期会遇到困难。然后，评分模型根据重构的输出计算差异分数，以识别异常事件。</p>
+<p>GNN与其他架构类型的一个关键区别在于主干重建期用STGNN实现。</p>
+<p><strong>预测</strong>：依赖假设为预测误差在正常时期应该较低，但在异常时期应该较高。主干模块被一个经过训练可以进行一步预测的图神经网络 (GNN) 预测器所取代。在部署期间，预测器进行一步预测，并将预测结果提供给评分器。评分器将预测结果与实际观测信号进行比较，以计算差异，例如绝对误差或均方误差。代表性架构为GDN。</p>
+<p>虽然预测差异框架与重建差异框架可能相似，但它们依赖于根本不同的原理和实施策略。重建差异框架将当前输入投射到潜在空间，尝试重建它，并在重建失败时识别异常。该方法在训练和推理过程中都使用当前输入数据，重点关注模型重建训练数据的能力，而不是样本外数据的能力。相反，预测差异框架使用历史数据预测当前值，并通过将预测与实际观测值进行比较来识别异常。重建侧重于复制当前输入，而预测则强调预测未来数据点并通过预测误差检测异常。</p>
+<h3 id="gdngraph-deviation-network"><a class="markdownIt-Anchor" href="#gdngraph-deviation-network"></a> GDN（Graph Deviation Network）</h3>
+<p>旨在充分利用多变量时间序列中传感器之间的复杂关系，并指出了两个挑战：</p>
+<ul>
+<li>不同的传感器具有显著不同的行为（特征变量代表的物理含义不同）</li>
+<li>传感器之间的关系未知</li>
+</ul>
+<p>GDN方法包括四个部分：</p>
+<ol>
+<li>传感器嵌入(Embedding)，使用嵌入向量灵活捕捉每个传感器的独特特性</li>
+<li>图结构学习，学习传感器之间的关系</li>
+<li>基于图注意力机制预测每个传感器在其邻近传感器上的未来值</li>
+<li>图偏差评分</li>
+</ol>
+<p>GDN的输入为：</p>
+<p>在每个时间刻度<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathnormal">t</span></span></span></span>，由<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span>个传感器值<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mrow><mi>t</mi><mi>r</mi><mi>a</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">s_{train}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>组成的N维向量，并在不同时刻进行组合，以构成时间序列数据。</p>
+<p>GDN的输出为：</p>
+<p>一组二进制标签，用于指示每个测试时间点是否为异常</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%A7%91%E7%A0%94%E7%9B%B8%E5%85%B3/" class="category-chain-item">科研相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>论文研读</div>
+      <div>http://akichen891.github.io/2025/05/24/论文研读/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aki</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年5月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年5月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/22/%E8%AE%BA%E6%96%87%E5%B7%A5%E4%BD%9C%E8%BF%9B%E5%BA%A6/" title="论文工作进度">
+                        <span class="hidden-mobile">论文工作进度</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
