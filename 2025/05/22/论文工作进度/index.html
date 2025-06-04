@@ -27,7 +27,7 @@
 <meta property="og:description" content="故障类型 扩展样本：  保持工况不变，修改故障发生时间  先对1#日用负载逆变进行极间短路故障注入，从105s开始注入故障，随后每个样本的故障注入时间向后推迟0.2s至150s停止，共计250个样本。每次样本采样时长均为从故障注入后向后数3s，采样频率为1000Hz 问题：仿真太耗时间，一次15分钟，250个样本就是62小时 解决：只生成105s - 109.2s的25个样本，剩下的人工加噪。这">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-22T06:15:40.000Z">
-<meta property="article:modified_time" content="2025-05-24T14:21:51.764Z">
+<meta property="article:modified_time" content="2025-05-27T12:11:09.952Z">
 <meta property="article:author" content="Aki">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          800 字
+          790 字
         
       </span>
     
@@ -319,223 +319,112 @@
 <li>推进电机：推进器功率，转速</li>
 <li>断路器：断开（0）或闭合（1）</li>
 </ul>
-<p>正常状态下待运行的工况列表：</p>
+<p>考虑到舰船存在以下几种情况：</p>
+<ul>
+<li>靠港，一柴</li>
+<li>低速巡航，两柴</li>
+<li>中速巡航，四柴</li>
+<li>高速巡航，四柴一燃</li>
+<li>高速巡航，四柴两燃</li>
+</ul>
+<p>其中靠港、低速巡航和中速巡航都只考虑日用负载的推进，脉冲和大功率负载不接入。</p>
+<ul>
+<li>20s，DG1建压起动，25s并入系统</li>
+<li>30s，日用负载10%，共1.2MW</li>
+<li>55s，DG2、DG3、DG4建压起动，60s并入系统</li>
+<li>80s，日用负载30%，共3.6MW</li>
+<li>85s，TJ1和TJ2起动，目标转速为83</li>
+<li>220s，TG1起动，225s并入系统</li>
+<li>305s，日用负载100%，共12MW</li>
+<li>355s，TJ1、TJ2目标转速86.85转</li>
+<li>460s，TJ1、TJ2目标转速143转</li>
+<li>570s，结束仿真</li>
+</ul>
 <table>
 <thead>
 <tr>
-<th>编号</th>
-<th>发电机组合</th>
-<th>日用负载</th>
-<th>大功率负载</th>
-<th>脉冲负载</th>
-<th>工程情景</th>
-<th>仿真建议时间</th>
-<th>备注说明</th>
+<th>段编号</th>
+<th>时间范围（秒）</th>
+<th>运行状态</th>
+<th>样本类别</th>
+<th>建议用途</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1</td>
-<td>DG1</td>
-<td>2个（1.2MW）</td>
-<td>无</td>
-<td>无</td>
-<td>靠港待命、值更运行</td>
-<td>60s</td>
-<td>单柴低负载</td>
+<td>A1</td>
+<td>30–55</td>
+<td>日用负载10%，DG1</td>
+<td>稳态</td>
+<td>靠港状态训练样本</td>
 </tr>
 <tr>
-<td>2</td>
-<td>DG1</td>
-<td>4个（1.2MW）</td>
-<td>无</td>
-<td>无</td>
-<td>靠港待命、值更运行</td>
-<td>60s</td>
-<td>单柴中负载</td>
+<td>A2</td>
+<td>55–80</td>
+<td>DG2~DG4并入过程</td>
+<td>过渡/切换段</td>
+<td>模型鲁棒性测试</td>
 </tr>
 <tr>
-<td>3</td>
-<td>DG2</td>
-<td>2个（1.2MW）</td>
-<td>无</td>
-<td>无</td>
-<td>靠港待命、值更运行</td>
-<td>60s</td>
-<td>单柴低负载</td>
+<td>A3</td>
+<td>80–85</td>
+<td>日用负载30%，四柴</td>
+<td>稳态</td>
+<td>低速巡航训练样本</td>
 </tr>
 <tr>
-<td>4</td>
-<td>DG2</td>
-<td>2个（1.2MW）</td>
-<td>无</td>
-<td>无</td>
-<td>靠港待命、值更运行</td>
-<td>60s</td>
-<td>单柴中负载</td>
+<td>A4</td>
+<td>85–220</td>
+<td>推进器83转速阶段</td>
+<td>稳态</td>
+<td>中速巡航样本</td>
 </tr>
 <tr>
-<td>5</td>
-<td>DG1 + DG2</td>
-<td>4个（2.4MW）</td>
-<td>无</td>
-<td>无</td>
-<td>靠港生活保障期</td>
-<td>60s</td>
-<td>两柴中负载</td>
+<td>A5</td>
+<td>220–305</td>
+<td>TG1并入过程 +负载增</td>
+<td>切换过渡段</td>
+<td>动态扰动验证</td>
 </tr>
 <tr>
-<td>6</td>
-<td>DG1 + DG2 + TG1</td>
-<td>6个（3.6MW）</td>
-<td>无</td>
-<td>无</td>
-<td>靠港战备测试</td>
-<td>60s</td>
-<td>两柴一燃高负载</td>
+<td>A6</td>
+<td>305–355</td>
+<td>日用负载100%</td>
+<td>稳态</td>
+<td>高速巡航样本</td>
 </tr>
 <tr>
-<td>7</td>
-<td>TG1</td>
-<td>3个（1.8MW）</td>
-<td>无</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>单燃中负载</td>
+<td>A7</td>
+<td>355–460</td>
+<td>推进器提速至86.85</td>
+<td>稳态/微扰动</td>
+<td>高速加强样本</td>
 </tr>
 <tr>
-<td>8</td>
-<td>TG2</td>
-<td>3个（1.8MW）</td>
-<td>无</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>单燃中负载</td>
-</tr>
-<tr>
-<td>9</td>
-<td>TG1 + TG2</td>
-<td>6个（3.6MW）</td>
-<td>无</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>两燃高负载</td>
-</tr>
-<tr>
-<td>10</td>
-<td>DG1 + TG1</td>
-<td>4个（2.4MW）</td>
-<td>无</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>一柴一燃</td>
-</tr>
-<tr>
-<td>11</td>
-<td>DG2 + TG1</td>
-<td>6个（3.6MW）</td>
-<td>无</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>一柴一燃</td>
-</tr>
-<tr>
-<td>12</td>
-<td>DG1 + TG2</td>
-<td>4个（2.4MW）</td>
-<td>无</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>一柴一燃</td>
-</tr>
-<tr>
-<td>13</td>
-<td>DG2 + TG2</td>
-<td>6个（3.6MW）</td>
-<td>无</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>一柴一燃</td>
-</tr>
-<tr>
-<td>14</td>
-<td>TG1 + TG2</td>
-<td>6个（3.6MW）</td>
-<td>雷达</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>一柴一燃</td>
-</tr>
-<tr>
-<td>15</td>
-<td>TG1 + TG2 + DG1 + DG2</td>
-<td>6个（3.6MW）</td>
-<td>雷达</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>满功率</td>
-</tr>
-<tr>
-<td>16</td>
-<td>TG1 + TG2</td>
-<td>6个（3.6MW）</td>
-<td>雷达+电子战</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>一柴一燃</td>
-</tr>
-<tr>
-<td>17</td>
-<td>TG1 + TG2 + DG1 + DG2</td>
-<td>6个（3.6MW）</td>
-<td>雷达+电子战</td>
-<td>无</td>
-<td>锚地战备待命</td>
-<td>60s</td>
-<td>满功率</td>
-</tr>
-<tr>
-<td>18</td>
-<td>DG3（备用）</td>
-<td>2个（1.2MW）</td>
-<td>无</td>
-<td>无</td>
-<td>备用发电机测试</td>
-<td>60s</td>
-<td></td>
-</tr>
-<tr>
-<td>19</td>
-<td>DG4（备用）</td>
-<td>2个（1.2MW）</td>
-<td>无</td>
-<td>无</td>
-<td>备用发电机测试</td>
-<td>60s</td>
-<td></td>
-</tr>
-<tr>
-<td>20</td>
-<td>DG3（备用）+ DG4（备用）</td>
-<td>6个（1.2MW）</td>
-<td>无</td>
-<td>无</td>
-<td>备用发电机测试</td>
-<td>60s</td>
-<td></td>
+<td>A8</td>
+<td>460–570</td>
+<td>推进器提速至143</td>
+<td>稳态/高功率</td>
+<td>极端稳态样本</td>
 </tr>
 </tbody>
 </table>
+<p>高速情况：</p>
+<ul>
+<li>20s，所有发电机建压，25s并入系统</li>
+<li>30s，日用负载2MW</li>
+<li>35s，日用负载4MW</li>
+<li>40s，日用负载6MW</li>
+<li>45s，日用负载8MW</li>
+<li>50s，日用负载10MW</li>
+<li>55s，日用负载12MW</li>
+<li>60s，雷达开机，6MW</li>
+<li>65s，电子战开机，1MW</li>
+<li>70s，LL3开机，1MW</li>
+<li>75s，PL1开机，115s关闭</li>
+<li>80s，PL2开机，120s关闭</li>
+<li>85s，PL3开机，125s关闭</li>
+</ul>
 
                 
               </div>
@@ -593,7 +482,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年5月24日</div>
+          <div>2025年5月27日</div>
         </div>
       
       
