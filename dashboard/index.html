@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>综合电力系统实时监测看板</title>
+    <style>
+        :root {
+            --sidebar-bg: #2c3e50;
+            --sidebar-hover: #3e5871;
+            --accent-blue: #3498db;
+            --accent-green: #2ecc71;
+            --body-bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-gray: #7f8c8d;
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: var(--body-bg);
+            overflow: hidden;
+        }
+
+        /* 整体容器 */
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* 侧边栏 - 100% 还原 Qt 样式 */
+        .sidebar {
+            width: 220px;
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid #34495e;
+            text-align: center;
+        }
+
+        .menu-item {
+            padding: 18px 25px;
+            color: #bdc3c7;
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 1px solid #34495e;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            color: white;
+        }
+
+        .menu-item.active {
+            background-color: var(--accent-blue);
+            color: white;
+            border-left: 6px solid var(--accent-green);
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+        }
+
+        /* 卡片样式 - 扁平化风格 */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #e6e6e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header::before {
+            content: "▶";
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        /* 数据网格 */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .data-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .data-label { color: var(--text-gray); font-size: 14px; margin-bottom: 10px; }
+        .data-value { font-size: 24px; font-weight: bold; color: var(--accent-blue); }
+
+        /* 终端风格诊断窗口 */
+        .terminal {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 150px;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <div class="sidebar-header">控制台菜单</div>
+        <div class="menu-item active" onclick="showTab(0)">系统概览</div>
+        <div class="menu-item" onclick="showTab(1)">保护整定</div>
+        <div class="menu-item" onclick="showTab(2)">故障记录</div>
+        <div class="menu-item" onclick="showTab(3)">硬件设置</div>
+    </div>
+
+    <div class="main-content">
+        <div id="tab0" class="tab-content active">
+            <div class="page-title">系统监测实时数据</div>
+            <div class="card">
+                <div class="card-header">电气参数监测</div>
+                <div class="data-grid">
+                    <div class="data-box">
+                        <div class="data-label">A相电压</div>
+                        <div class="data-value" id="vol-val">220.4 V</div>
+                    </div>
+                    <div class="data-box">
+                        <div class="data-label">A相电流</div>
+                        <div class="data-value" style="color: var(--accent-green);">42.8 A</div>
+                    </div>
+                    <div class="data-box">
+                        <div class="data-label">系统频率</div>
+                        <div class="data-value">50.02 Hz</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab3" class="tab-content">
+            <div class="page-title">硬件诊断与设置</div>
+            <div class="card">
+                <div class="card-header">CAN总线状态扫描</div>
+                <div class="terminal">
+                    > 正在搜索可用驱动...<br>
+                    > 发现插件: [SOCKETCAN, VIRTUALCAN, PEAKCAN]<br>
+                    > 正在扫描设备接口...<br>
+                    > <span style="color:white">● 发现设备: can0 (Virtual CAN Interface)</span><br>
+                    > <span style="color:white">● 发现设备: vcan0 (Simulation Node)</span><br>
+                    > 状态: 系统已就绪
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showTab(index) {
+        // 切换菜单样式
+        const items = document.querySelectorAll('.menu-item');
+        items.forEach((item, i) => {
+            if(i === index) item.classList.add('active');
+            else item.classList.remove('active');
+        });
+
+        // 切换内容
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach((tab, i) => {
+            if(i === index) tab.classList.add('active');
+            else tab.classList.remove('active');
+        });
+    }
+
+    // 简单的数值模拟跳动
+    setInterval(() => {
+        const v = (220 + Math.random()).toFixed(1);
+        document.getElementById('vol-val').innerText = v + " V";
+    }, 2000);
+</script>
+
+</body>
+</html>

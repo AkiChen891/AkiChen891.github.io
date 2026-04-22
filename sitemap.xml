@@ -2,15 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://akichen891.github.io/system-dashboard/index.html</loc>
-    
-    <lastmod>2026-04-22</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://akichen891.github.io/2025/06/03/%E7%AE%80%E5%8C%96%E5%8D%81%E4%BA%8C%E7%9B%B8%E5%90%8C%E6%AD%A5%E6%95%B4%E6%B5%81%E5%8F%91%E7%94%B5%E6%9C%BA%E6%A8%A1%E5%9E%8B%E6%8E%A8%E5%AF%BC/</loc>
     
     <lastmod>2025-06-16</lastmod>
@@ -659,14 +650,14 @@
   </url>
   
   <url>
-    <loc>http://akichen891.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/</loc>
+    <loc>http://akichen891.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://akichen891.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F-Linux%E5%BC%80%E5%8F%91/</loc>
+    <loc>http://akichen891.github.io/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%EF%BC%88%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%EF%BC%89/</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
