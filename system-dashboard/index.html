@@ -19,11 +19,15 @@
   <meta name="author" content="Aki">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="http://akichen891.github.io/archives/2026/03/index.html">
+    <meta name="description" content="系统概览         保护整定         故障记录         硬件状态      &lt;div class&#x3D;&quot;content-area&quot;&gt;     &lt;div class&#x3D;&quot;tab-content active&quot;&gt;         &lt;h2 style&#x3D;&quot;color: #2c3e50">
+<meta property="og:type" content="website">
+<meta property="og:title" content="系统实时监测看板">
+<meta property="og:url" content="http://akichen891.github.io/system-dashboard/index.html">
 <meta property="og:site_name" content="Aki&#39;s Blog">
+<meta property="og:description" content="系统概览         保护整定         故障记录         硬件状态      &lt;div class&#x3D;&quot;content-area&quot;&gt;     &lt;div class&#x3D;&quot;tab-content active&quot;&gt;         &lt;h2 style&#x3D;&quot;color: #2c3e50">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-22T11:15:55.421Z">
+<meta property="article:modified_time" content="2026-04-22T11:15:55.421Z">
 <meta property="article:author" content="Aki">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -31,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>归档 - Aki&#39;s Blog</title>
+  <title>系统实时监测看板 - Aki&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,13 +201,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/images/Amiya.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">归档</span>
+            <span id="subtitle">系统实时监测看板</span>
           
         </div>
 
@@ -230,23 +234,132 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 69 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2026</p>
-    
-    <a href="/2026/03/18/PMSM/" class="list-group-item list-group-item-action">
-      <time>03-18</time>
-      <div class="list-group-item-title">PMSM</div>
-    </a>
-  
+<article class="page-content">
+  <div id="qt-dashboard">
+    <div class="side-bar">
+        <div class="menu-item active" onclick="switchTab(0)">系统概览</div>
+        <div class="menu-item" onclick="switchTab(1)">保护整定</div>
+        <div class="menu-item" onclick="switchTab(2)">故障记录</div>
+        <div class="menu-item" onclick="switchTab(3)">硬件状态</div>
+    </div>
+<pre><code class="hljs">&lt;div class=&quot;content-area&quot;&gt;
+    &lt;div class=&quot;tab-content active&quot;&gt;
+        &lt;h2 style=&quot;color: #2c3e50;&quot;&gt;⚡ 系统概览 (Real-time)&lt;/h2&gt;
+        &lt;div class=&quot;card-grid&quot;&gt;
+            &lt;div class=&quot;data-card&quot;&gt;
+                &lt;p&gt;当前母线电压&lt;/p&gt;
+                &lt;h3 id=&quot;val-v&quot;&gt;220.5 V&lt;/h3&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;data-card&quot;&gt;
+                &lt;p&gt;负载电流&lt;/p&gt;
+                &lt;h3 id=&quot;val-a&quot; style=&quot;color: #2ecc71;&quot;&gt;45.2 A&lt;/h3&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;status-box&quot;&gt;
+            &lt;p&gt;💡 提示：该页面模拟展示来自 CAN 总线的实时监测数据。&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;tab-content&quot;&gt;
+        &lt;h2 style=&quot;color: #2c3e50;&quot;&gt;🛠 硬件诊断&lt;/h2&gt;
+        &lt;div class=&quot;log-window&quot;&gt;
+            &lt;p&gt;&gt; 正在初始化网络连接...&lt;/p&gt;
+            &lt;p&gt;&gt; 连接至 GitHub Pages 服务器: OK&lt;/p&gt;
+            &lt;p&gt;&gt; 正在检测模拟 CAN 节点: can0, can1 发现&lt;/p&gt;
+            &lt;p style=&quot;color: #2ecc71;&quot;&gt;&gt; 系统状态: 运行良好&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
 </div>
+<style>
+/* 容器样式 */
+#qt-dashboard {
+    display: flex;
+    min-height: 500px;
+    background: #f0f2f5;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e6e6e6;
+    font-family: 'Microsoft YaHei', sans-serif;
+}
 
+/* 侧边栏样式 (完美复刻你的 Qt 侧边栏) */
+.side-bar {
+    width: 180px;
+    background: #2c3e50;
+    color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+}
 
+.menu-item {
+    padding: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 1px solid #34495e;
+    transition: 0.3s;
+}
+
+.menu-item:hover { background: #3e5871; }
+.menu-item.active {
+    background: #3498db;
+    border-left: 6px solid #2ecc71;
+}
+
+/* 内容区样式 */
+.content-area {
+    flex: 1;
+    padding: 30px;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.5s; }
+
+/* 卡片布局 */
+.card-grid { display: flex; gap: 20px; margin-top: 20px; }
+.data-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+.data-card p { color: #7f8c8d; margin: 0; }
+.data-card h3 { font-size: 28px; margin: 10px 0; }
+
+.log-window {
+    background: #1e1e1e;
+    color: #00ff00;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+    min-height: 200px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+<script>
+function switchTab(index) {
+    const tabs = document.querySelectorAll('.tab-content');
+    const items = document.querySelectorAll('.menu-item');
+    
+    tabs.forEach(t => t.classList.remove('active'));
+    items.forEach(i => i.classList.remove('active'));
+    
+    tabs[index].classList.add('active');
+    items[index].classList.add('active');
+}
+</script>
+
+  
+
+</article>
 
 
 
