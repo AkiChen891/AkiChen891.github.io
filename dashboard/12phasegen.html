@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>十二相同步整流发电机参数转换</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; }
+        .ref { text-align: center; font-size: 0.85em; color: #7f8c8d; margin-bottom: 30px; }
+        .section { margin-bottom: 25px; padding: 20px; border: 1px solid #eee; border-radius: 8px; background: #fdfdfd; }
+        .section-title { font-weight: bold; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 10px; margin-bottom: 15px; display: block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .input-group { display: flex; flex-direction: column; }
+        label { font-size: 0.8em; margin-bottom: 4px; color: #555; font-weight: 600; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; }
+        button { width: 100%; padding: 15px; background: #27ae60; color: #fff; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer; margin-top: 10px; }
+        #results { margin-top: 30px; display: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #f1f8ff; color: #0366d6; text-align: left; padding: 12px; font-size: 0.9em; }
+        td { padding: 10px 12px; border-bottom: 1px solid #eee; font-size: 0.95em; }
+        .math { font-family: "Consolas", monospace; color: #c0392b; font-weight: bold; }
+        .highlight { background: #fff9db; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>十二相同步整流发电机参数转换</h1>
+    <p class="ref">参考文献：马伟明, 王东. 多相整流发电机及其系统的分析[M]. 2020.</p>
+
+    <div class="section">
+        <span class="section-title">1. 系统基准与定子电阻</span>
+        <div class="grid">
+            <div class="input-group"><label>频率 f (Hz)</label><input type="number" id="f" value="100"></div>
+            <div class="input-group"><label>定子相电阻 rs (pu)</label><input type="number" id="rs" step="0.000001" value="0.00026"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <span class="section-title">2. 定子微观电抗 (包含绕组间互感)</span>
+        <div class="grid">
+            <div class="input-group"><label>直轴自感 xdy</label><input type="number" id="xdy" value="0.4721"></div>
+            <div class="input-group"><label>直轴互感1 xdm1</label><input type="number" id="xdm1" value="0.3503"></div>
+            <div class="input-group"><label>直轴互感2 xdm2</label><input type="number" id="xdm2" value="0.3358"></div>
+            <div class="input-group"><label>交轴自感 xqy</label><input type="number" id="xqy" value="0.4721"></div>
+            <div class="input-group"><label>交轴互感1 xqm1</label><input type="number" id="xqm1" value="0.3503"></div>
+            <div class="input-group"><label>交轴互感2 xqm2</label><input type="number" id="xqm2" value="0.3358"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <span class="section-title">3. 转子微观参数 (自感与电阻)</span>
+        <div class="grid">
+            <div class="input-group"><label>励磁自感 xfd</label><input type="number" id="xfd" value="0.3836"></div>
+            <div class="input-group"><label>直轴阻尼 xkd</label><input type="number" id="xkd" value="0.3545"></div>
+            <div class="input-group"><label>稳定绕组 xfq</label><input type="number" id="xfq" value="0.3949"></div>
+            <div class="input-group"><label>交轴阻尼 xkq</label><input type="number" id="xkq" value="0.3568"></div>
+            <div class="input-group"><label>rfd (励磁电阻)</label><input type="number" id="rfd" value="0.00022"></div>
+            <div class="input-group"><label>rkd (直阻尼电阻)</label><input type="number" id="rkd" value="0.0024"></div>
+            <div class="input-group"><label>rfq (稳定电阻)</label><input type="number" id="rfq" value="0.000757"></div>
+            <div class="input-group"><label>rkq (交阻尼电阻)</label><input type="number" id="rkq" value="0.0027"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <span class="section-title">4. 定转子互感参数 (电枢反应)</span>
+        <div class="grid">
+            <div class="input-group"><label>直轴互感 xafdy/xakdy</label><input type="number" id="xad_m" value="0.3404"></div>
+            <div class="input-group"><label>交轴互感 xafqy/xakqy</label><input type="number" id="xaq_m" value="0.3404"></div>
+        </div>
+    </div>
+
+    <button onclick="calculate()">计算</button>
+
+    <div id="results">
+        <div class="section" style="border-color: #27ae60;">
+            <span class="section-title" style="color: #27ae60;">计算结果 (同步/暂态/次暂态指标)</span>
+            <table>
+                <thead><tr><th>参数名称</th><th>计算值</th><th>物理对标说明</th></tr></thead>
+                <tbody id="result-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculate() {
+    const v = id => parseFloat(document.getElementById(id).value);
+    const ws = 2 * Math.PI * v('f');
+
+    // 1. 合成直轴同步电抗 xd (自感+所有互感之和)
+    // 逻辑：xd = xdy + 2*xdm1 + xdm2
+    const xd = v('xdy') + 2 * v('xdm1') + v('xdm2');
+    const xq = v('xqy') + 2 * v('xqm1') + v('xqm2');
+
+    // 2. 总电枢反应电抗 (4套绕组总和)
+    const xad_sum = 4 * v('xad_m');
+    const xaq_sum = 4 * v('xaq_m');
+
+    // 3. 总漏抗 (包含绕组间互漏抗)
+    const xl_total = xd - xad_sum;
+    const xlq_total = xq - xaq_sum;
+
+    // 4. 转子漏抗 (折算至总回路)
+    const xf_sig = 4 * (v('xfd') - v('xad_m'));
+    const xkd_sig = 4 * (v('xkd') - v('xad_m'));
+    const xfq_sig = 4 * (v('xfq') - v('xaq_m'));
+    const xkq_sig = 4 * (v('xkq') - v('xaq_m'));
+
+    // 5. 暂态与次暂态电抗合成
+    const xdp = xl_total + (xad_sum * xf_sig) / (xad_sum + xf_sig);
+    const xqp = xlq_total + (xaq_sum * xfq_sig) / (xaq_sum + xfq_sig);
+    const xdpp = xl_total + 1 / (1/xad_sum + 1/xf_sig + 1/xkd_sig);
+    const xqpp = xlq_total + 1 / (1/xaq_sum + 1/xfq_sig + 1/xkq_sig);
+
+    // 6. 时间常数 (考虑 4 倍增益因子)
+    const td_p = (v('xfd') / (ws * v('rfd'))) * (xdp / xd);
+    const td_pp = ((v('xkd') - Math.pow(v('xad_m'),2)/v('xfd')) / (ws * v('rkd'))) * (xdpp / xdp) * 4;
+
+    const data = [
+        ["xd (直轴同步电抗)", xd.toFixed(4), "由自感与3套互感叠加而成"],
+        ["xq (交轴同步电抗)", xq.toFixed(4), "交轴同步运行总阻抗"],
+        ["xd' (直轴暂态电抗)", xdp.toFixed(4), "表征励磁绕组参与时的阻抗"],
+        ["xd'' (直轴次暂态电抗)", xdpp.toFixed(4), "短路初瞬间总阻抗 (关键指标)"],
+        ["xq'' (交轴次暂态电抗)", xqpp.toFixed(4), "交轴阻尼作用下的瞬时阻抗"],
+        ["Td' (暂态时间常数)", td_p.toFixed(4) + " s", "电压恢复过程的主时间常数"],
+        ["Td'' (次暂态时间常数)", td_pp.toFixed(4) + " s", "短路尖峰电流衰减常数"]
+    ];
+
+    let html = "";
+    data.forEach(d => {
+        const highlight = d[0].includes("xd''") || d[0].includes("xd (") ? "highlight" : "";
+        html += `<tr class="${highlight}"><td>${d[0]}</td><td class="math">${d[1]}</td><td>${d[2]}</td></tr>`;
+    });
+
+    document.getElementById('result-body').innerHTML = html;
+    document.getElementById('results').style.display = 'block';
+}
+</script>
+</body>
+</html>
